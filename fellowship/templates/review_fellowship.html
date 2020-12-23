@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head_css %}
+table.customTable {
+  width: 100%;
+  background-color: #FFFFFF;
+  border-collapse: collapse;
+  border-width: 2px;
+  border-color: #7ea8f8;
+  border-style: solid;
+  color: #000000;
+}
+
+table.customTable td, table.customTable th {
+  border-width: 2px;
+  border-color: #7ea8f8;
+  border-style: solid;
+  padding: 5px;
+}
+
+table.customTable thead {
+  background-color: #7ea8f8;
+}
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'fellowship:list' %}">Fellowships</a></li>
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+<form id="formid" action='{% url "fellowship:save_fellowship_comments" fellowship.id %}' method="POST" novalidate enctype="multipart/form-data">{% csrf_token %}
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-9">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title text-center">
+            VIEW FELLOWSHIP
+          </div>
+          </div>
+          <div class="card-body">
+          <div class="row marl">
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="call" class="required">Call</label>
+            {{fellowship.call}}
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="fellowship_id" class="required">Fellowship ID</label>
+            {{fellowship.fellowship_id}}
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="title" class="required">Title</label>
+            {{fellowship.title}}
+            </div>
+            </div>
+              <div class="filter_col col-md-12">
+                <div class="form-group ">
+                  <label  class="required">Project Objectives Address</label>
+                  {{ fellowship.project_objectives }}
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                  <div class="form-group ">
+                    <label for="exampleInputEmail1" class="required">Summary </label>
+                    {{ fellowship.summary }}
+                  </div>
+                </div>
+                {% comment %}
+              <div class="filter_col col-md-4">
+                <div class="form-group ">
+                  <label for="exampleInputEmail1" class="required">Leads{% if fellowship_form.lead.field.required %}<span
+                      class="error_marker" style="color:red">*</span>{% endif %}</label>
+                  <select name="lead" class="form-control" placeholder="Lead" required="" id="id_lead">
+                    <option value="" selected="">---------</option>
+                    {% for lead in leads %}
+                    <option value="{{lead.id}}" {% ifequal fellowship_obj.lead.id lead.id %}selected{% endifequal %}>
+                      {{lead.first_name}} {{lead.last_name}}</option>
+                    {% endfor %}
+                  </select>
+                  <span class="error" id="id__lead">{{ fellowship_form.lead.errors }}</span>
+                </div>
+              </div>
+              {% endcomment %}
+
+
+
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">Keywords</label>
+                  {{ fellowship.keywords }}
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">Budget</label>
+                  {{ fellowship.budget }}
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">Start Date</label>
+                  {{ fellowship.start_date }}
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">End Date</label>
+                  {{ fellowship.end_date }}
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">New End Date</label>
+                  {{ fellowship.new_end_date }}
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">Duration</label>
+                  {{ fellowship.duration }}
+                </div>
+              </div>
+              <div class="filter_col col-12">
+                <div class="form-group">
+                  <label for="id_sattus">Theme</label>
+                  {{ fellowship.theme }}
+                </div>
+              </div>
+              <div class="filter_col col-12">
+                <div class="form-group">
+                  <label for="id_sattus">Value Chain/Commodity Focus</label>
+                  {{ fellowship.value_chain }}
+                </div>
+              </div>
+
+
+
+
+                <div class="filter_col col-4">
+                  <div class="form-group">
+                    <label for="id_sattus">PI</label>
+                    {{ fellowship.pi }}
+                  </div>
+                </div>
+
+
+
+
+                <div class="filter_col col-4">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Students </label>
+                    <ul>
+                      {% for user in users %}
+                          {% if user in fellowship_obj.users.all %} 
+                              <li>{{user.get_full_name}}</li>
+                          {% endif %}
+                      {% endfor %}
+                      <ul>
+                  </div>
+                </div>
+                <div class="filter_col col-4">
+                  <div class="form-group">
+                    <label for="id_sattus">Approval Status</label>
+                    {{ fellowship.approval_status }}
+                  </div>
+                </div>
+                <div class="filter_col col-12">
+                    <div class="form-group">
+                      <label for="id_sattus">Collaborators</label>
+                      {{ fellowship.collaborators }}
+                    </div>
+                  </div>
+                <div class="filter_col col-12">
+                  <div class="form-group">
+                    <label for="id_sattus">Has reports</label>
+                    {{ fellowship.has_reports }}
+                  </div>
+                </div>
+
+                {% comment %}
+                <div class="filter_col col-12">
+                  <div class="form-group">
+                    <label>Keywordss</label>
+                    <div class="txt-box-div" id="tag-div"><input type="text" name="tags" id="tags_1"
+                        value="{% for t in fellowship_obj.tags.all %}{{t.name}}, {% endfor %}" class="tags" />
+                    </div>
+                  </div>
+                </div>
+                {
+                <div class="filter_col col-md-12">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Attachment</label>
+                    <input type="file" name="account_attachment">
+                    {% if fellowship_obj.account_attachment.count %}
+                    {% for attachment in fellowship_obj.account_attachment.all %}
+                    <div id="attachment{{attachment.id}}" class="mt-2">
+                      <a target="_blank" href="{{ attachment.attachment.url }}">{{ attachment.file_name }}</a>
+                      {% if not attachment.created_by.role == 'ADMIN' or attachment.created_by.role == request.user.role %}
+                      <a class="action btn primary_btn" onclick="remove_attachment({{attachment.id}})">X</a>
+                      {% endif %}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    <span class="error"></span>
+                  </div>
+                </div>
+                {% endcomment %}
+              </div>
+            <div class="col-md-12">
+              <!-- <div class="row marl buttons_row form_btn_row text-center">
+                <button class="btn btn-default save" type="submit" id="call_save">Save</button>
+                <a href="{% url 'fellowship:list' %}" class="btn btn-default clear" id="create_user_cancel">Cancel</a>
+              </div> -->
+            </div>
+          </div>
+          </div>
+      <!--end of card body-->
+      </div>
+    </div>
+    <input type="hidden" id="save_new_form" name="savenewform">
+
+  <!-- overview ends here -->
+
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-9">
+      <table class="customTable">
+          <thead>
+              <tr><th>BY</th><th>COMMENT</th></tr>
+          </thead>
+          <tbody>
+          {% for comment in fellowship.fellowship_comments.all %} 
+              <tr><td>{{ comment.created_by }}</td><td>{{ comment.comment }}</td></tr>
+          {% endfor %}
+          </tbody>
+      </table>
+    </div>
+
+    <div class="col-md-9">
+      <table>
+      {{ comments_form }}
+      </table>
+    </div>
+
+    <div class="col-md-12">
+      <div class="row marl buttons_row form_btn_row text-center">
+        <button class="btn btn-default save" type="submit" id="call_save">Save</button>
+        <a href="{% url 'fellowship:list' %}" class="btn btn-default clear" id="create_user_cancel">Cancel</a>
+      </div>
+    </div>
+
+  </div>
+
+
+
+</form>
+
+{% endblock %}
+
+{% block run_jquery %}
+$('#id_fellowship').val("{{ fellowship.id }}").closest('tr').hide()
+$('#id_created_by').val("{{ user.id }}").closest('tr').hide()
+{% endblock %}

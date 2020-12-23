@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+    {% block extralinks %}
+        <link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+        <style>
+            .opacity_block {
+                opacity: 0.2;
+            }
+        </style>
+    {% endblock extralinks %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'project_management:projectlist'   %}">Projects</a></li>
+            <li class="breadcrumb-item active">View</li>
+        </ol>
+    </nav>
+    <!-- CASE VIEW STARTS -->
+    <div class="main_container" id="maincontainer">
+        <div class="overview_form_block row marl justify-content-center">
+            <div class="col-md-10" id="opacity_block">
+                <div class="card">
+                    <div class="card-header" id="datashow">
+                        <div class="card-title text-center">
+                            <h5>
+                                <span class="float-left title">Overview</span>
+                                <span class="" style="margin-top: 0px">
+                <div class="dropdown buttons_row text-right">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    {% if perms.project_management.view_projectmanagement %}
+                        <li><a class="dropdown-item" href="{% url 'project_management:edit_project' projectrecord.pk %}">Edit</a></li>
+                    {% endif %}
+
+                  </ul>
+                </div>
+
+              </span>
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row marl">
+                            <div class="col-md-10">
+                                <h4>Project details</h4>
+                                <dl>
+
+                                    <dt>Project Title</dt>
+                                    <dd>{{ projectrecord.project_title }}</dd>
+
+                                    <dt>Ruforum Grant Number:</dt>
+                                    <dd>{{ projectrecord.ruforum_grant_number }}</dd>
+
+                                    <dt>Lead institution:</dt>
+                                    <dd>{{ projectrecord.lead_institution }}</dd>
+
+                                    <dt>Contact Person at RUforum:</dt>
+                                    <dd>{{ projectrecord.contact_person_at_RUFORUM }}</dd>
+
+                                    <dt>Contact Person from lead institution:</dt>
+                                    <dd>{{ projectrecord.contact_person_from_lead_institution_if_not_RUFORUM }}</dd>
+
+                                    <dt>Partners:</dt>
+                                    <dd>{{ projectrecord.partners }}</dd>
+
+                                    <dt>Start Date:</dt>
+                                    <dd>{{ projectrecord.start_date }}</dd>
+
+                                    <dt>End Date:</dt>
+                                    <dd>{{ projectrecord.end_date }}</dd>
+
+                                    <dt>New End Date:</dt>
+                                    <dd>{{ projectrecord.new_end_date }}</dd>
+
+                                    <dt>Project Status:</dt>
+                                    <dd>{{ projectrecord.project_status }}</dd>
+
+                                    <dt>Project Duration:</dt>
+                                    <dd>{{ projectrecord.project_duration }}</dd>
+
+                                    <dt>Donor Currency:</dt>
+                                    <dd>{{ projectrecord.donor_currency }}</dd>
+
+                                    <dt>Total Project Budget:</dt>
+                                    <dd>{{ projectrecord.total_project_budget_original_currency }}</dd>
+
+                                    <dt>Total Budget Us:</dt>
+                                    <dd>{{ projectrecord.total_budget_us }}</dd>
+
+                                    <dt>Total Budget Received from Donor to RUFORUM:</dt>
+                                    <dd>{{ projectrecord.total_budget_received_from_donor_to_ruforum }}</dd>
+                                    <dt>Ruforum Secretariate staff time:</dt>
+                                    <dd>{{ projectrecord.ruforum_secretariat_staff_time }}</dd>
+
+                                    <dt>Annual Budget available:</dt>
+                                    <dd>{{ projectrecord.annual_budget_available }}</dd>
+
+                                    <dt>Project Goals:</dt>
+                                    <dd>{{ projectrecord.project_goal }}</dd>
+
+                                    <dt>Project Objectives:</dt>
+                                    <dd>{{ projectrecord.project_objectives }}</dd>
+
+                                    <dt>Reporting Frequency:</dt>
+                                    <dd>{{ projectrecord.reporting_frequency }}</dd>
+
+
+                                </dl>
+                                <dl>
+
+
+                                    <dt>Project Proposal:</dt>
+                                    {% if projectrecord.project_proposal %}
+                                        <dd><a href="{{ project.project_proposal.url }}" target="blank">{{ project.project_proposal }}</a></dd>
+                                    {% endif %}
+
+                                    </div>
+
+
+                                </dl>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+     <br clear="all">
+    </div>
+
+
+
+
+{% endblock %}
+<br clear="all">

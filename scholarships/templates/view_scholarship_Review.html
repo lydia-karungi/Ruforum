@@ -1,0 +1,543 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% block extralinks %}
+{% load crispy_forms_tags %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'scholarships:list' %}">Scholarships</a></li>
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">Overview</span>
+              <span class="" style="margin-top: 0px">
+
+                <div class="dropdown buttons_row">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    {% if request.user.role == "ADMIN" or request.user.role == "Grants Managers"  or request.user.is_superuser %}
+                    <li><a href="{% url 'scholarships:edit_scholarship' application_record.pk %}">Edit</a></li>
+                    {% endif %}
+                    <li><a class="dropdown-item" href="{% url 'scholarships:print_scholarship' application_record.id %}"
+                      target="blank">print</a></li>
+                  </ul>
+                </div>
+
+              </span>
+            </h5>
+          </div>
+          </div>
+          <div class="card-body" id="datashow">
+          <div class="row marl">
+              <div class="col-md-9">
+              <h4 class="text-center">{{application_record.last_name}}, {{application_record.first_name}}'s application details</h4>
+              <dl>
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="col-auto">
+                      <div class="avatar-wrapper" data-tippy-placement="bottom" title="Passport Photo">
+                        {% if application_record.passport_photo %}
+                        <img alt="Passport Photo" class="profile-pic" src="{{application_record.passport_photo.url}}" />
+                        {% else %}
+                          <img alt="" class="profile-pic" src="{% static 'images/user.png'%}"/>
+                          {% endif %}
+                          <div class="upload-button"></div>
+
+                      </div>
+                  </div>
+                </div>
+                  <div class="col-md-9">
+                    <b>Last Name:</b>
+                    {{application_record.last_name}}<br>
+                    <b>First Name:</b>
+                    {{application_record.first_name}}<br>
+                    <b>Nationality:</b> {{application_record.otherscholarshipapplication.get_country_of_residence_display}}<br>
+                    <b>Gender:</b> {{application_record.user.get_gender_display}}<br>
+                    <b>Marital Status:</b> {{application_record.otherscholarshipapplication.get_marital_status_display}}<br>
+                    <b>Date Of Birth:</b> {{application_record.date_of_birth}}<br>
+                    <b>Place Of Birth:</b> {{application_record.otherscholarshipapplication.place_of_birth}}<br>
+                    <b>
+                      Telephone contact:</b> {{application_record.otherscholarshipapplication.telephone_contacts}}<br>
+                      <b>
+                        Email:</b> {{application_record.otherscholarshipapplication.contact_email}}<br>
+                        <b>Residence contact address:</b> {{application_record.otherscholarshipapplication.residence_contact_address}}<br>
+
+                        <!--end of applicant's data-->
+                        <h3>Applicant Expression of Study Interest</h3>
+
+
+                  <dt>Name of University:</dt>
+                  <dd>{{application_record.otherscholarshipapplication.name_of_university}}</dd>
+
+                  <dt>Programme applied for:</dt>
+                  <dd>{{application_record.programme_applied_for}}</dd>
+
+                  <dt>Scholarship Call ID:</dt>
+                  <dd>{{application_record.call}}</dd>
+                   <h3>Educational Data</h3>
+                   {% if application_record.othereducation_set.all|length > 0 %}
+              {% for row in application_record.othereducation_set.all %}
+              <dl>
+
+                   <dt>Record: {{ forloop.counter }}</dt>
+                  <dt>Institution:</dt>
+                  <dd>{{row.institution}}</dd>
+                  <dt>Qualification:</dt>
+                  <dd>{{row.qualification}}</dd>
+                  <dt>Major:</dt>
+                  <dd>{{row.major}}</dd>
+                  <dt>Score:</dt>
+                  <dd>{{row.total_score}}</dd>
+                  <dt>Country:</dt>
+                  <dd>{{row.get_country_display}}</dd>
+
+                  <dt>Dates From:</dt>
+                  <dd>{{row.date_from}}</dd>
+
+                  <dt>Dates To:</dt>
+                  <dd>{{row.date_to}}</dd>
+                  <dt>Academic Document</dt>
+                  <dd>
+                    {% if row.file %}
+                    <a href="{{row.file.url}}" target="blank">{{row.file}}</a>
+                    {% else %}
+                    No Academic Document attached
+                    {% endif %}
+                  </dd>
+              </dl>
+              {% endfor %}
+              {% else %}
+              <h6 class="text-center">No Education Records Found</h6>
+              {% endif %}
+              <h3>Research Projects</h3>
+              {% if publications|length > 0 %}
+              {% for row in publications %}
+              <dl>
+                <dt>Record: {{ forloop.counter }}</dt>
+                  <dt>Level:</dt>
+                  <dd>{{row.code}}</dd>
+
+                  <dt>Particular:</dt>
+                  <dd>{{row.particular}}</dd>
+
+                  <dt>Title:</dt>
+                  <dd>{{row.title}}</dd>
+
+
+                  <dt>Description:</dt>
+                  <dd>{{row.description|linebreaks}}</dd>
+
+              </dl>
+              {% endfor %}
+              {% else %}
+              <h6 class="text-center">No Research Projects Records Found</h6>
+              {% endif %}
+
+              <h3>Publications</h3>
+              {% if publication_papers|length > 0 %}
+              {% for row in publication_papers %}
+              <dl>
+                <dt>Record: {{ forloop.counter }}</dt>
+                  <dt>Title:</dt>
+                  <dd>{{row.title}}</dd>
+
+                  <dt>published papers:</dt>
+                  <dd>
+                    {% if row.published_file %}
+                    <a href="{{referee.published_file.url}}">{{row.published_file}}</a>
+                    {% else %}
+                    No published papers
+                    {% endif %}
+
+                  </dd>
+
+              </dl>
+              {% endfor %}
+              {% else %}
+              <h6 class="text-center">No publication Records Found</h6>
+                  {% endif %}
+                  <h3>Employment History</h3>
+                  {% if application_record.employmenthistory_set.all|length > 0 %}
+                  {% for row in application_record.employmenthistory_set.all %}
+                  <dl>
+                    <dt>Record: {{ forloop.counter }}</dt>
+                      <dt>Oranisation</dt>
+                      <dd>{{row.organisation}}</dd>
+                      <dt>Address</dt>
+                      <dd>{{row.organisation_address}}</dd>
+
+                      <dt>Employed From</dt>
+                      <dd>{{row.employed_from}}</dd>
+
+                      <dt>Employed To</dt>
+                      <dd>{{row.employed_to}}</dd>
+
+
+                      <dt>Reason for Leaving</dt>
+                      <dd>{{row.reason_for_leaving|linebreaks}}</dd>
+
+                  </dl>
+                  {% endfor %}
+                  {% else %}
+                  <h6 class="text-center">No Employment History Records Found</h6>
+                  {% endif %}
+                  <dt>Work Experience</dt>
+                  <dd>
+                    {% if application_record.otherscholarshipapplication.experience %}
+                    {{application_record.otherscholarshipapplication.experience}}
+                    {% else %}
+                    No Work Experience
+                    {% endif %}
+
+                  </dd>
+                  <h3>Research Interest</h3>
+
+                  <dt>Possible research interest/Topic:</dt>
+                  <dd>{{application_record.otherscholarshipapplication.research_experience|linebreaks}}</dd>
+
+                  <dt>Research Location</dt>
+                  <dd>{{application_record.otherscholarshipapplication.get_research_location_display}}</dd>
+
+
+                  <dt>Reason for selecting the above location:</dt>
+                  <dd>{{application_record.otherscholarshipapplication.research_location_reason}}</dd>
+                  <h3>Employer Support</h3>
+                  <dt>Full support by Employer to undertake graduate studies through full release:</dt>
+                  <dd>{{application_record.otherscholarshipapplication.employer_support|yesno:"Yes,No"}}</dd>
+                  <dt>letter of no objection/endorsement</dt>
+                  <dd>
+                    {% if application_record.otherscholarshipapplication.support_evidence %}
+                    <a href="{{application_record.otherscholarshipapplication.support_evidence.url}}" target="blank">{{application_record.otherscholarshipapplication.support_evidence}}</a>
+                    {% else %}
+                    No letter attached
+                    {% endif %}
+
+                  </dd>
+                  <h3>Additional funding</h3>
+                  <dt>Have any additional funding</dt>
+                  <dd>{{application_record.otherscholarshipapplication.have_additional_funding|yesno:"Yes,No"}}</dd>
+                    <dt>Funding source</dt>
+                    <dd>
+                      {% if application_record.otherscholarshipapplication.specify_funding_type %}
+                      {{application_record.otherscholarshipapplication.specify_funding_type}}
+                      {% else %}
+                      No funding source
+                      {% endif %}
+                    </dd>
+                    <dt>Funding Type</dt>
+                    {% if application_record.otherscholarshipapplication.funding_type %}
+                    {{application_record.otherscholarshipapplication.funding_type}}
+                    {% else %}
+                    No funding source/not specified
+                    {% endif %}
+                    <dt>Already Funded </dt>
+                    <dd>{{application_record.otherscholarshipapplication.already_funded|yesno:"Yes,No"}}</dd>
+                    <dt>Amount Provided (US$)</dt>
+                    {{application_record.otherscholarshipapplication.amount_provided}}
+                    <h3>Referees</h3>
+                    {% if referees|length > 0 %}
+                    {% for referee in referees %}
+
+                    <dl>
+                      <dt>Referee {{forloop.counter}}</dt>
+                      <dd><b>Names :</b>{{referee.referee_names}}</dd>
+                      <dd><b>Addrees :</b>{{referee.referee_address}}</dd>
+                      <dd><b>Contact :</b>{{referee.contact_details}}</dd>
+                      <dd><b>Reference Letter :</b>
+                        {% if referee.file %}
+                        <a href="{{referee.file.url}}">{{referee.file}}</a>
+                        {% else %}
+                        No reference Letter
+                        {% endif %}
+                      </dd>
+                  </dl>
+
+                    {% endfor %}
+                    {% else %}
+                    <h6 class="text-center">No Referees Provided</h6>
+                    {% endif %}
+                   <dt>Was English the language of instruction in High school</dt>
+                   <dd>{{application_record.otherscholarshipapplication.english_in_high_school|yesno:"Yes,No"}}</dd>
+                   <dt>How the applicant learned about the call</dt>
+                   <dd>{{application_record.get_scholarship_call_source_display}}</dd>
+                   <h3>Research Concept Note</h3>
+                   {% if application_record.otherscholarshipapplication.research_concept_note %}
+                   <p><a href="{{application_record.otherscholarshipapplication.research_concept_note.url}}" target="blank">{{application_record.otherscholarshipapplication.research_concept_note}}</a></p>
+                   {% else %}
+                   No Concept paper
+                   {% endif %}
+                  </div>
+
+                </div>
+
+
+              </dl>
+
+              </div>
+          </div>
+          </div>
+
+
+      {% if request.user.is_superuser or request.user.role == 'ADMIN' or request.user.role == "Grants Managers" or request.user == review.reviewed_by or perms.scholarships.make_scholarship_permissions %}
+      <!-- Reviews Section starts-->
+      <div class="card-header" id="datashow">
+        <div class="panel-heading card-title view-pad">
+          <div class="spinner-border  text-primary" id="spinner"></div>
+          <h5>Reviews</h5>
+        </div>
+        </div>
+        <div class="card-body">
+        <div class="row">
+          <div class="col-md-12">
+
+
+
+
+                <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+
+                  <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Score</th>
+                        <th>Reviewer</th>
+                        <th>Recommendation</th>
+                        <th>Review Form</th>
+                        <th>Concept Note</th>
+                        <th >Comments</th>
+                    </tr>
+                  </thead>
+                  {% for review in reviews %}
+                    <tr>
+                      <td>{{review.reviewed_on|date:'d/m/Y'}}</td>
+                      <td>{{review.get_total_marks}}</td>
+                      <td>{{review.reviewer}}</td>
+                      <td>{{review.get_recommendation_display}}</td>
+                      <td>
+                        {% if review.review_form %}
+                        <a href="{{ review.review_form.url }}"
+                                              target="blank" >View</a>
+                        {% else %}
+                        No Form 
+                        {% endif %}
+                      </td>
+                      <td>
+                        {% if review.concept_note %}
+                        <a href="{{ review.concept_note.url }}"
+                                              target="blank" >View</a>
+                        {% else %}
+                        No Form 
+                        {% endif %}
+                      </td>
+                      <td>{{review.comment}}</td>
+                    </tr>
+                    {% endfor %}
+                     <tfoot>
+                      <tr>
+                        <th>
+                          Average Score
+                        </th>
+                        <th>
+                          {{average_score.mark__avg}}
+                        </th>
+                        <th colspan="3">
+                          {% if application_record.selected_for_funding == True %}
+                          Selected for fundind
+                          {% elif application_record.selected_for_funding == False %}
+                          Application Rejected
+                          {% else %}
+                          Decision has not been made yet
+                          {% endif %}
+
+                        </th>
+                        <th>
+                          {{application_record.selected_for_funding_comments}}
+                        </th>
+                        <th>
+                          <a class="btn primary_btn decision" data-id="{{application_record.id}}" style="color:white;" data-toggle="modal" data-target="#approveGrantApplicationmodel" >Decision
+                            </button>
+                        </th>
+                      </tr>
+                    </tfoot>
+
+                </table>
+              </div>
+
+
+
+
+          </div>
+        </div>
+        <div class="modal fade" id="Reviews_Cases_Modal" role="dialog" data-keyboard="false" data-backdrop="static">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Update Your Review</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+              </div>
+              <form id="review_edit_form" method="POST">
+                <div class="modal-body">
+                  <div class="form-group">
+                    <textarea class="form-control mentions" textarea cols="40" rows="3" id="id_editreview"
+                      name="review" placeholder="Submit Your Reviews" style="color:black;"></textarea><span>
+                      <p id="ReviewEditError" style="display:none; color:red"></p>
+                    </span>
+                    <input type="hidden" value="{{ application.id }}" name="applicationid">
+                    <input type="hidden" value="" name="reviewid" id="reviewid">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-default save" id="review_edit" type="submit">Update</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Reviews Section Ends-->
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+</div>
+<br clear="all">
+  <!--model to handle fellowship application deletion confirmation-->
+<!-- Modal -->
+<div class="modal fade" id="approveGrantApplicationmodel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title text-center" id="exampleModalLabel">Scholarship Application Decision</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="text-center">Take Scholarship Application Decision.</p>
+
+    </div>
+    <div class="modal-footer text-center">
+      <button type="button" class="btn btn-danger " data-dismiss="modal">Cancel</button>
+      <button type="button" data-id="{{application_record.id}}" data-toggle="modal" data-target="#reject_application_modal" data-dismiss="modal"   class="btn btn-primary">Reject</button>
+      <a type="button" id="approve_scholarship_application" href="{% url 'scholarships:approve_scholarship' application_record.pk  %}" class="btn btn-success">Approve</a>
+    </div>
+  </div>
+</div>
+</div>
+        <!-- Reviews Section Ends-->
+
+        <div class="modal fade" id="reject_application_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title text-center" id="exampleModalLabel">Scholarship Application Decision</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+
+                <form id="reject_form" method="POST">
+                  <input type="hidden" name="selected_for_funding" value="False"/>
+                  {% csrf_token %}
+                  <div class="row marl">
+                    <div class="filter_col col-12">
+
+                      <div class="form-group">
+                        <label for="id_sattus">Comment{% if reject_form.selected_for_funding_comments.field.required %}<span
+                            class="error">*</span>{% endif %}</label>
+                        {{ reject_form.selected_for_funding_comments }}
+                        <span class="error" id="id__budget">{{ reject_form.selected_for_funding_comments.errors }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  </form>
+              </div>
+              <div class="modal-footer text-center">
+                <button type="button" class="btn btn-danger " data-dismiss="modal">Cancel</button>
+                <button type="button" id="reject_scholarship_application" class="btn btn-primary">Reject</button>
+              </div>
+            </div>
+          </div>
+          </div>
+
+
+  </div>
+</div>
+<br clear="all">
+{% endblock %}
+{% block js_block %}
+<script src="{% static 'js/scholarships/view_application.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script type="text/javascript">
+
+  //reject scholarship Application function
+//picked the id of the scholarship app and placed it in the data-id attribute if the url
+$("#spinner").hide();
+$('.decision').click(function () {
+   var item_di=$(this).attr("data-id");
+  // console.log(item_di);
+   $('#reject_scholarship_application').click(function(){
+
+    var formData = new FormData($("#reject_form")[0]);
+    $.ajax({
+      url: "/scholarships/"+item_di+"/reject",
+      type: "POST",
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      beforeSend: function () {
+    // ... your initialization code here (so show loader) ...
+    $("#spinner").show();
+     },
+      success: function (response) {
+        $("#spinner").hide();
+        if(response.errormessage != null){
+        swal({text:response.errormessage,icon:"error"}).then(() =>{
+        window.location.href="{% url 'scholarships:view_scholarship_review' application_record.id  %}"});
+        }else{
+          swal({text:response.success_message,icon:"success"}).then(() =>{
+        window.location.href="{% url 'scholarships:reviewed_scholarships_list'  %}"});
+        }
+
+
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        console.log(errorThrown);
+        $("#spinner").hide();
+            swal({
+          text: textStatus,
+          icon: "An error occured",
+});
+        }
+
+    });
+  });
+
+ });
+
+</script>
+
+
+
+{% endblock js_block %}

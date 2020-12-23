@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load paginate %}
+{% load thumbnail %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<style>
+    .form-group label{
+      font-weight: 800;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+<!-- main_container starts here -->
+<div class="main_container">
+  <!-- heading_create starts here -->
+  <div class="row marl">
+    <div class="col-lg-12 text-right">
+      <span class="d-inline"><a class="primary_btn" href="#"><i class="fa fa-plus"></i>
+          Enroll students</a></span>
+    </div>
+  </div>
+  <div class="filter_row list_filter_row row marl">
+    <div class="col-md-12">
+      <div class="card">
+
+          <form id="contacts_filter" action="" method="POST">
+              {% csrf_token %}
+            <div class="card-header text-center">
+              <div class="card-title">Filters</div>
+              </div>
+              <div class="card-body">
+              <div class="row marl">
+                <div class="filter_col col-md-2">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">FIRST NAME</label>
+                    <input type="text" class="form-control" placeholder="First Name" name="first_name"
+                      value="{{request.POST.first_name}}">
+                  </div>
+                </div>
+                <div class="filter_col col-md-2">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">LAST NAME</label>
+                      <input type="text" class="form-control" placeholder="First Name" name="last_name"
+                        value="{{request.POST.last_name}}">
+                    </div>
+                  </div>
+                  <div class="filter_col col-md-2">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Registration No.</label>
+                      <input type="text" class="form-control" placeholder="reg no." name="university_reg_no"
+                        value="{{request.POST.university_reg_no}}">
+                    </div>
+                  </div>
+                <div class="filter_col col-md-2">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Country</label>
+                    <select class="form-control" name="country">
+                      <option value="">
+                        Select country</option>
+                      {% for country in countries.0.1 %}
+                      <option value="{{country.0}}">
+                        {{country.1}}</option>
+                      {% endfor %}
+                      {% for country in countries.1.1 %}
+                      <option value="{{country.0}}">
+                        {{country.1}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+             
+                <div class="filter_col text-center col-3">
+                  <div class="form-group buttons_row">
+                    <button class="btn btn-primary save" type="submit">Search</button>
+                    <a href="{% url 'PI:student_list' %}" class="btn btn-default clear">Clear</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+      </div>
+    </div>
+  </div>
+  <!-- heading_create ends here -->
+  <!-- filter_row starts here -->
+  <div class="table_container_row row marl ">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title text-right">
+
+            <span class="float-left">Students - {% if show_pageitems %} {% show_pageitems %}{% else %}
+              {{student_obj_list|length}}{% endif %}</span>
+
+            <span class="filter_toggle">
+              <a href="#"  title="filter" class="primary_btn"><i class="fas fa-filter"></i></a>
+            </span>
+
+          </div>
+          </div>
+         
+
+
+<div class="table-responsive">
+            <table class="table table-hover table-bordered ">
+              <thead>
+                {% if student_obj_list|length > 0 %}
+                <tr>
+                  <th >Student No.</th>
+                  <th >Name</th>
+                  <th >Country</th>
+                  <th>University</th>
+                  <th>Registration NO.</th>
+                  <th class="text-center">Enroll</th>
+                </tr>
+                {% endif %}
+              </thead>
+              <tbody>
+                {% if per_page %}
+                {% paginate per_page student_obj_list %}
+                {% else%}
+                {% paginate 15 student_obj_list %}
+                {% endif %}
+                {% for student in student_obj_list %}
+                <tr style="text-align:center;">
+                  <td scope="row">{{student.student_no}}</td>
+                  <td><a href="#" data-toggle="modal" data-target="#exampleModalCenter_contact{{contact.id}}">{{contact.first_name}}
+                    {{student.user.first_name}}  {{student.user.last_name}}</a></td>
+                  <td>
+                    {{student.user.get_country_display}}
+                  </td>
+                  <td>
+                   {{student.university}}
+                  </td>
+                  <td>
+                    {% if student.university_reg_no %}
+                    {{student.university_reg_no}}
+                    {% else %}
+                    Not Specified
+                    {% endif %}
+                  </td>
+                  <td class="actions">
+                      <a href="" data-id="{{student.pk}}" class="btn btn-sm btn-info edit sdtenroll" title="Enroll" data-toggle="modal" data-target="#enrollstudentmodel"
+                                  ><i class="fa fa-plus" aria-hidden="true"></i></a>
+                      
+                 
+                  </td>
+                </tr>
+                {% endfor%}
+              </tbody>
+            </table>
+</div>
+</div>
+          {%ifequal student_obj_list|length 0 %}
+          <h6 class="text-center">No Contact Records Found</h6>
+          {%endifequal%}
+          <div class="marl row text-center">
+            {% show_pages %}
+          </div>
+          </div>
+    <br clear="all">
+  </div>
+  <!-- filter_row ends here -->
+  <!-- Modal -->
+<div class="modal fade" id="enrollstudentmodel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="exampleModalLabel">Enroll Student</h5>
+        <button type="button" class="close fg" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+     <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label for="Support_type" class="col-form-label">Grant:</label>
+          {{form.grant}}
+        </div>
+       </div>
+       <div class="col-md-6">
+        <div class="form-group">
+          <label for="Support_type" class="col-form-label">Support Type:</label>
+          {{form.Support_type}}
+        </div>
+       </div>
+       <div class="col-md-6">
+        <div class="form-group">
+          <label for="Support_type" class="col-form-label">Year of Study:</label>
+          {{form.study_year}}
+         
+        </div>
+        <input type="hidden" class="student_id" />
+       </div>
+     </div>
+
+      </div>
+      <div class="modal-footer text-center">
+        <button type="button" class="btn btn-danger fg" data-dismiss="modal">Cancel</button>
+        <button type="button" id="enrollbtn" class="btn btn-primary enroll">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--end of model-->
+
+
+
+{%endblock%}
+{% block js_block %}
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('.assigned_users').select2();
+    $(".filter_toggle").click(function () {
+      $(".list_filter_row").toggle();
+    });
+  });
+
+  search = "{{search}}"
+
+  if (search == 'True') {
+    $(".list_filter_row").show();
+  }
+  $('.sdtenroll').click(function () {
+
+   var id =$(this).attr("data-id");
+    
+    $(".student_id").val(id);
+   $('.fg').click(function(){
+    window.location.href="{% url 'PI:student_list' %}";
+   });
+   console.log(id);
+
+  $('.enroll').click(function (e) {
+      
+      var support=$("#id_Support_type").val();
+      var study_year=$("#id_study_year").val();
+      var stud_id=$('.student_id').val();
+      var grant_id =$("#id_grant").val();
+      //console.log(std_id);
+     
+    const url ="/PI/student/enrollment/";
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+        'student':stud_id,
+        'Support_type':support,
+        'study_year':study_year,
+        'grant':grant_id,
+        
+      },
+      success: function () {
+        //ToDO: show a success notification
+       window.location.href="{% url 'PI:student_list' %}"
+      }
+    });
+    return false; //<---- move it here
+  });
+});
+
+
+  $("a[rel='page']").click(function (e) {
+    e.preventDefault();
+    $('#contacts_filter').attr("action", $(this).attr("href"));
+    $('#contacts_filter').submit();
+  });
+</script>
+{% endblock js_block %}

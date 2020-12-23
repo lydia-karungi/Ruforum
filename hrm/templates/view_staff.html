@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% load paginate %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'hrm:staff_list' %}">Staffs</a></li>
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">Overview</span>
+              <span class="" style="margin-top: 0px">
+
+                <div class="dropdown buttons_row">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url "hrm:edit_staff" staff_profilerecord.id %}">Edit</a></li>
+                  </ul>
+                </div>
+
+              </span>
+            </h5>
+          </div>
+            </div>
+            <div class="card-body">
+          <div class="row marl">
+              <div class="col-md-4">
+              <dl>
+
+                  <dt>User Account</dt>
+                  <dd>
+                    {{staff_profilerecord.user}}
+                  </dd>
+
+                  <dt>ID Number</dt>
+                  <dd>{{staff_profilerecord.id_number}}</dd>
+
+                  <dt>Date of Birth</dt>
+                  <dd>{{staff_profilerecord.birthday}}</dd>
+                  <dt>NSSF</dt>
+                  <dd>{{staff_profilerecord.nssf}}</dd>
+                  <dt>NHIF</dt>
+                  <dd>{{staff_profilerecord.nhif}}</dd>
+                  <dt>Job Title</dt>
+                  <dd>{{staff_profilerecord.role}}</dd>
+
+              </dl>
+              </div>
+              <div class="col-md-4">
+              <dl>
+                <dt>Department</dt>
+                <dd>{{staff_profilerecord.department}}</dd>
+                <dt> Emergency Contact Name</dt>
+                <dd>{{staff_profilerecord.emergency_contact_name}}</dd>
+                  <dt>Emergency Contact Number</dt>
+                  <dd>{{staff_profilerecord.emergency_contact_number}}</dd>
+                  <dt>Relationship</dt>
+                  <dd>{{staff_profilerecord.emergency_contact_relationship}}</dd>
+                  <dt>Start Date</dt>
+                  <dd>{{staff_profilerecord.start_date}}</dd>
+                  <dt>End Date</dt>
+                  <dd>{{staff_profilerecord.end_date}}</dd>
+
+              </dl>
+              </div>
+              <div class="col-md-4">
+                <dl>
+                  <dt>Leave Days</dt>
+                  <dd>{{staff_profilerecord.leave_days}}</dd>
+                  <dt>
+                    Sick days</dt>
+                  <dd>{{staff_profilerecord.sick_days}}</dd>
+                    <dt>Overtime allowed</dt>
+                    <dd>{{staff_profilerecord.overtime_allowed|yesno:"Yes,No"}}</dd>
+  
+  
+                </dl>
+                </div>
+        </div>
+
+</div>
+
+    </div>
+<br clear="all">
+  </div>
+  <br clear="all">
+
+</div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,459 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% load common_tags %}
+{% load humanize %}
+<!-- <a href=""><button class="btn btn-primary" type="button">Logout</button></a> -->
+<div class="row marl justify-content-center">
+  <div class="col-md-10 m-1">
+      {% if request.user == scholarship.user or request.user.role == "ADMIN" or request.user.is_superuser %}
+    <div class="card">
+      <div class="card-header">
+      <h3 class="text-center"><strong>Admin Dashboard</strong> <br><b>Dear {{user.last_name}} {{user.first_name}}</b></h3>
+      <h5>Welcome to the Ruforum Admin Dashboard, using this panel, you can manage the whole system from here.
+
+      </h5>
+      </div>
+      </div>
+      {% endif %}
+    <!-- count_blocks_row starts here -->
+    <div class="row count_blocks_row">
+      <div class="col-md-3">
+        <div class="item sky_blue">
+          <a href="">
+            <div class="title">Contacts</div>
+            <div class="count">{{contacts_count|intcomma}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="item green">
+          <a href="">
+            <div class="title">Calls</div>
+            <div class="count">{{calls_count|intcomma}}</div>
+          </a>
+          <!-- <div class="more"><a href="#">Go Live</a></div> -->
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="item red">
+          <a href="">
+            <div class="title">Grants</div>
+            <div class="count">{{grants_count|intcomma}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="item yellow">
+          <a href="">
+            <div class="title">Scholarships</div>
+            <div class="count">{{scholarships_count|intcomma}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- count_blocks_row ends here -->
+    <div class="count_blocks_row row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+          <div class="card-title text-center">
+            <h4><strong>Contacts per Group</strong></h4>
+          </div>
+        </div>
+          <div class="card-body">
+           
+         <!--put here a chart-->
+         <canvas id="myChart" width="400" height="200">
+
+         </canvas>
+          </div>
+        </div>
+      </div>
+    
+    </div>
+    <div class="count_blocks_row row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+          <div class="card-title text-center">
+            <h4><strong>Grant Calls</strong></h4>
+          </div>
+        </div>
+          <div class="card-body">
+           
+         <!--put here a chart-->
+         <canvas id="calls_chart" width="400" height="200">
+
+         </canvas>
+          </div>
+        </div>
+      </div>
+    
+    </div>
+    <div class="count_blocks_row row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+          <div class="card-title text-center">
+            <h4><strong>Scholarship Calls</strong></h4>
+          </div>
+        </div>
+          <div class="card-body">
+           
+         <!--put here a chart-->
+         <canvas id="calls_scholarship" width="400" height="200">
+
+         </canvas>
+          </div>
+        </div>
+      </div>
+    
+    </div>
+    <div class="count_blocks_row row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">
+          <div class="card-title text-center">
+            <h4><strong>Fellowship Calls</strong></h4>
+            <!-- <ul class="list-inline panel-actions">
+              <li><a href="#" id="panel-fullscreen" role="button" title="Toggle fullscreen"><i class="fa fa-user"></i></a></li>
+          </ul> -->
+          </div>
+        </div>
+          <div class="card-body">
+           
+         <!--put here a chart-->
+         <canvas id="calls_fellowship" width="400" height="200">
+
+         </canvas>
+          </div>
+        </div>
+      </div>
+    
+    </div>
+
+  </div>
+ 
+</div>
+
+<br clear="all">
+{% endblock %}
+{% block js_block %}
+<script type="text/javascript" src="{% static 'js/chart.min.js' %}"></script>
+<script type="text/javascript">
+
+  $(document).ready(function () {
+    $(".tag_class_opp").click(function () {
+      // $(".tag_class_opp").css('cursor', 'pointer')
+      url = ""
+      url = url + "?tag=" + $(this).attr('data-link')
+      window.location.href = url;
+    });
+
+    $(".tag_class_acc").click(function () {
+      // $(".tag_class_acc").css('cursor', 'pointer')
+      url = ""
+      url = url + "?tag=" + $(this).attr('data-link')
+      window.location.href = url;
+    });
+//contacts sections
+ var endpoint="/api/users"
+ var defaultData=[]
+ var labels=[]
+ var inactiveusers=[]
+ $.ajax({
+   method:"GET",
+   url:endpoint,
+   success:function(data){
+      console.log(data);
+     labels=data.labels;
+     defaultData=data.data;
+     inactiveusers=data.inactiveusers
+     var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+    type: 'horizontalBar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: '# of active users',
+            data: defaultData,
+            backgroundColor: 
+                '#007bff',
+            borderColor: 
+                '#fff',
+          
+            borderWidth: 1
+        },
+        {
+            label: '# of inactive users',
+            data: inactiveusers,
+            backgroundColor: 
+                '#6c757d',
+            borderColor: 
+                '#fff',
+          
+            borderWidth: 1
+        }]
+    },
+    options: {
+         scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                },
+                scaleLabel: {
+            display: true,
+            labelString: 'Group Names'
+          }
+                
+            }],
+
+        xAxes: [ {
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'users'
+          },
+          ticks: {
+            major: {
+              fontStyle: 'bold',
+              fontColor: '#FF0000'
+            }
+          }
+        } ]
+      
+        }
+
+    }
+});
+
+
+   },
+   error:function(error_data){
+     console.log(error);
+     console.log(error_data);
+   }
+ })
+//end of contacts section
+//calls section
+var endpoint="/api/calls"
+ var grants=[]
+ var grantlabels=[]
+ var scholarship=[]
+ $.ajax({
+   method:"GET",
+   url:endpoint,
+   success:function(data){
+      console.log(data);
+     grantlabels=data.grantlabels;
+     grants=data.grants;
+     scholarship=data.scholarshipapplications
+     var ctx = document.getElementById('calls_chart').getContext('2d');
+    var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+       labels: grantlabels,
+        datasets: [{
+           
+            label: 'Grant Call Applications',
+            data:grants,
+            backgroundColor: 
+                '#28a745',
+            borderColor: 
+                '#fff',
+          
+            borderWidth: 1
+        },
+       
+        ]
+    },
+    options: {
+         scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                },
+                scaleLabel: {
+            display: true,
+            labelString: 'Number of Applications'
+          }
+                
+            }],
+
+        xAxes: [ {
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Calls'
+          },
+          ticks: {
+            major: {
+              fontStyle: 'bold',
+              fontColor: '#FF0000'
+            }
+          }
+        } ]
+      
+        }
+
+    }
+});
+
+
+   },
+   error:function(error_data){
+     console.log(error);
+     console.log(error_data);
+   }
+ })
+
+//end of calls section
+var scholarship=[]
+ $.ajax({
+   method:"GET",
+   url:endpoint,
+   success:function(data){
+      console.log(data);
+     grantlabels=data.grantlabels;
+     scholarshiplable=data.scholarshiplabels;
+     scholarship=data.scholarshipapplications
+     var ctx = document.getElementById('calls_scholarship').getContext('2d');
+    var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+       labels: scholarshiplable,
+        datasets: [{
+           
+            label: 'Scholarship Call Applications',
+            data:scholarship,
+            backgroundColor: 
+                '#e83e8c',
+            borderColor: 
+                '#fff',
+          
+            borderWidth: 1
+        },
+       
+        ]
+    },
+    options: {
+         scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                },
+                scaleLabel: {
+            display: true,
+            labelString: 'Number of Applications'
+          }
+                
+            }],
+
+        xAxes: [ {
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Calls'
+          },
+          ticks: {
+            major: {
+              fontStyle: 'bold',
+              fontColor: '#FF0000'
+            }
+          }
+        } ]
+      
+        }
+
+    }
+});
+
+
+   },
+   error:function(error_data){
+     console.log(error);
+     console.log(error_data);
+   }
+ })
+
+//end of calls section
+var fellowship=[]
+var fellowshiplabel=[]
+ $.ajax({
+   method:"GET",
+   url:endpoint,
+   success:function(data){
+      console.log(data);
+      fellowshiplabel=data.fellowshiplabels;
+     fellowship=data.fellowships;
+     var ctx = document.getElementById('calls_fellowship').getContext('2d');
+    var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+       labels: grantlabels,
+        datasets: [{
+           
+            label: 'Fellowship Call Applications',
+            data:grants,
+            backgroundColor: 
+                '#fd7e14',
+            borderColor: 
+                '#fff',
+          
+            borderWidth: 1
+        },
+      
+        ]
+    },
+    options: {
+         scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                },
+                scaleLabel: {
+            display: true,
+            labelString: 'Number of Applications'
+          }
+                
+            }],
+
+        xAxes: [ {
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: 'Calls'
+          },
+          ticks: {
+            major: {
+              fontStyle: 'bold',
+              fontColor: '#FF0000'
+            }
+          }
+        } ]
+      
+        }
+
+    }
+});
+
+
+   },
+   error:function(error_data){
+     console.log(error);
+     console.log(error_data);
+   }
+ })
+
+//end of calls section
+
+
+
+});
+</script>
+{% endblock js_block %}

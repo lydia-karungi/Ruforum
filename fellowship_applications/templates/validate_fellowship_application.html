@@ -1,0 +1,431 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'fellowship_applicationss:list' %}">Fellowship Applications</a></li>
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">Overview</span>
+              <span class="" style="margin-top: 0px">
+                {% if request.user.role == "ADMIN" or request.user.role == "Grants Managers"  or request.user.is_superuser %}
+                <div class="dropdown buttons_row">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a href="{% url 'fellowship_applicationss:edit_application' application_record.id %}">Edit</a></li>
+                  </ul>
+                </div>
+                {% endif %}
+              </span>
+            </h5>
+          </div>
+          </div>
+          <div class="card-body">
+          <div class="row marl">
+            <div class="col-md-6">
+                    <div class="filter_col col-md-12" id="iname">
+                            <div class="form-group">
+                              <label class="application_field_label" for="id_title" data-name="title">Home Institution</label>
+                              <div class="application_field" id="title" data-name="title">{{ application_record.home_institute_name }}</div>
+                            </div>
+                          </div>
+                          <div class="filter_col col-md-12" id="iname">
+                            <div class="form-group">
+                              <label class="application_field_label" for="id_gender" data-name="gender">Place</label>
+                              <div class="application_field" id="gender" data-name="gender">{{ application_record.home_institute_place }}</div>
+                            </div>
+                          </div>
+                          <div class="filter_col col-md-12" id="iname">
+                            <div class="form-group">
+                              <label class="application_field_label" for="id_last_name" data-name="last_name">Faculty</label>
+                              <div class="application_field" id="last_name" data-name="last_name">{{ application_record.home_institute_faculty }}</div>
+                            </div>
+                          </div>
+                          <div class="filter_col col-md-12" id="iname">
+                            <div class="form-group">
+                              <label class="application_field_label" for="id_first_name" data-name="first_name">Department</label>
+                              <div class="application_field" id="first_name" data-name="first_name">{{ application_record.home_institute_department }}</div>
+                            </div>
+                          </div>
+
+                          <div class="filter_col col-md-12" id="iname">
+                            <div class="form-group">
+                              <label class="application_field_label" for="id_first_name" data-name="first_name">Letter of Release</label>
+                              <dd><a href="{{application_record.letter_of_release.url}}" download>{{application_record.letter_of_release}}</a></dd>
+                            </div>
+                          </div>
+
+
+            </div>
+            <div class="col-md-6">
+                    <div class="filter_col col-md-12" id="iname">
+                            <div class="form-group">
+                              <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Host Institution</label>
+                              <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.host_institute_name }}</div>
+                            </div>
+                          </div>
+                          <div class="filter_col col-md-12" id="iname">
+                            <div class="form-group">
+                              <label class="application_field_label" for="id_theme" data-name="theme">Host Place</label>
+                              <div class="application_field" id="theme" data-name="theme">{{ application_record.host_institute_place}}</div>
+                            </div>
+                          </div>
+                          <div class="filter_col col-md-12" id="iname">
+                            <div class="form-group">
+                              <label class="application_field_label" for="id_proposal_theme" data-name="proposal_theme">Faculty</label>
+                              <div class="application_field" id="proposal_theme" data-name="proposal_theme">{{ application_record.host_institute_faculty }}</div>
+                            </div>
+                          </div>
+                          <div class="filter_col col-md-12" id="iname">
+                            <div class="form-group">
+                              <label class="application_field_label" for="id_non_university_partners" data-name="non_university_partners">Department</label>
+                              <div class="application_field" id="non_university_partners" data-name="non_university_partners">{{ application_record.host_institute_department }}</div>
+                            </div>
+                          </div>
+
+
+            </div>
+
+            <div class="col-md-4">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Applicant</label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.first_name }} {{ application_record.last_name }}</div>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-4">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Title</label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.job_title }} </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-4">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Position</label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.position }} </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Area of specialization</label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.area_of_specialization }} </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Area of interest to provide teaching  support under the mobility</label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.area_of_interest }} </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Address  of the Exchange Fellow	</label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.address }} </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Contacts	</label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">Email 1: {{ application_record.email_1 }}  Email 2: {{ application_record.email_2 }} Telephone: {{ application_record.telephone }}</div>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">City</label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.city }} </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Country</label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.get_country_display }} </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="filter_col col-md-12" id="iname">
+                <div class="form-group">
+                  <label class="application_field_label" for="id_first_name" data-name="first_name">CV Attachment</label>
+                  <dd><a href="{{application_record.cv.url}}" download>{{application_record.cv}}</a></dd>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Subject Area</label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.subject_area }} </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-4">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Proposed Beginning of the visit </label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.proposed_begining }} </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-4">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Proposed End of the visit  </label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.proposed_end }} </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-4">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Duration  </label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.duration }} </div>
+              </div>
+            </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus"> Form of service to be rendered </label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.get_form_of_service_display }} </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Proposed value to add to the host university during the period of mobility (besides teaching, research and supervision)</label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.proposed_value }} </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Other activities </label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.other_activities }} </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Comment </label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.comment }} </div>
+              </div>
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="filter_col col-md-12" id="iname">
+              <div class="form-group">
+                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Motivation </label>
+                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.motivation }} </div>
+              </div>
+            </div>
+            </div>
+
+
+          </div>
+        </div>
+
+        <!-- Reviews Section starts-->
+        {% if perms.grants_applications.review_grant_applications %}
+        <div class="card-header" id="datashow">
+          <div class="panel-heading card-title view-pad">
+            <h5>Validation</h5>
+          </div>
+
+          <div class="card-body">
+          <div class="row">
+            <div class="col-md-12">
+
+              <form id="review_form" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row marl">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="id_score" class="required">Validated Home Institute
+                        {% if form.validated_home_institute.field.required %}<span class="error_marker"
+                          style="color:red">*</span>{% endif %}</label>
+                      {{ form.validated_home_institute}}
+                      <span class="error" id="id__other_universities">{{ form.validated_home_institute.errors }}</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="id_recommendation" class="required">Validated Host Institute
+                        {% if form.validated_host_institute.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                    {{ form.validated_host_institute}}
+                    <span class="error" id="id__title">{{ form.validated_host_institute.errors }}</span>
+                </div>
+                </div>
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="id_comments" class="required">Validated Letter of Release
+                        {% if form.validated_letter_of_release.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                    {{ form.validated_letter_of_release}}
+                    <span class="error" id="id__title">{{ form.validated_letter_of_release.errors }}</span>
+                </div>
+                </div>
+
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="id_review_form" class="required">Validated CV
+                        {% if form.validated_cv.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                    {{ form.validated_cv}}
+                    <span class="error" id="id__title">{{ form.validated_cv.errors }}</span>
+                </div>
+                </div>
+                <div class="col-md-12">
+                  <label for="id_review_form" class="required">Comment
+                    {% if form.compliance_comments.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                {{ form.compliance_comments}}
+                <span class="error" id="id__title">{{ form.compliance_comments.errors }}</span>
+                  </div >
+                  <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1" class="required">Compliant
+                          <span class="error_marker"
+                            style="color:red">*</span></label>
+                            {{ form.compliant}}
+                        <span class="error" id="id__project_budget">{{ applicationobj.compliant.errors }}</span>
+                      </div>
+                  </div>
+
+                  <div>
+                    <p id="ReviewError" style="display:none; color:red"></p>
+                  </div>
+                  </br>
+                  <div style="text-align:center;margin-top:6px;" class="buttons_row">
+                    <button class="btn btn-default save float-center" id="review_submit" type="submit">Submit</button>
+                  </div>
+                </div>
+                </div>
+
+                </div>
+              </form>
+              {% endif %}
+              <ul class="list-group" id="reviews_div">
+                {% for review in reviews %}
+                <li class="list-group-item list-row" id="review{{review.id}}">
+                  {% if request.user.is_superuser or request.user.role == 'ADMIN' or request.user == review.reviewed_by %}
+                  <div class="float-right right-container">
+                    <div class="list-row-buttons btn-group float-right">
+                      <button class="btn primary_btn btn-sm dropdown-toggle" data-toggle="dropdown"
+                        type="button">Actions <span class="caret"></span></button>
+                      <ul class="dropdown-menu text-center">
+                        <li>
+                          <a class="action" onclick="edit_review({{review.id}})">Edit</a>
+                        </li>
+                        <li>
+                          <a class="action" onclick="remove_review({{review.id}})">Remove</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  {% endif %}
+                  <div class="table-responsive">
+                  <table class="table table-hover">
+                    {% if forloop.first %}
+                    <thead>
+                      <tr>
+                          <th>Date</th>
+                          <th>Score</th>
+                          <th>Reviewer</th>
+                          <th>Recommendation</th>
+                          <th >Comments</th>
+
+                          <th>Form</th>
+                      </tr>
+                    </thead>
+                    {% endif %}
+                      <tr>
+                        <td>{{review.date|date:'d/m/Y'}}</td>
+                        <td>{{review.score}}</td>
+                        <td>{{review.reviewer}}</td>
+                        <td>{{review.get_recommendation_display}}</td>
+                        <td>{{review.comments}}</td>
+
+                        <td><a href="{{review.review_form.url}}" target="blank">Review Form</a></td></tr>
+                  </table>
+</div>
+                  <div class="stream-post-container" id="review_name{{review.id}}">
+                    <pre>{{ review.review }}</pre>
+                  </div>
+                  <div class="stream-container">
+                    <pre class="float-left">{{ review.reviewed_by }}</pre>
+                    <pre class="float-right date">{{ review.reviewed_on|date:'m/d/Y,  h:i:s A' }}</pre>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+         
+        </div>
+        <!-- Reviews Section Ends-->
+
+      </div>
+    </div>
+    <br clear="all">
+
+  </div>
+</div>
+
+{% endblock %}
+{% block js_block %}
+<script src="{% static 'js/grants_applications/view_fellowship_application.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script type="text/javascript">
+
+  
+
+
+</script>
+<script type="text/javascript">
+
+ 
+
+</script>
+<script src="{% static 'js/bootstrap-suggest.js' %}"></script>
+
+{% endblock js_block %}

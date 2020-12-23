@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load compress %}
+{% load thumbnail %}
+{% load navutils_tags %}
+
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ruforum</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    {% compress css %}
+   <link href="{% static 'css/main.scss' %}" type="text/x-scss" rel="stylesheet">
+    <link href="{% static 'css/mention.scss' %}" type="text/x-scss" rel="stylesheet">
+    {% endcompress %}
+  <!--  <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">-->
+    <link href="{% static "css/daterangepicker.css" %}" rel="stylesheet" type="text/css" />
+    <link href="{% static "css/jquery.comiseo.daterangepicker.css" %}" rel="stylesheet" type="text/css" />
+    <style>
+        .footer {
+          position: fixed;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+
+          background-color: white;
+          text-align: center;
+        }
+
+
+
+        body {
+
+
+        }
+        .fixed-top {
+
+    padding-top: 15px;
+}
+
+header .navbar .navbar-nav .nav-item a.active {
+    color: #fff!important;
+    border-bottom: 3px solid #fff;
+}
+
+.main_container {
+  background-color: #fff;
+}
+
+/* we could combine this and the rules for .main_container if that's not used anywhere else? */
+#mainbody {
+padding-top:10px;
+padding-bottom:10px;
+margin-bottom:55px;
+}
+
+
+#navbarSupportedContent {
+
+    color: #fff;
+    background-color: #89C43E;
+    font-size: .9em;
+    border-top: 3px solid #fff;
+    border-bottom: 10px solid #dcd3a3;
+    /*height:30px;*/
+
+}
+
+header .navbar .navbar-nav .nav-item a {
+
+ color: #fff!important;
+}
+.navbar-brand {
+
+    display: block;
+    position: absolute;
+    height: 64px;
+    width: 25%;
+    top: 0;
+    left: 1em;
+    z-index: 2;
+    padding: 10px;
+    background-color: #fff;
+    background-image: url("/static/images/ruforum-logo.png");
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    -webkit-border-radius: 0 0 15px 15px;
+    -moz-border-radius: 0 0 15px 15px;
+    -ms-border-radius: 0 0 15px 15px;
+    -o-border-radius: 0 0 15px 15px;
+    border-radius: 0 0 15px 15px;
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    -ms-box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    -o-box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    text-indent: -2000px;
+
+}
+header .navbar .navbar-nav.navbar-right .dropdown a.nav-link {
+    padding: 11px 15px;
+    border-bottom: 0px;
+}
+
+header .navbar .navbar-nav .nav-item a:hover {
+  color: yellow!important;
+  background-color: transparent;
+}
+
+header .navbar .navbar-nav .nav-item a {
+    color: #fff!important;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 10px 15px;
+    display: inline-block;
+    padding-top: 0px;
+    border-bottom: 0px;
+}
+
+header .navbar {
+    background: #fff;
+    border: none;
+    border: 1px solid #ddd;
+    padding: 0px;
+}
+
+#navMenu {
+  padding-top: 24px;
+
+}
+
+.dropdown-menu {
+  background-color: #00766F;
+  color: yellow!important;
+}
+
+    {% block head_css %}{% endblock %}
+
+        </style>
+    {% block extralinks %} {% endblock %}
+    {% block extrahead %}{% endblock %}
+  </head>
+  <body>
+
+        {% block content %}
+        {% endblock %}
+
+
+
+    <div class="footer">
+        <p>&copy; {% now "Y" %} RUFORUM</p>
+      </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   <script src="https://code.jquery.com/jquery-migrate-3.1.0.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment-with-locales.min.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="{% static "js/moment.js" %}" type="text/javascript"></script>
+    <script src="{% static "js/jquery.comiseo.daterangepicker.js" %}" type="text/javascript"></script>
+    <!--notify.js-->
+    <script src="{% static 'js/notify.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/notify.min.js' %}" type="text/javascript"></script>
+    {% include 'session_security/all.html' %}
+
+    {% block js_block %}
+    {% endblock js_block %}
+
+  </body>
+</html>

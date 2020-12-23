@@ -1,0 +1,13 @@
+{% extends 'root_email_template.html' %}
+
+{% block heading %}
+Dear {{ application.user }}
+{% endblock heading %}
+
+
+{% block content_body %}
+<p>This is to inform you that your application has been reviewed for compliance and will be submitted for technical review.</p>
+<p>Thank you for responding to this call and below is a comment from the reviewer. </p>
+<p>{{application.comment}}</p>
+<p>Scholarship Manager </p>
+{% endblock content_body %}

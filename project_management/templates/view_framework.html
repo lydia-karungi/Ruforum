@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+    {% block extralinks %}
+        <link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+        <style>
+            .opacity_block {
+                opacity: 0.2;
+            }
+        </style>
+    {% endblock extralinks %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'project_management:projectlist'   %}">Projects</a></li>
+            <li class="breadcrumb-item active">View</li>
+        </ol>
+    </nav>
+    <!-- CASE VIEW STARTS -->
+    <div class="main_container" id="maincontainer">
+        <div class="overview_form_block row marl justify-content-center">
+            <div class="col-md-10" id="opacity_block">
+                <div class="card">
+                    <div class="card-header" id="datashow">
+                        <div class="card-title text-center">
+                            <h5>
+                                <span class="float-left title">Overview</span>
+                                <span class="" style="margin-top: 0px">
+                <div class="dropdown buttons_row text-right">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    {% if perms.project_management.view_logicalframework %}
+                        <li><a class="dropdown-item" href="{% url 'project_management:edit_project_framework' projectrecord.pk %}">Edit</a></li>
+                    {% endif %}
+
+                  </ul>
+                </div>
+
+              </span>
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row marl">
+                            <div class="col-md-10">
+                                <h4>Project details</h4>
+                                <dl>
+
+                                    <dt>Project Title</dt>
+                                    <dd>{{ projectrecord.project }}</dd>
+
+                                    <dt>Overall Objectives:</dt>
+                                    <dd>{{ projectrecord.overall_objectives }}</dd>
+
+                                    <dt>What are the overall broader objectives to which the project will contribute?</dt>
+                                    <dd>{{ projectrecord.broader_objectives_to_which_the_project_will_contribute }}</dd>
+
+                                    <dt>What are the key indicators related to the overall objectives?</dt>
+                                    <dd>{{ projectrecord.project_objectives }}</dd>
+
+                                    <dt>What are the sources of information for these indicators?</dt>
+                                    <dd>{{ projectrecord.sources_of_information_to_indicators }}</dd>
+
+                                    <dt>What specific objective is the project intended to achieve to contribute to the overall objectives?</dt>
+                                    <dd>{{ projectrecord.specific_objective }}</dd>
+
+                                    <dt>What are the indicators that clearly show the objective of the action has been achieved?</dt>
+                                    <dd>{{ projectrecord.indicators_that_clearly_show_that_objective_has_been_achieved }}</dd>
+
+                                    <dt>What are the sources of information that exist or can be collected? What are the methods required to get this information?'</dt>
+                                    <dd>{{ projectrecord.sources_of_information_that_exist_or_can_be_collected }}</dd>
+
+                                    <dt>What factors and conditions outside the Beneficiarys responsibility are necessary to achieve that objective?(external conditions) Which risks should be taken into consideration?</dt>
+                                    <dd>{{ projectrecord.necessary_factors_outside_the_beneficiaries_responsibility }}</dd>
+
+                                    <dt>What are the expected results, Detail them.(The results are the outputs envisaged to achieve the specific objective)'</dt>
+                                    <dd>{{ projectrecord.expected_results }}</dd>
+
+                                    <dt>What are the indicators to measure whether and to what extent the action achieves the expected result?</dt>
+                                    <dd>{{ projectrecord.indicators_to_measure_expected_results }}</dd>
+
+                                    <dt>What are the sources of information that exist or can be collected? What are the methods required to get this information?</dt>
+                                    <dd>{{ projectrecord.sources_of_information_that_exist_or_can_be_collected }}</dd>
+
+                                    <dt>What external conditions must be met to obtain the expected results on schedule?</dt>
+                                    <dd>{{ projectrecord.external_conditions_for_expected_results }}</dd>
+
+                                    <dt>What are the key activities to be carried out and in what sequence in order to produce the expected results? please list the activities in order</dt>
+                                    <dd>{{ projectrecord.key_activities }}</dd>
+
+                                    <dt>What are the means required to implement these activities, e.g. personnel, equipment, training, studies, supplies, operational facilities, etc.</dt>
+                                    <dd>{{ projectrecord.means_required_to_carry_out_activities }}</dd>
+
+                                    <dt>What are the sources of information about action progress?</dt>
+                                    <dd>{{ projectrecord.sources_of_information_about_action_progress }}</dd>
+
+                                    <dt>What pre-conditions are required before the action starts?</dt>
+                                    <dd>{{ projectrecord.pre_conditions_required }}</dd>
+
+                                    <dt>What conditions outside the Beneficiarys direct control have to be met for the implementation of the planned activities?</dt>
+                                    <dd>{{ projectrecord.conditions_outside_beneficiaries_control }}</dd>
+
+                                </dl>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+     <br clear="all">
+    </div>
+
+
+
+
+{% endblock %}
+<br clear="all">

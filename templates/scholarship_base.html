@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load compress %}
+{% load thumbnail %}
+{% load navutils_tags %}
+
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ruforum</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    {% compress css %}
+   <link href="{% static 'css/main.scss' %}" type="text/x-scss" rel="stylesheet">
+    <link href="{% static 'css/mention.scss' %}" type="text/x-scss" rel="stylesheet">
+    {% endcompress %}
+  <!--  <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">-->
+    <link href="{% static "css/daterangepicker.css" %}" rel="stylesheet" type="text/css" />
+    <link href="{% static "css/jquery.comiseo.daterangepicker.css" %}" rel="stylesheet" type="text/css" />
+    <style>
+        .footer {
+          position: fixed;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+
+          background-color: white;
+          text-align: center;
+        }
+
+        .label-ok {
+          color: #fff;
+            background-color: #99c473;
+        }
+        .label-warning {
+            color: #fff;
+            background-color: #df7514;
+            -webkit-text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            -moz-text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            -ms-text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            -o-text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+        }
+        .label-error {
+            color: #fff;
+            background-color: #CA3C3C;
+            -webkit-text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            -moz-text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            -ms-text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            -o-text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+        }
+        .label {
+            display: inline-block;
+            min-width: 8em;
+            margin: .5em 1em;
+            padding: .2em 1em;
+            text-align: center;
+        }
+
+        body {
+    color: #494949;
+    background-color: #c8c484;
+    -webkit-box-shadow: 0 0 1em rgba(0,0,0,0.5);
+    -moz-box-shadow: 0 0 1em rgba(0,0,0,0.5);
+    -ms-box-shadow: 0 0 1em rgba(0,0,0,0.5);
+    -o-box-shadow: 0 0 1em rgba(0,0,0,0.5);
+    box-shadow: 0 0 1em rgba(0,0,0,0.5);
+    margin: 0 auto;
+    max-width: 85em;
+    min-width: 18em;
+    position: relative;
+    border-top: 15px solid #609645;
+    font-family: "Roboto", sans-serif;
+
+        }
+        .fixed-top {
+
+    padding-top: 15px;
+}
+
+header .navbar .navbar-nav .nav-item a.active {
+    color: #fff!important;
+    border-bottom: 3px solid #fff;
+}
+
+.main_container {
+  background-color: #fff;
+}
+
+#navbarSupportedContent {
+
+    color: #fff;
+    background-color: #89C43E;
+    font-size: .9em;
+    border-top: 3px solid #fff;
+    border-bottom: 10px solid #dcd3a3;
+    /*height:30px;*/
+
+}
+
+header .navbar .navbar-nav .nav-item a {
+
+ color: #fff!important;
+}
+.navbar-brand {
+
+    display: block;
+    position: absolute;
+    height: 84px;
+    width: 260px;
+    top: 0;
+    left: 1em;
+    z-index: 2;
+    padding: 10px;
+    background-color: #fff;
+    background-image: url("/static/images/ruforum-logo.png");
+    background-position: 10px center;
+    background-size: 90% auto;
+    background-repeat: no-repeat;
+    -webkit-border-radius: 0 0 15px 15px;
+    -moz-border-radius: 0 0 15px 15px;
+    -ms-border-radius: 0 0 15px 15px;
+    -o-border-radius: 0 0 15px 15px;
+    border-radius: 0 0 15px 15px;
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    -ms-box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    -o-box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    text-indent: -2000px;
+
+}
+header .navbar .navbar-nav.navbar-right .dropdown a.nav-link {
+    padding: 11px 15px;
+    border-bottom: 0px;
+}
+
+header .navbar .navbar-nav .nav-item a:hover {
+  color: yellow!important;
+}
+
+header .navbar .navbar-nav .nav-item a {
+    color: #fff!important;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 10px 15px;
+    display: inline-block;
+    padding-top: 0px;
+    border-bottom: 0px;
+}
+
+header .navbar {
+    background: #fff;
+    border: none;
+    border: 1px solid #ddd;
+    padding: 0px;
+}
+
+#navMenu {
+  padding-top: 24px;
+
+}
+
+.dropdown-menu {
+  background-color: #00766F;
+}
+
+        </style>
+    {% block extralinks %} {% endblock %}
+    {% block extrahead %}{% endblock %}
+  </head>
+  <body class="main_body_bg_color">
+    <div class="wrapper">
+      <!-- header starts here -->
+      <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+          {% comment %}
+          <a class="navbar-brand" href="">Ruforum</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+          </button>
+          {% endcomment %}
+          <a class="navbar-brand" href="{% url "common:home" %}">
+            <img src="{% static "images/ruforum-logo.png" %}" style="width:140px" alt="">
+          </a>
+          {% block navlinks %}
+
+          <div class="collapse navbar-collapse  justify-content-end" id="navbarSupportedContent">
+
+          <ul class="navbar-nav navbar-right my-2 my-lg-0" style="margin-top:15x;">
+              <li class="nav-item dropdown">
+                <a href="#" class="dropdown-toggle abcd nav-link" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false" >
+                  {{request.user.get_full_name}}
+                {% if not request.user.profile_pic %}
+                <img src="{% static 'images/user.png' %}" alt="Micro profile pic">
+                {% else %}
+                {% thumbnail request.user.profile_pic "25x25" as im %}
+                <img src="{{ im.url }}">
+                {% endthumbnail %}
+                {% endif %}
+                <b class="caret"></b></a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                  {% if request.user.email != "admin@micropyramid.com" %}
+                  <a class="dropdown-item" href="{% url 'common:change_password' %}"><i class="fas fa-key"></i> Change Password</a>
+                  {% endif %}
+                  <a class="dropdown-item" href="{% url 'common:profile' %}"><i class="fas fa-user"></i> Profile</a>
+                  <a class="dropdown-item" href="{% url 'common:logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+              </li>
+            </ul>
+           </div>
+
+          {% if request.user.is_authenticatedxxxxx %}
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item"><a class="nav-link" id="dashboard" href="{% url "common:home" %}">Dashboard</a></li>
+
+              {% if perms.contacts.change_user %}
+              <li class="nav-item"><a class="nav-link" id="contacts" href="{% url 'contacts:list' %}">Contacts</a></li>
+              {% endif %}
+
+              {% if perms.calls.change_call %}
+              <li class="nav-item"><a class="nav-link" id="calls" href="{% url 'calls:list' %}">Calls</a></li>
+              {% endif %}
+              {% comment %}
+              <li class="nav-item"><a class="nav-link" id="grants" href="{% url 'grants:list' %}">Grants</a></li>
+              <li class="nav-item"><a class="nav-link" id="grants_applications" href="{% url 'grants_applications:list' %}">Grant Applications</a></li>
+              {% endcomment %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Grants
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" id="grants" href="{% url 'grants:list' %}">Grants</a>
+                  <a class="dropdown-item" id="grants_applications" href="{% url 'grants_applications:list' %}">Grant Applications</a>
+
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" id="grant_types" href="{% url 'grant_types:list' %}">Grant Types</a>
+
+                </div>
+              </li>
+              {% if perms.events.change_event %}
+              <li class="nav-item"><a class="nav-link" id="events"href="">Events</a></li>
+              {% endif %}
+              {% if perms.scholarships.change_scholarshipapplication %}
+              <li class="nav-item"><a class="nav-link" id="scholarships" href="{% url 'scholarships:list' %}">Scholarships</a></li>
+              {% endif %}
+              <li class="nav-item"><a class="nav-link" id="studen_reports" href="">Student Reports</a></li>
+              {% if request.user.role == "ADMIN" or request.user.is_superuser %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarUsersDropdown" role="button" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  Users
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarUsersDropdown">
+                  <a class="dropdown-item" id="users" href="{% url 'common:users_list' %}">Users</a>
+                  <a class="dropdown-item" id="groups" href="{% url 'common:groups_list' %}">Groups</a>
+                </div>
+              </li>
+
+              <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Settings
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" id="grants" href="{% url 'template_manager:list' %}">Templates</a>
+
+                  </div>
+                </li>
+              {% endif %}
+            </ul>
+            <ul class="navbar-nav navbar-right my-2 my-lg-0">
+              <li class="nav-item dropdown">
+                <a href="#" class="dropdown-toggle abcd nav-link" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false" >
+                {% if not request.user.profile_pic %}
+                <img src="{% static 'images/user.png' %}" alt="Micro profile pic">
+                {% else %}
+                {% thumbnail request.user.profile_pic "25x25" as im %}
+                <img src="{{ im.url }}">
+                {% endthumbnail %}
+                {% endif %}
+                <b class="caret"></b></a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                  {% if request.user.email != "admin@micropyramid.com" %}
+                  <a class="dropdown-item" href="/change-password/"><i class="fas fa-key"></i> Change Password</a>
+                  {% endif %}
+                  <a class="dropdown-item" href=""><i class="fas fa-user"></i> Profile</a>
+                  <a class="dropdown-item" href="{% url 'common:logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+          {% endif %}
+          {% endblock %}
+        </nav>
+
+        <nav class="navbar  navbar-expand-md navbar-dark justify-content-center" id="navMenu" style="background-color: #00766F;">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="true" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse w-100" id="navbarMenu">
+          {% render_menu menu=menus.scholarship_reviewer user=request.user %}
+        </div>
+        </nav>
+      </header>
+      <!-- header ends here -->
+      <!-- main_container starts here -->
+      <div id="mainbody" class="main_container" style="padding-top:10px;margin-bottom:55px">
+        <!-- breadcrumb starts here -->
+        {% block breadcrumb %}
+        {% endblock %}
+        <!-- breadcrumb ends here -->
+        {% block content %}
+        {% endblock %}
+      </div>
+      <!-- main_container ends here -->
+    </div>
+    <div class="footer">
+        <p>&copy; {% now "Y" %} RUFORUM</p>
+      </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-migrate-3.1.0.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment-with-locales.min.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="{% static "js/moment.js" %}" type="text/javascript"></script>
+    <script src="{% static "js/jquery.comiseo.daterangepicker.js" %}" type="text/javascript"></script>
+    <script src="{% static 'js/index.js' %}"></script>
+    {% block js_block %}
+    {% endblock js_block %}
+    <script type="text/javascript">
+      $(document).ready(function(){
+          word = window.location.pathname.split('/')[1]
+          if(word == ""){
+            $("#dashboard").addClass('active')
+          }
+          else{
+            $('#' + word).addClass('active')
+          }
+      });
+    </script>
+  </body>
+</html>

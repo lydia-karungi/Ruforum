@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load paginate %}
+{% load thumbnail %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<style>
+  .form-group label{
+    font-weight: 800;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<!-- main_container starts here -->
+<div class="main_container">
+  <!-- heading_create starts here -->
+  <div class="row marl">
+    <div class="col-lg-12 text-right m-1">
+      <span class="d-inline"><a class="primary_btn" href="{% url 'project_management:create_project'%}"><i class="fa fa-plus"></i>
+          Add New
+          Project</a></span>
+    </div>
+  </div>
+  <!-- heading_create ends here -->
+
+  <div class="col-md-12 col-lg-12 col-xl-12">
+    <div class="table_container_row row marl no-gutters">
+      <div class="col-md-12">
+
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open">
+
+            <div class="card">
+                <div class="table-responsive">
+                  <div id="toolbar">
+                    <span class="float-left">Projects - {% if show_pageitems %}
+                      {% show_pageitems %}{% else %}
+                      {{ project_list|length }}{% endif %}</span>
+                  </div>
+                  <table
+                  data-toggle="table"
+                  data-search="true"
+                  data-show-columns="true"
+                  data-show-export="true"
+                  data-click-to-select="true"
+                  data-minimum-count-columns="2"
+                  data-show-pagination-switch="true"
+                  data-pagination="true"
+                  data-id-field="id"
+                  data-page-list="[10, 25, 50, 100, all]"
+
+                  >
+                    <thead>
+                      {% if project_list|length > 0 %}
+                      <tr class="text-center">
+                        <th>#</th>
+                        <th>Project title</th>
+                        <th>Ruforum Grant number</th>
+                        <th>Lead Institution</th>
+                        <th>Project status</th>
+                        <th>Project Duration</th>
+
+
+                        <th>Action</th>
+                      </tr>
+                      {% endif %}
+                    </thead>
+                    <tbody>
+                      {% if per_page %}
+                      {% paginate per_page project_list %}
+                      {% else %}
+                      {% paginate 10 project_list %}
+                      {% endif %}
+                      {% for project in project_list %}
+                      <tr class="text-center">
+                        <td scope="row">{{ forloop.counter }}</td>
+                        <td>
+                          {{project.project_title|truncatechars:30}}
+                        </td>
+                        <td>
+                          {{project.ruforum_grant_number}}
+                        </td>
+                        <td>
+                          {{project.lead_institution}}
+                        </td>
+                        <td>
+                          {{project.project_status}}
+                        </td>
+                        <td>
+                            {{project.project_duration}}
+                          </td>
+
+
+
+                          <td class="actions">
+
+                            <!--<a href="" class="btn btn-info edit"><i
+                              class="fas fa-eye"></i></a>-->
+                                <a href="{% url "project_management:view_project" project.pk %}" title="Detail" class="btn btn-sm btn-info edit m-1"><i
+                                  class="fas fa-eye"></i></a>
+                                <a href="{% url "project_management:edit_project" project.pk %}" class="btn btn-sm btn-success edit"><i
+                                class="fas fa-pencil-alt"></i></a>
+                                <a href="{% url "project_management:delete_project" project.pk %}"  title="Delete" data-toggle="modal" data-target="#deleteunitmodel" id="btn_delete_unit"
+                                class="btn btn-danger btn-sm delete remove_document m-1"><i class="fas fa-trash-alt"></i></a>
+
+                          </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--model to handle call deletion confirmation-->
+<!-- Modal -->
+
+ <div class="modal fade" id="deleteunitmodel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="exampleModalLabel">Delete Project</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
+            <div class="modal-body">
+              <p class="text-center">Are you sure you want to delete this Project?</p>
+            </div>
+            <div class="modal-footer text-center">
+              <button type="button" class="btn btn-danger " data-dismiss="modal">Cancel</button>
+              <button type="button" id="approval_delete_btn" class="btn btn-primary">Delete</button>
+            </div>
+      </div>
+    </div>
+  </div>
+<!--end of model-->
+
+{% endblock %}
+{% block js_block %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('.assigned_users').select2();
+    $('#id_tag').select2();
+    $(".filter_toggle").click(function () {
+      $(".list_filter_row").toggle();
+    });
+    var date = new Date();
+    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    $('#date_of_meeting').datetimepicker({
+      'format': 'YYYY-MM-DD',
+      minDate: today
+    })
+  });
+
+  search = "{{search}}"
+
+  if (search == 'True') {
+    $(".list_filter_row").show();
+  }
+
+  $("#close-tab").click(function (e) {
+    $("#tab_status").val('Closed')
+  })
+
+  $("#open-tab").click(function (e) {
+    $("#tab_status").val('Open')
+  })
+
+  tab_status = "{{tab_status}}"
+  if (tab_status == 'Closed') {
+    $("#close-tab").click()
+  } else {
+    $("#open-tab").click()
+  }
+
+  $('.delete').click(function () {
+   var item_di=$(this).attr("data-id");
+  // console.log(item_di);
+   $('#approval_delete_btn').click(function(){
+       var url="/project_management/"+item_di+"/delete_project/";
+     $.get(url, function (data) {
+
+      window.location.reload();
+   });
+
+   });
+ });
+
+  $("a[rel='page']").click(function (e) {
+    e.preventDefault();
+    $('#leads_filter').attr("action", $(this).attr("href"));
+    $('#leads_filter').submit();
+  });
+  {% for message in messages %}
+  $(document).ready(function() {
+      $.notify("{{message}}", "{{ message.tags }}");
+  });
+  {% endfor %}
+</script>
+{% endblock js_block %}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block content %}
+<form>
+<div class="email-inbox-header">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="email-title"><span class="icon mdi mdi-inbox"></span> Incidents <span class="new-messages">(2 new grants)</span>  </div>
+    </div>
+    <div class="col-md-6">
+      <div class="email-search">
+        <div class="input-group input-search input-group-sm">
+          <input type="text" placeholder="Search grants..." class="form-control" name="search" {% if search %}value="{{search}}"{% endif %}><span class="input-group-btn">
+            <button type="button" class="btn btn-default"><i class="icon mdi mdi-search"></i></button></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+<div class="email-filters">
+  <div class="email-filters-left">
+    <div class="be-checkbox be-select-all">
+      <input id="check" type="checkbox">
+      <label for="check"></label>
+    </div>
+    <div class="btn-group">
+      <button data-toggle="dropdown" type="button" class="btn btn-default dropdown-toggle">With selected <span class="caret"></span></button>
+      <ul role="menu" class="dropdown-menu">
+        <li><a href="#">Mark as read</a></li>
+        <li><a href="#">Mark as unread</a></li>
+        <li><a href="#">Spam</a></li>
+        <li class="divider"></li>
+        <li><a href="#">Delete</a></li>
+      </ul>
+    </div>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default">Archive</button>
+      <button type="button" class="btn btn-default">Span</button>
+      <button type="button" class="btn btn-default">Delete</button>
+    </div>
+    <div class="btn-group">
+        <button type="button" class="btn btn-success"
+        onclick="window.location.href=''"><i class="icon icon-left mdi mdi-plus-circle"></i> Report Incident</button>
+      </div>
+    <div class="btn-group">
+      <button data-toggle="dropdown" type="button" class="btn btn-default dropdown-toggle">Order by <span class="caret"></span></button>
+      <ul role="menu" class="dropdown-menu dropdown-menu-right">
+        <li><a href="#">Date</a></li>
+        <li><a href="#">From</a></li>
+        <li><a href="#">Subject</a></li>
+        <li class="divider"></li>
+        <li><a href="#">Size</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="email-filters-right"><span class="email-pagination-indicator">1-50 of 253</span>
+    <div class="btn-group email-pagination-nav">
+      <button type="button" class="btn btn-default"><i class="mdi mdi-chevron-left"></i></button>
+      <button type="button" class="btn btn-default"><i class="mdi mdi-chevron-right"></i></button>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <!--Responsive table-->
+  <div class="col-sm-12">
+    <div class="panel panel-default panel-table">
+      <!--
+      <div class="panel-heading">Incidents<span style="padding-left: 20px"><a href=""class="btn btn-space btn-success"><i class="icon icon-left mdi mdi-plus-circle"></i> Report Incident</a></span>
+        <div class="tools"><span class="icon mdi mdi-download"></span><span class="icon mdi mdi-more-vert"></span></div>
+      </div>
+      -->
+      <div class="panel-body">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th style="width:5%;">
+                <div class="be-checkbox be-checkbox-sm">
+                  <input id="check1" type="checkbox">
+                  <label for="check1"></label>
+                </div>
+              </th>
+              
+              <th style="width:20%;">Grant ID</th>
+              <th style="width:20%;">Title</th>
+              <th style="width:20%;">Call</th>
+              <th style="width:17%;">Has Reports</th>
+              <th style="width:15%;">Approval Status</th>
+              
+              <th style="width:10%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            {% for grant in grants %}
+            <tr>
+              <td>
+                <div class="be-checkbox be-checkbox-sm">
+                  <input id="check2" type="checkbox">
+                  <label for="check2"></label>
+                </div>
+              </td>
+              <td class="cell-detail">{{grant.grant_id|default_if_none:"____"}}</td>
+              <td class="cell-detail">{{grant.title}}</td>
+              <td class="cell-detail">{{grant.call}}</td>
+              <td class="cell-detail">{% if grant.has_reports %}Yes{% else %}No{% endif %}</td>
+              <td class="cell-detail">{{grant.get_approval_status_display}}</td>
+              {% comment %}
+              
+              <td class="cell-detail"><span>{{grant.capture_date|date:"b d, Y"}}</span><span class="cell-detail-description">{{grant.capture_date|time:"H:S"}}</span></td>
+              {% endcomment %}
+              <td class="text-right">
+                <div class="btn-group btn-hspace">
+                  <button type="button" data-toggle="dropdown" class="btn btn-default dropdown-toggle">Actions<span class="icon-dropdown mdi mdi-chevron-down"></span></button>
+                  <ul role="menu" class="dropdown-menu pull-right">
+                    <li><a href="">Update</a></li>
+                    
+                  </ul>
+                </div>
+              </td>
+            </tr>  
+            {% endfor %}   
+           
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,261 @@
+{% extends 'printbase.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+         
+            <div class="card-body">
+                <div class="row marl">
+                    <div class="col-md-10">
+                   
+                    <dl>
+                      <div class="row">
+                    
+                        <div class="col-md-9">
+                          <b>Last Name:</b>
+                          {{application_record.last_name}}<br>
+                          <b>First Name:</b>
+                          {{application_record.first_name}}<br>
+                          <b>Nationality:</b> {{application_record.otherscholarshipapplication.get_country_of_residence_display}}<br>
+                          <b>Gender:</b> {{application_record.user.get_gender_display}}<br>
+                          <b>Marital Status:</b> {{application_record.otherscholarshipapplication.get_marital_status_display}}<br>
+                          <b>Date Of Birth:</b> {{application_record.date_of_birth}}<br>
+                          <b>Place Of Birth:</b> {{application_record.otherscholarshipapplication.place_of_birth}}<br>
+                          <b>
+                            Telephone contact:</b> {{application_record.otherscholarshipapplication.telephone_contacts}}<br>
+                            <b>
+                              Email:</b> {{application_record.otherscholarshipapplication.contact_email}}<br>
+                              <b>Residence contact address:</b> {{application_record.otherscholarshipapplication.residence_contact_address}}<br>
+
+                              <!--end of applicant's data-->
+                              <h3>Applicant Expression of Study Interest</h3>
+
+
+                        <dt>Name of University:</dt>
+                        <dd>{{application_record.otherscholarshipapplication.name_of_university}}</dd>
+
+                        <dt>Programme applied for:</dt>
+                        <dd>{{application_record.programme_applied_for}}</dd>
+
+                        <dt>Scholarship Call ID:</dt>
+                        <dd>{{application_record.call}}</dd>
+                         <h3>Educational Data</h3>
+                         {% if application_record.othereducation_set.all|length > 0 %}
+                    {% for row in application_record.othereducation_set.all %}
+                    <dl>
+
+                         <dt>Record: {{ forloop.counter }}</dt>
+                        <dt>Institution:</dt>
+                        <dd>{{row.institution}}</dd>
+
+                        <dt>Country:</dt>
+                        <dd>{{row.get_country_display}}</dd>
+
+                        <dt>Dates From:</dt>
+                        <dd>{{row.date_from}}</dd>
+
+                        <dt>Dates To:</dt>
+                        <dd>{{row.date_to}}</dd>
+                        <dt>Academic Document</dt>
+                        <dd>
+                          {% if row.file %}
+                          <a href="{{row.file.url}}" target="blank">{{row.file}}</a>
+                          {% else %}
+                          No Academic Document attached
+                          {% endif %}
+                        </dd>
+                    </dl>
+                    {% endfor %}
+                    {% else %}
+                    <h6 class="text-center">No Education Records Found</h6>
+                    {% endif %}
+                    <h3>Research Projects</h3>
+                    {% if publications|length > 0 %}
+                    {% for row in publications %}
+                    <dl>
+                      <dt>Record: {{ forloop.counter }}</dt>
+                        <dt>Level:</dt>
+                        <dd>{{row.code}}</dd>
+
+                        <dt>Particular:</dt>
+                        <dd>{{row.particular}}</dd>
+
+                        <dt>Title:</dt>
+                        <dd>{{row.title}}</dd>
+
+
+                        <dt>Description:</dt>
+                        <dd>{{row.description|linebreaks}}</dd>
+
+                    </dl>
+                    {% endfor %}
+                    {% else %}
+                    <h6 class="text-center">No Research Projects Records Found</h6>
+                    {% endif %}
+
+                    <h3>Publications</h3>
+                    {% if publication_papers|length > 0 %}
+                    {% for row in publication_papers %}
+                    <dl>
+                      <dt>Record: {{ forloop.counter }}</dt>
+                        <dt>Title:</dt>
+                        <dd>{{row.title}}</dd>
+
+                        <dt>published papers:</dt>
+                        <dd>
+                          {% if row.published_file %}
+                          <a href="{{referee.published_file.url}}">{{row.published_file}}</a>
+                          {% else %}
+                          No published papers
+                          {% endif %}
+
+                        </dd>
+
+                    </dl>
+                    {% endfor %}
+                    {% else %}
+                    <h6 class="text-center">No publication Records Found</h6>
+                        {% endif %}
+                        <h3>Employment History</h3>
+                        {% if application_record.employmenthistory_set.all|length > 0 %}
+                        {% for row in application_record.employmenthistory_set.all %}
+                        <dl>
+                          <dt>Record: {{ forloop.counter }}</dt>
+                            <dt>Oranisation</dt>
+                            <dd>{{row.organisation}}</dd>
+                            <dt>Address</dt>
+                            <dd>{{row.organisation_address}}</dd>
+
+                            <dt>Employed From</dt>
+                            <dd>{{row.employed_from}}</dd>
+
+                            <dt>Employed To</dt>
+                            <dd>{{row.employed_to}}</dd>
+
+
+                            <dt>Reason for Leaving</dt>
+                            <dd>{{row.reason_for_leaving|linebreaks}}</dd>
+
+                        </dl>
+                        {% endfor %}
+                        {% else %}
+                        <h6 class="text-center">No Employment History Records Found</h6>
+                        {% endif %}
+                        <dt>Work Experience</dt>
+                        <dd>
+                          {% if application_record.otherscholarshipapplication.experience %}
+                          {{application_record.otherscholarshipapplication.experience}}
+                          {% else %}
+                          No Work Experience
+                          {% endif %}
+
+                        </dd>
+                        <h3>Research Interest</h3>
+
+                        <dt>Possible research interest/Topic:</dt>
+                        <dd>{{application_record.otherscholarshipapplication.research_experience|linebreaks}}</dd>
+
+                        <dt>Research Location</dt>
+                        <dd>{{application_record.otherscholarshipapplication.get_research_location_display}}</dd>
+
+
+                        <dt>Reason for selecting the above location:</dt>
+                        <dd>{{application_record.otherscholarshipapplication.research_location_reason}}</dd>
+                        <h3>Employer Support</h3>
+                        <dt>Full support by Employer to undertake graduate studies through full release:</dt>
+                        <dd>{{application_record.otherscholarshipapplication.employer_support|yesno:"Yes,No"}}</dd>
+                        <dt>letter of no objection/endorsement</dt>
+                        <dd>
+                          {% if application_record.otherscholarshipapplication.support_evidence %}
+                          <a href="{{application_record.otherscholarshipapplication.support_evidence.url}}" target="blank">{{row.published_file}}</a>
+                          {% else %}
+                          No letter attached
+                          {% endif %}
+
+                        </dd>
+                        <h3>Additional funding</h3>
+                        <dt>Have any additional funding</dt>
+                        <dd>{{application_record.otherscholarshipapplication.have_additional_funding|yesno:"Yes,No"}}</dd>
+                          <dt>Funding source</dt>
+                          <dd>
+                            {% if application_record.otherscholarshipapplication.specify_funding_type %}
+                            {{application_record.otherscholarshipapplication.specify_funding_type}}
+                            {% else %}
+                            No funding source
+                            {% endif %}
+                          </dd>
+                          <dt>Funding Type</dt>
+                          {% if application_record.otherscholarshipapplication.funding_type %}
+                          {{application_record.otherscholarshipapplication.funding_type}}
+                          {% else %}
+                          No funding source/not specified
+                          {% endif %}
+                          <dt>Already Funded </dt>
+                          <dd>{{application_record.otherscholarshipapplication.already_funded|yesno:"Yes,No"}}</dd>
+                          <dt>Amount Provided (US$)</dt>
+                          {{application_record.otherscholarshipapplication.amount_provided}}
+                          <h3>Referees</h3>
+                          {% if referees|length > 0 %}
+                          {% for referee in referees %}
+
+                          <dl>
+                            <dt>Referee {{forloop.counter}}</dt>
+                            <dd><b>Names :</b>{{referee.referee_names}}</dd>
+                            <dd><b>Addrees :</b>{{referee.referee_address}}</dd>
+                            <dd><b>Contact :</b>{{referee.contact_details}}</dd>
+                            <dd><b>Reference Letter :</b>
+                              {% if referee.file %}
+                              <a href="{{referee.file.url}}">{{referee.file}}</a>
+                              {% else %}
+                              No reference Letter
+                              {% endif %}
+                            </dd>
+                        </dl>
+
+                          {% endfor %}
+                          {% else %}
+                          <h6 class="text-center">No Referees Provided</h6>
+                          {% endif %}
+                         <dt>Was English the language of instruction in High school</dt>
+                         <dd>{{application_record.otherscholarshipapplication.english_in_high_school|yesno:"Yes,No"}}</dd>
+                         <dt>How the applicant learned about the call</dt>
+                         <dd>{{application_record.get_scholarship_call_source_display}}</dd>
+                         <h3>Research Concept Note</h3>
+                         {% if application_record.otherscholarshipapplication.research_concept_note %}
+                         <p><a href="{{application_record.otherscholarshipapplication.research_concept_note.url}}" target="blank">{{application_record.otherscholarshipapplication.research_concept_note}}</a></p>
+                         {% else %}
+                         No Concept paper
+                         {% endif %}
+                        </div>
+
+                      </div>
+
+
+                    </dl>
+
+                    </div>
+              </div>
+        <!--END HERE-->
+
+</div>
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

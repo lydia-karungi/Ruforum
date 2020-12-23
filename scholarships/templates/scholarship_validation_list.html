@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load paginate %}
+{% load thumbnail %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<style>
+    .form-group label{
+      font-weight: 800;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+<!-- main_container starts here -->
+<div class="main_container">
+  <!-- heading_create starts here -->
+
+  <!-- filter_row starts here -->
+  <div class="table_container_row row marl ">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+            <span class="float-left"> Scholarship Applications Review- {% if show_pageitems %} {% show_pageitems %}{% else %}
+              {{scholarships|length}}{% endif %}</span>
+    
+          
+            </div>
+              </div>
+<div class="card">
+          <div class="table-responsive">
+            <table
+            id="table"
+            data-toggle="table"
+            data-show-toggle="true"
+            data-search="true"
+            data-show-refresh="true"
+            data-show-fullscreen="true"
+            data-show-columns="true"
+            data-show-columns-toggle-all="true"
+            data-show-export="true"
+            data-click-to-select="true"
+            data-minimum-count-columns="2"
+            data-show-pagination-switch="true"
+            data-pagination="true"
+            data-id-field="id"
+            data-toolbar="#toolbar"
+            data-export-types="[‘csv’,‘doc’, ‘excel’, ‘pdf’]"
+            data-page-list="[10, 25, 50, 100, all]"
+            >
+              <thead>
+               
+
+                <tr>
+                  <th>ID</th>
+                  <th>Call ID</th>
+                  <th>Applicant</th>
+                
+                  <th>Programme Applied For</th>
+                  <th>Validate</th>
+                </tr>
+        
+              </thead>
+              <tbody>
+              
+                {% for scholarship in scholarships %}
+                <tr style="text-align:center;">
+                  <td scope="row">{{ scholarship.id }}</td>
+                  <td><a href="#" data-toggle="modal" data-target="#exampleModalCenter_scholarship{{scholarship.id}}">
+                      {{scholarship.call.call_id}}</a></td>
+                  <td>
+                    {{scholarship.first_name}} {{scholarship.last_name}}
+                  </td>
+                
+                  <td>
+                    {{scholarship.programme_applied_for|truncatechars:30}}
+                  </td>
+                  <td class="actions">
+                    <a href="{% url "scholarships:validate_scholarship" scholarship.pk%}" class="btn btn-sm btn-info view" data-toggle="tooltip" title="Click"><i class="fas fa-check"></i></a>
+
+
+                  </td>
+                </tr>
+                {% endfor%}
+              </tbody>
+            </table
+            >
+          </div>
+         
+
+
+      </div>
+    </div>
+    <br clear="all">
+  </div>
+  <!-- filter_row ends here -->
+</div>
+<!-- main_container ends here -->
+<br clear="all">
+
+
+
+
+{%endblock%}
+{% block js_block %}
+<script type="text/javascript">
+  
+  $('.delete').click(function (e) {
+    e.preventDefault()
+    url = $(this).attr('href')
+    if (!confirm('Are you sure you want to delete?'))
+      return;
+    window.location = $(this).attr('href')
+  });
+
+
+  {% for message in messages %}
+  $(document).ready(function() {
+      $.notify("{{message}}", "{{ message.tags }}");
+  });
+  {% endfor %}
+</script>
+{% endblock js_block %}

@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block breadcrumb %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css" />
+{% endblock %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'project_management:projectlist' %}">Projects</a></li>
+    <li class="breadcrumb-item active">{% if event_obj %}Edit {% else %} Add {% endif %}</li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+<form id="formid" action='' method="POST" novalidate enctype="multipart/form-data">{% csrf_token %}
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title text-center">
+            {% if event_obj %}EDIT{% else %}ADD{% endif %} PROJECT
+          </div>
+            </div>
+           <div class="card-body">
+          <div class="row marl">
+
+            <input type="hidden" value="{{student_pk}}" name="student">
+              <div class="col-md-6">
+                {{ form.project_title|as_crispy_field }}
+              </div>
+              <div class="col-md-6">
+
+                {{ form.ruforum_grant_number|as_crispy_field }}
+              </div>
+              <div class="col-md-6">
+                {{ form.lead_institution|as_crispy_field }}
+              </div>
+              <div class="col-md-6">
+                {{ form.contact_person_from_lead_institution_if_not_RUFORUM|as_crispy_field }}
+              </div>
+              <div class="col-md-6">
+                {{ form.contact_person_at_ruforum|as_crispy_field }}
+                </div>
+                <div class="col-md-6">
+                  {{ form.ruforum_flagship|as_crispy_field }}
+                </div>
+                <div class="col-md-12">
+                  {{ form.partners|as_crispy_field }}
+                </div>
+
+                <div class="col-md-6">
+                  {{ form.start_date|as_crispy_field }}
+                </div>
+
+                <div class="col-md-6">
+                  {{ form.end_date|as_crispy_field }}
+                </div>
+
+                <div class="col-md-6">
+                  {{ form.new_end_date|as_crispy_field }}
+                </div>
+
+                <div class="col-md-6">
+                  {{ form.project_status|as_crispy_field }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.project_duration|as_crispy_field }}
+                  </div>
+                <div class="col-md-6">
+                    {{ form.donor_currency|as_crispy_field }}
+                  </div>
+                <div class="col-md-6">
+                    {{ form.total_project_budget_original_currency|as_crispy_field }}
+                  </div>
+                <div class="col-md-4">
+                    {{ form.total_budget_us|as_crispy_field }}
+                  </div>
+                <div class="col-md-6">
+                    {{ form.total_budget_received_from_Donor_to_RUFORUM|as_crispy_field }}
+                  </div>
+                <div class="col-md-6">
+                    {{ form.ruforum_secretariat_staff_time|as_crispy_field }}
+                  </div>
+                <div class="col-md-6">
+                    {{ form.annual_budget_available|as_crispy_field }}
+                  </div>
+                <div class="col-md-6">
+                    {{ form.project_goal|as_crispy_field }}
+                  </div>
+                <div class="col-md-6">
+                    {{ form.project_objectives|as_crispy_field }}
+                  </div>
+
+                <div class="col-md-6">
+                    {{ form.reporting_frequency|as_crispy_field }}
+                  </div>
+                <div class="col-md-6">
+                    {{ form.project_proposal|as_crispy_field }}
+                  </div>
+
+
+
+                </div>
+              </div>
+          <div class="card-footer">
+          <div class="col-md-12 padding-top">
+            <div class="col-md-12">
+              <div class="row marl buttons_row form_btn_row text-center">
+                <button class="btn btn-default save" type="submit">Save</button>
+                <a href="{% url 'PI:reports' %}" class="btn btn-default clear"
+                  id="create_user_cancel">Cancel</a>
+              </div>
+            </div>
+          </div>
+        </div>
+          </div>
+
+      </div>
+    </div>
+    <!-- <input type="hidden" id="save_new_form" name="savenewform"> -->
+
+  </form>
+<br clear="all">
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script>
+<script type="text/javascript">
+
+  // $(document).ready(function() {
+  //   $('.assigned_users').select2();
+  // });
+  $(document).ready(function () {
+  });
+
+
+</script>
+{% endblock js_block %}

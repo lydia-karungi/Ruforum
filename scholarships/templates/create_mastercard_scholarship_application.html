@@ -1,0 +1,1147 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block breadcrumb %}
+    {% block extralinks %}
+        {% load common_tags %}
+        {% load crispy_forms_tags %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css"
+              rel="stylesheet">
+        <link rel="stylesheet" type="text/css"
+              href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css"/>
+
+    {% endblock %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'scholarships:list' %}">Scholarships</a></li>
+            <li class="breadcrumb-item active">Mastercard Scholarship Application</li>
+        </ol>
+    </nav>
+{% endblock %}
+{% block content %}
+    <form id="scholarshipform" action='' method="POST" novalidate enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="overview_form_block row marl justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title text-center">
+                            {% if scholarship_obj %}EDIT SCHOLARSHIP APPLICATION{% else %}SCHOLARSHIP APPLICATION
+                                FORM{% endif %}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row marl">
+                            <!--first tab begins here-->
+
+
+                            <div class="tab">
+                                <div class="col-md-12">
+                                    <legend class="mx-3">Applicant Expression of Study Interest</legend>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Passport Photo
+                                                {% if form.call.field.required %}<span class="error_marker"
+                                                                                       style="color:red">*</span>{% endif %}
+                                            </label>
+                                            <div class="col-auto">
+                                                <div class="avatar-wrapper" data-tippy-placement="bottom"
+                                                     title="Upload Profile Picture">
+                                                    <img alt="" class="profile-pic"
+                                                         src="{% static 'images/user.png' %}"/>
+                                                    <div class="upload-button"></div>
+                                                    <input accept="image/*" class="file-upload" name="passport_photo"
+                                                           type="file"/>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group col-md-12">
+                                        {{ form.passport_no|as_crispy_field }}
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                              {{ form.programme_applied_for|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                              {{ mastercard_form.name_of_university|as_crispy_field }}
+                                    </div>
+
+
+                                    <div class="form-group col-md-12">
+
+                                    {{ form.call|as_crispy_field }}
+                                </div>
+
+                            </div>
+                            </div>
+                            <!--end of first tab-->
+
+                            <!--second tab begins here-->
+                            <div class="tab">
+                                <legend class="mx-3">Applicant Biodata (as applicable in your National Registration
+                                    Documents)
+                                </legend>
+                                <div class="row">
+
+                                    <div class="form-group col-md-6">
+                                        {{ form.first_name|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ form.last_name|as_crispy_field }}
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        {{ form.other_names|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        {{ form.gender|as_crispy_field }}
+
+                                    </div>
+
+                                    <div class="filter_col col-md-4">
+                                        <div class="form-group">
+                                            <label for="date_of_birth" class="required">Date of Birth
+                                                {% if form.date_of_birth.field.required %}<span class="error_marker"
+                                                                                                style="color:red">*</span>{% endif %}
+                                            </label>
+                                            <div class="input-group">{{ form.date_of_birth }}</div>
+                                            <span class="error"
+                                                  id="id__date_of_birth">{{ form.date_of_birth.errors }}</span>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h4>Place of birth</h4>
+                                    </div>
+                                    <div class="filter_col col-md-4">
+                                        {{ mastercard_form.village_of_birth|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ mastercard_form.district_of_birth|as_crispy_field }}
+                                    </div>
+                                    <div class="filter_col col-md-4">
+
+                                        {{ mastercard_form.country_of_birth|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h5>Residence contact address</h5>
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ mastercard_form.village_of_residence|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ mastercard_form.district_of_residence|as_crispy_field }}
+                                    </div>
+                                    <div class="filter_col col-md-4">
+
+                                        {{ mastercard_form.country_of_residence|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+
+                                              {{ mastercard_form.nearest_major_road|as_crispy_field }}
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        {{ mastercard_form.sketch_map|as_crispy_field }}
+                                    </div>
+
+
+                                    <div class=" col-md-6">
+
+                                              {{ mastercard_form.telephone_contacts|as_crispy_field }}
+                                    </div>
+
+                                    <div class=" col-md-6">
+
+
+                                              {{ mastercard_form.telephone_owner|as_crispy_field }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!--end of second tab-->
+                            <!--third tab begins here-->
+                            <div id="background" class="form-group tab">
+                                {{ parent_formset.management_form }}
+                                <legend class="form-group-legend">Family Background and History</legend>
+                                {% for parent_form in parent_formset %}
+                                    {% for hidden in parent_form.hidden_fields %}
+                                        {{ hidden|as_crispy_field }}
+                                    {% endfor %}
+                                    <div style="border: 5px solid #eee;padding: 15px;margin: 15px">
+
+                                        <h5>{{ parents|get_at_index:forloop.counter0 }}</h5>
+                                        <div class="col-md-12">
+
+                                                  {{ parent_form.full_name|as_crispy_field }}
+                                        </div>
+                                        <div class="col-md-12">
+
+                                            {{ parent_form.status|as_crispy_field }}
+                                        </div>
+                                        <div class="row parent_death_info"
+                                             id="{{ parents|get_at_index:forloop.counter0 }}_parent_death">
+                                            <div class="filter_col col-md-6">
+                                                <div class="form-group">
+                                                    <label for="date_of_death" class="required">Date of death
+                                                        {% if parent_form.date_of_death.field.required %}
+                                                            <span class="error_marker"
+                                                                  style="color:red">*</span>{% endif %}</label>
+                                                    <div class="input-group"> {{ parent_form.date_of_death }}</div>
+                                                </div>
+                                                <span class="error"
+                                                      id="id__date_of_death">{{ parent_form.date_of_death.errors }}</span>
+
+                                            </div>
+                                            <div class="filter_col col-md-6">
+
+                                                      {{ parent_form.death_certificate|as_crispy_field }}
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+
+                                                      {{ parent_form.disability|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-4">
+
+                                                      {{ parent_form.occupation|as_crispy_field }}
+                                            </div>
+                                            <div class="filter_col col-md-4">
+
+                                                {{ parent_form.organisation|as_crispy_field }}
+                                            </div>
+                                            <div class="filter_col col-md-4">
+
+                                                      {{ parent_form.gross_annual_income|as_crispy_field }}
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                {% endfor %}
+                                <div class="row">
+                                    <div class="col-md-6">
+
+                                              {{ mastercard_form.name_of_guardian_or_spouse|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-6">
+
+                                              {{ mastercard_form.guardian_or_spouse_phone|as_crispy_field }}
+
+                                    </div>
+                                    <div class="col-md-4">
+
+                                              {{ mastercard_form.guardian_relationship|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-4">
+
+                                              {{ mastercard_form.guardian_occupation|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-4">
+
+                                              {{ mastercard_form.number_of_siblings|as_crispy_field }}
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!--end of third tab-->
+                            <!--fourth tab begins here-->
+                            <div id="education_background" class="form-group tab">
+                                {{ education_formset.management_form }}
+                                <legend>Applicant's Education Background</legend>
+                                {% for edu_form in education_formset %}
+                                    {% for hidden in edu_form.hidden_fields %}
+                                        {{ hidden|as_crispy_field }}
+                                    {% endfor %}
+                                    <div id="educationTable">
+                                    <div id="education_fieldset"
+                                         style="border: 5px solid #eee;padding: 20px;margin: 20px">
+
+                                        <h5>{{ school_types|get_at_index:forloop.counter0 }}</h5>
+                                        <div class="formset_row row">
+                                          <div class="col-md-12">
+                                            {{edu_form.particular|as_crispy_field}}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ edu_form.name_of_school|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ edu_form.location_of_school|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ edu_form.school_ownership|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ edu_form.total_score|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ edu_form.year_of_completion|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ edu_form.average_cost_of_fees_per_year|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ edu_form.certificate|as_crispy_field }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    </div>
+                                {% endfor %}
+                               
+                            </div>
+                        </div>
+                        <!--end of fourth tab-->
+                        <!--fifth tab begins from here-->
+                        <div class="tab">
+                            <legend class="mx-3">Publications and Research Projects</legend>
+
+                            <div id="researchTable">
+                                <div style="border: 5px solid #eee;padding: 20px;margin: 20px">
+                                    <div class="formset row">
+
+                                        {{ research_formset.management_form }}
+
+                                        {% for form in research_formset %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden|as_crispy_field }}
+                                            {% endfor %}
+
+
+                                            <div class="col-md-6">
+                                                {{ form.code|as_crispy_field }}
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                {{ form.title|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-12">
+                                                {{ form.description|as_crispy_field }}
+                                            </div>
+
+                                        {% endfor %}
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <!--last tab-->
+                        <!--more tab-->
+                        <div class="tab">
+                            <legend>Family associated Information</legend>
+                            <h6>Household income source (List the major sources of household/family income)</h6>
+                            <div id="house_hold_income">
+                                <div style="border: 5px solid #eee;padding: 20px;margin: 20px">
+
+                                    <div class="formset_row row">
+                                        {{ incomesource_formset.management_form }}
+
+                                        {% for income in incomesource_formset %}
+
+                                            <div class="col-md-6">
+                                                {{ income.source|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6">
+
+                                                {{ income.amount|as_crispy_field }}
+                                            </div>
+
+
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        {{ mastercard_form.income_contrib3efc|as_crispy_field }}
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12">
+
+                                          {{ mastercard_form.own_livestock|as_crispy_field }}
+                                </div>
+                            </div>
+
+                            <div id="family_live_stock">
+                                <h6> list the type and number of livestock</h6>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        {{ mastercard_form.number_of_donkeys|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ mastercard_form.number_of_camels|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ mastercard_form.number_of_chickens|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ mastercard_form.number_of_cattle|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ mastercard_form.number_of_goats|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ mastercard_form.number_of_sheep|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-12">
+                                        <hr>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+
+                                          {{ mastercard_form.electricity|as_crispy_field }}
+                                </div>
+                                <div class="col-md-4">
+
+                                          {{ mastercard_form.toilet_type|as_crispy_field }}
+                                </div>
+                                <div class="col-md-4">
+
+                                    {{ mastercard_form.how_many_share_toilet|as_crispy_field }}
+
+
+                                </div>
+                                <div class="col-md-6">
+                                    {{ mastercard_form.water_source|as_crispy_field }}
+                                </div>
+                                <div class="col-md-3">
+                                    {{ mastercard_form.other_water_source|as_crispy_field }}
+                                </div>
+                                <div class="col-md-3">
+                                    {{ mastercard_form.distance_to_the_source|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    {{ mastercard_form.type_of_roofing|as_crispy_field }}
+                                </div>
+
+                                <div class="col-md-12" id="id_other_roofing_div">
+                                    {{ mastercard_form.other_roofing|as_crispy_field }}
+                                </div>
+
+                                <div class="col-md-12">
+                                    {{ mastercard_form.type_of_house_wall|as_crispy_field }}
+                                </div>
+
+
+                                <div class="col-md-12" id="id_other_house_wall_div">
+                                    {{ mastercard_form.other_house_wall|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    {{ mastercard_form.type_of_floor|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12" id="id_other_floor_div">
+                                    {{ mastercard_form.other_floor|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    {{ mastercard_form.home_assets|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12" id="id_other_asset_div">
+                                    {{ mastercard_form.other_assets|as_crispy_field }}
+                                </div>
+                            </div>
+                            <h6>What are your current sources of income? Rank them in order of importance</h6>
+                            <div class="row">
+
+
+                                <div class="col-md-6">
+
+                                          {{ mastercard_form.income_source_1|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ mastercard_form.income_source_2|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ mastercard_form.income_source_3|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ mastercard_form.income_source_4|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    <hr>
+                                </div>
+                                <div class="col-md-6">
+                                    {{ mastercard_form.rooms_in_house|as_crispy_field }}
+                                </div>
+
+                                <div class="col-md-6">
+                                    {{ mastercard_form.people_in_house|as_crispy_field }}
+                                </div>
+
+                                <div class="col-md-12">
+                                    {{ mastercard_form.pending_high_school_balances|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12" id="pending_high_school_balance_id">
+                                    {{ mastercard_form.school_balances|as_crispy_field }}
+                                </div>
+                            </div>
+
+
+                        </div>
+
+ <!--one more tab-->
+ <div class="form-fieldset-group tab">
+    <div class="row">
+
+
+        <div class="col-md-12">
+            <legend>Work Experience (to be filled by Postgraduate and Masters Applicants Only)
+            </legend>
+
+        </div>
+        <div class="col-md-12">
+            <h6>Provide details of work experience gained after your degree.</h6>
+            <div id="employmentTable">
+                {{ experience_formset.management_form }}
+
+                {% for edu_form in experience_formset %}
+                    {% for hidden in edu_form.hidden_fields %}
+                        {{ hidden|as_crispy_field }}
+                    {% endfor %}
+                    <div style="border: 5px solid #eee;padding: 20px;margin: 20px">
+
+                        <div class="row formset_row">
+
+                            <div class="col-md-12">
+                                {{ edu_form.organisation|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ edu_form.employed_from|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ edu_form.employed_to|as_crispy_field }}
+                            </div>
+                            <div class="col-md-12">
+                                {{ edu_form.average_monthly_salary|as_crispy_field }}
+                            </div>
+                            <div class="col-md-12">
+                                {{ edu_form.reason_for_leaving|as_crispy_field }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+            </div>
+
+
+        </div>
+        <div class="col-md-12">
+            <h6>What degree program did you pursue at undergraduate level?</h6>
+        </div>
+        <div class="col-md-6">
+            {{ mastercard_form.degree_program|as_crispy_field }}
+        </div>
+        <div class="col-md-2">
+            {{ mastercard_form.grading_creteria|as_crispy_field }}
+        </div>
+        <div class="col-md-4">
+            {{ mastercard_form.gpa|as_crispy_field }}
+        </div>
+
+        <div class="col-md-6">
+            {{ mastercard_form.institution|as_crispy_field }}
+        </div>
+        <div class="col-md-6">
+            {{ mastercard_form.year_of_completion|as_crispy_field }}
+        </div>
+
+        <div class="col-md-12">
+            {{ mastercard_form.most_significant_contribution|as_crispy_field }}
+        </div>
+        <div class="col-md-12">
+            {{ mastercard_form.employer_support|as_crispy_field }}
+        </div>
+        <div class="col-md-12" id="employee_endorsement_letter">
+            {{ mastercard_form.letter_of_endorsement|as_crispy_field }}
+        </div>
+
+    </div>
+</div>
+<!--end of one more tab-->
+                        <!--end of more tab-->
+                        <!--one more tab-->
+                        <div class="tab">
+                            <div class="form-fieldset-group">
+
+
+                                <legend>Leadership experience and participation in community activities</legend>
+                                {{ mastercard_form.held_leadership_position|as_crispy_field }}
+                                {{ position_formset.management_form }}
+                                {% for position_form in position_formset %}
+                                    {% for hidden in position_form.hidden_fields %}
+                                        {{ hidden|as_crispy_field }}
+                                    {% endfor %}
+                                    <div id="leadership" style="border: 5px solid #eee;padding: 20px;margin: 20px">
+
+                                        <div class="row formset_row">
+                                            <div class="col-md-6">
+                                                {{ position_form.position|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ position_form.group|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ position_form.year|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ position_form.certificate|as_crispy_field }}
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                {% endfor %}
+                                {{ mastercard_form.experience|as_crispy_field }}
+                                {{ mastercard_form.challenge|as_crispy_field }}
+                                <h6>Please rank in order of preference the first three sectors you would like to work in
+                                    the most.</h6>
+                                {{ mastercard_form.sector_1|as_crispy_field }}
+                                <div id="other_sector_1_div">
+                                    {{ mastercard_form.other_sector_1|as_crispy_field }}
+                                </div>
+                                {{ mastercard_form.sector_2|as_crispy_field }}
+                                <div id="other_sector_2_div">
+                                    {{ mastercard_form.other_sector_2|as_crispy_field }}
+                                </div>
+                                {{ mastercard_form.sector_3|as_crispy_field }}
+                                <div id="other_sector_3_div">
+                                    {{ mastercard_form.other_sector_3|as_crispy_field }}
+                                </div>
+
+                            </div>
+                        </div>
+                        <!--end of one more tab-->
+
+                        <!--one more tab-->
+                        <div id="other-info" class="form-fieldset-group tab">
+                            <legend>Other information</legend>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{ mastercard_form.have_physical_disability|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12" id="physical_disability_div">
+                                    {{ mastercard_form.physical_disability|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    {{ mastercard_form.have_history_of_chronic_illness|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12" id="chronica_illness_div">
+                                    {{ mastercard_form.history_of_chronic_illness|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    {{ mastercard_form.have_been_arrested|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12" id="been_arrested_div">
+                                    {{ mastercard_form.cause_of_arrest|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                              {{ form.english_in_high_school|as_crispy_field }}
+                                    </div>
+
+                                <div class="col-md-12">
+                                    {{ form.scholarship_call_source|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12" id="other_call_sources">
+                                    {{ mastercard_form.other_call_source|as_crispy_field }}
+                                </div>
+                            </div>
+                        </div>
+                        <!--end of one more tab-->
+                        <!--one more tab-->
+                        <div id="statements" class="form-fieldset-group tab">
+                            <div class="row marl">
+                            <legend>Sworn Statements</legend>
+                            <h4>Declaration</h4>
+                            <p>
+
+                                I do declare that all the information I have provided in this application form
+                                is to the best of my knowledge true and accurate. I do understand that any
+                                information that may be deemed falsified and/or inaccurate shall lead to
+                                automatic disqualification of my application and/or scholarship. I do
+                                acknowledge that completing this application DOES NOT imply automatic award of
+                                scholarship. The decision of the RUFORUM Technical Committee is Final.
+
+                            </p>
+                            <p class="release-form">
+                            <h4>Release form</h4>
+
+                            If selected to be awarded MCF@RUFORUM scholarship, I agree to the education
+                            model and training framework that will be provided by the university to which I
+                            have been provided the scholarship to undertake my studies. I agree to abide and
+                            allow the university, RUFORUM and Mastercard Foundation for purposes of any
+                            public relations and purpose of promoting their services to the wider global
+                            context make use of any photographs and/or my personal biodata as permissible
+                            under ethical conduct. I provide RUFORUM and member universities and Mastercard
+                            Foundation such express permission to use the said material either complete or
+                            in part, alone or in conjunction with any wordings, caption or drawing. RUFORUM,
+                            Gulu and Egerton universities, and Mastercard Foundation can use the
+                            photographs for purposes of out-door advertising or any other media or before
+                            any forum gathering for the promotion of their mandate and services.
+
+                            </p>
+                            <p class="exclusivity">
+                            <h4>Exclusivity</h4>
+
+                            I declare that I will not provide any
+                            material to any organisation without any prior informed consent of RUFORUM, if
+                            such information is to be used to the detriment of RUFORUM, the university, and
+                            Mastercard Foundation. I pledge that I will not prosecute or institute any
+                            proceeding or make claims or demands either against RUFORUM, the university and
+                            Mastercard Foundation or any of its staff and representatives in respect to the
+                            use of materials provided including photographs among others. I do understand
+                            the details and conditions of the release and exclusivity conditions
+
+                            </p>
+                            <div id="div_id_i_agree" class="control-group pure-control-group"><label for="id_i_agree"
+                                                                                                     class="checkbox requiredField">
+                                <input type="checkbox" name="i_agree" required class="checkboxinput" id="id_i_agree"/>
+                                I agree to the above declaration, conditions of the release and exclusivity conditions
+                            </label>
+                                <p id="error_id_i_agree" class="field-error-inline-html5validation"></p></div>
+                            </div>
+                        </div>
+                        <!--end of one more tab-->
+                        <div class="col-md-12 m-1">
+                            <div style="overflow:auto;">
+                                <div style="float:right; margin-top: 20px;">
+                                    <button type="button" class="btn previous">Previous</button>
+                                    <button type="button" class="next btn btn-primary">Next</button>
+                                    <button type="button" class="btn btn-primary preview">Preview</button>
+                                    <button type="button" class="btn btn-primary submit">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <div style="text-align:center;margin-top:6px;">
+                            <span class="step">1</span>
+                            <span class="step">2</span>
+                            <span class="step">3</span>
+                            <span class="step">4</span>
+                            <span class="step">5</span>
+                            <span class="step">6</span>
+                            <span class="step">7</span>
+                            <span class="step">8</span>
+                            <span class="step">9</span>
+                            <span class="step">10</span>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- <input type="hidden" id="save_new_form" name="savenewform"> -->
+
+        </div>
+
+
+    </form>
+    <br clear="all">
+
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog modal-confirm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="icon-box">
+                        <i class="material-icons">warning</i>
+                    </div>
+                    <h4 class="modal-title">Are you sure?</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Do you really want to save your application? You will not be able to edit it after this.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmSave">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+    <script src="{% static 'js/jquery.validate.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/multi-form.js' %}"></script>
+    <script type='text/javascript'
+            src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+    <script src="https://malsup.github.io/jquery.form.js"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+
+    <script src="{% static 'js/jquery.formset.js' %}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#id_call").attr('readonly', true);
+            $("#Father_parent_death").hide();
+            $("#Mother_parent_death").hide();
+            $('#id_other_roofing_div').hide();
+            $('#id_other_house_wall_div').hide();
+            $("#family_live_stock").hide();
+            $('#id_other_floor_div').hide();
+            $("#id_other_asset_div").hide();
+            $("#pending_high_school_balance_id").hide();
+            $("#other_sector_3_div").hide();
+            $("#other_sector_2_div").hide();
+            $("#other_sector_1_div").hide();
+            $("#leadership").hide();
+            $("#other_call_sources").hide();
+            $("#been_arrested_div").hide();
+            $("#chronica_illness_div").hide();
+            $("#physical_disability_div").hide();
+            $("#employee_endorsement_letter").hide();
+            // hide type of roofing for others specification and show when others is clicked
+            $("[name='type_of_roofing']").click(function () {
+                if ($("#id_id_type_of_roofing_0_6").prop('checked') == true) {
+                    $('#id_other_roofing_div').show();
+
+                } else if ($("#id_id_type_of_roofing_0_6").prop('checked') == false) {
+                    $('#id_other_roofing_div').hide();
+                }
+                ;
+            });
+
+
+
+
+            // show and hide other wall type specification
+            $("[name='type_of_house_wall']").click(function () {
+                if ($("#id_id_type_of_house_wall_0_6").prop('checked') == true) {
+                    $('#id_other_house_wall_div').show();
+
+                } else if ($("#id_id_type_of_house_wall_0_6").prop('checked') == false) {
+                    $('#id_other_house_wall_div').hide();
+                }
+                ;
+            });
+            // show and hide other floor type specification
+            $("[name='type_of_floor']").click(function () {
+                if ($("#id_id_type_of_floor_0_4").prop('checked') == true) {
+                    $('#id_other_floor_div').show();
+
+                } else if ($("#id_id_type_of_floor_0_4").prop('checked') == false) {
+                    $('#id_other_floor_div').hide();
+                }
+                ;
+            });
+            // show and hide other assets specification
+            $("[name='home_assets']").click(function () {
+                if ($("#id_home_assets_8").prop('checked') == true) {
+                    $('#id_other_asset_div').show();
+
+                } else if ($("#id_home_assets_8").prop('checked') == false) {
+                    $('#id_other_asset_div').hide();
+                }
+                ;
+            });
+
+
+            var val = {
+                // Specify validation rules
+                rules: {
+                    'id_parent_set-0-full_name': {
+                        required: true
+                    },
+                    'id_parent_set-0-status': {
+                        required: true
+
+                    },
+                    'id_parent_set-1-status': {
+                        required: true
+                    },
+
+                    'id_parent_set-1-full_name': {
+                        required: true
+                    },
+
+                    'id_parent_set-0-occupation': {
+                        required: true
+                    },
+                    'id_parent_set-1-occupation': {
+                        required: true
+                    },
+                    'id_parent_set-0-occupation': {
+                        required: true
+                    },
+                    'id_parent_set-0-occupation': {
+                        required: true
+                    },
+                },
+                // Specify validation error messages
+                messages: {
+                    highest_qualification:
+                        "Please fill in your highest level of education",
+                    'id_parent_set-0-full_name': {
+                        required: "This field is required"
+                    },
+                    non_university_partners: {
+                        required: "Please include at least one non University partner"
+                    },
+                    other_departments: {
+                        required: "Please include at least one other department"
+                    },
+
+                    dean_contact: {
+                        required: "Dean's contact is required"
+                    },
+                    proposal_title: {
+                        required: "Please write short notes about your proposal"
+                    },
+                    proposal: {
+                        required: "Proposal is Required"
+                    },
+                    area_of_specialisation: {
+                        required: "Area of specialization  is required",
+
+                    },
+                    other_universities: {
+                        required: "Please include at least one other University"
+                    },
+                    supporting_letter_from_university: {
+                        requied: "Supporting letter is required"
+                    },
+                    project_timeline: {
+                        requied: "Please upload the project timeline"
+                    },
+                    application_form: {
+                        requied: "Please upload the application form"
+                    }
+                }
+            }
+            $("#scholarshipform").multiStepForm(
+                {
+                    // defaultStep:0,
+                    beforeSubmit: function (form, submit) {
+                        console.log("called before submiting the form");
+                        console.log(form);
+                        console.log(submit);
+                    },
+                    validations: val,
+                }
+            ).navigateTo(0);
+        });
+
+
+        //hide/show Physical disability
+        $('#id_have_physical_disability').click(function () {
+
+            if ($('#id_have_physical_disability').val() == 'True') {
+                $("#physical_disability_div").show();
+            } else if ($('#id_have_physical_disability').val() == 'False') {
+                $("#physical_disability_div").hide();
+            }
+        });
+        //hide/show History of chronic illness
+        $('#id_have_history_of_chronic_illness').click(function () {
+
+            if ($('#id_have_history_of_chronic_illness').val() == 'True') {
+                $("#chronica_illness_div").show();
+            } else if ($('#id_have_history_of_chronic_illness').val() == 'False') {
+                $("#chronica_illness_div").hide();
+            }
+        });
+        //hide/show Cause of arrest
+        $('#id_have_been_arrested').click(function () {
+
+            if ($('#id_have_been_arrested').val() == 'True') {
+                $("#been_arrested_div").show();
+            } else if ($('#id_have_been_arrested').val() == 'False') {
+                $("#been_arrested_div").hide();
+            }
+
+        });
+        //hide/show leadership positions held
+        $('#id_held_leadership_position').click(function () {
+
+            if ($('#id_held_leadership_position').val() == 'True') {
+                $("#leadership").show();
+            } else if ($('#id_held_leadership_position').val() == 'False') {
+                $("#leadership").hide();
+            }
+
+        });
+        //hide/show other call sources
+        $('#id_scholarship_call_source').click(function () {
+
+            if ($('#id_scholarship_call_source').val() == 'others') {
+                $("#other_call_sources").show();
+            } else {
+                $("#other_call_sources").hide();
+            }
+
+        });
+        //hide/show employee support
+        $('#id_employer_support').click(function () {
+
+            if ($('#id_employer_support').val() == 'True') {
+                $("#employee_endorsement_letter").show();
+            } else if ($('#id_employer_support').val() == 'False') {
+                $("#employee_endorsement_letter").hide();
+            }
+
+        });
+        // sector 1
+        $('#id_sector_1').click(function () {
+
+            if ($('#id_sector_1').val() == 'others') {
+                $("#other_sector_1_div").show();
+            } else {
+                $("#other_sector_1_div").hide();
+            }
+
+        });
+        // sector 2
+        $('#id_sector_2').click(function () {
+
+            if ($('#id_sector_2').val() == 'others') {
+                $("#other_sector_2_div").show();
+            } else {
+                $("#other_sector_2_div").hide();
+            }
+
+        });
+        // sector 3
+        $('#id_sector_3').change(function () {
+
+            if ($('#id_sector_3').val() == 'others') {
+                $("#other_sector_3_div").show();
+            } else {
+                $("#other_sector_3_div").hide();
+            }
+
+        });
+        $('#id_parent_set-0-status').click(function () {
+
+            if ($('#id_parent_set-0-status').val() == 'deceased') {
+                $("#Father_parent_death").show();
+            } else if ($('#id_parent_set-0-status').val() == 'alive') {
+                $("#Father_parent_death").hide();
+            }
+
+        });
+        //hide/show pending high school balance
+        $('#id_pending_high_school_balances').click(function () {
+
+            if ($('#id_pending_high_school_balances').val() == 'True') {
+                $("#pending_high_school_balance_id").show();
+            } else if ($('#id_pending_high_school_balances').val() == 'False') {
+                $("#pending_high_school_balance_id").hide();
+            }
+
+        });
+        $('#id_parent_set-1-status').click(function () {
+
+            if ($('#id_parent_set-1-status').val() == 'deceased') {
+                $("#Mother_parent_death").show();
+            } else if ($('#id_parent_set-1-status').val() == 'alive') {
+                $("#Mother_parent_death").hide();
+            }
+
+        });
+        $('#id_own_livestock').click(function () {
+
+            if ($('#id_own_livestock').val() == 'True') {
+                $("#family_live_stock").show();
+            } else if ($('#id_own_livestock').val() == 'False') {
+                $("#family_live_stock").hide();
+            }
+
+        });
+        $('#educationTable .formset_row').formset({
+            addText: 'Add education',
+            deleteText: 'remove',
+            prefix: 'education_set'
+        });
+
+
+
+        $('#researchTable .formset').formset({
+            addText: 'Add Research/Publication',
+            deleteText: 'remove',
+            prefix: 'research_set'
+        });
+
+        $('#house_hold_income .formset_row').formset({
+                addText: 'Add Source',
+                deleteText: 'remove',
+                prefix: 'incomesource_set'
+        });
+
+
+
+
+        $('#employmentTable .formset_row').formset({
+            addText: 'Add employment',
+            deleteText: 'remove',
+            prefix: 'employment_set'
+        });
+
+        $('#leadership .formset_row').formset({
+            addText: 'Add Leadership position',
+            deleteText: 'remove',
+            prefix: 'position_set'
+        });
+        $('#refereeTable .formset_row').formset({
+            addText: 'Add referee letter',
+            deleteText: 'remove',
+            prefix: 'referee_set'
+        });
+
+
+
+
+        $('#recurring_block').hide()
+        $("#id_contacts").select2();
+        $("#id_assigned_to").select2();
+        $("#id_teams").select2();
+        $("#id_start_date").css('color', 'black');
+        $("#id_end_date").css('color', 'black');
+
+
+        if ($('#id_call_type').val() == 'Recurring') {
+            $('#recurring_block').show()
+        } else {
+            $('#recurring_block').hide()
+        }
+
+        $('#id_call_type').on('change', function () {
+            // console.log($(this).val())
+            if ($(this).val() == 'Recurring') {
+                $('#recurring_block').show()
+            } else {
+                $('#recurring_block').hide()
+            }
+        });
+        {% for message in messages %}
+            $(document).ready(function () {
+                $.notify("{{message}}", "{{ message.tags }}");
+            });
+        {% endfor %}
+
+
+    </script>
+
+{% endblock js_block %}

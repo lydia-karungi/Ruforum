@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block breadcrumb %}
+    {% block extralinks %}
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css"
+              rel="stylesheet">
+        <link rel="stylesheet" type="text/css"
+              href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css"/>
+    {% endblock %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'contacts:students_list' %}">Students</a></li>
+            <li class="breadcrumb-item active">{% if student_obj %}Edit{% else %}Create{% endif %}</li>
+        </ol>
+    </nav>
+{% endblock %}
+{% block content %}
+    
+
+    <div class="overview_form_block row  justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <form id="formid" action='' method="POST" novalidate enctype="multipart/form-data">
+                  {% csrf_token %}
+                    <div class="card-header">
+                        <div class="card-title text-center">
+                            {% if student_obj %}EDIT{% else %}ADD NEW{% endif %} STUDENT
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mar1">
+
+                            <div class="col-md-6">
+                             {{ form.user|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+
+                             {{ form.year_of_birth|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                             {{ form.university|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+
+                            {{ form.university_department|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+
+                            {{ form.university_reg_no|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+
+                             {{ form.degree_program_level|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+
+                             {{ form.degree_program_name|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                             {{ form.intake_year|as_crispy_field }}
+                            </div>
+                            <div class="col-md-4">
+                                {{form.graduated|as_crispy_field}}
+                            </div>
+                            <div class="col-md-4">
+
+                             {{ form.grad_expected|as_crispy_field }}
+                            </div>
+                            <div class="col-md-4">
+
+                             {{ form.grad_actual|as_crispy_field }}
+                            </div>
+                            <div class="col-md-12">
+                             {{ form.thesis_title|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+
+                             {{ form.cohort|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                             {{ form.supervisor1|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 form-group">
+
+                             {{ form.supervisor2|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                             {{ form.supervisor3|as_crispy_field }}
+                            </div>
+                            <div class="col-md-4">
+
+                             {{ form.grant_type|as_crispy_field }}
+                            </div>
+                            <div class="col-md-4">
+
+                              {{ form.student_type|as_crispy_field }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form.funder|as_crispy_field }}
+                            </div>
+                            <div class="col-md-12">
+                                {{ form.research_abstract|as_crispy_field }}
+                            </div>
+
+
+                            <div class="col-md-12">
+
+                                <div class="form-actions row marl text-center">
+                                    <button class="btn btn-primary" type="submit" name="save">Save</button>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+        </form>
+    </div>
+        </div>
+    </div>
+    <br clear="all">
+    <!-- overview ends here -->
+
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+    <script type='text/javascript'
+            src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+    <script src="https://malsup.github.io/jquery.form.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#id_user").select2()
+
+        });
+
+        {% for message in messages %}
+            $(document).ready(function () {
+                $.notify("{{message}}", "{{ message.tags }}");
+            });
+        {% endfor %}
+    </script>
+
+{% endblock js_block %}

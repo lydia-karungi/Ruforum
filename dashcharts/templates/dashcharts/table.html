@@ -1,0 +1,6 @@
+{% load static %}
+
+$('#{{table_name}}').DataTable( {
+    "data": {{data|safe}},
+    "columns": {{table_columns|safe}}
+} );

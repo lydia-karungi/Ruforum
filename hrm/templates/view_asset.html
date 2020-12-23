@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% load paginate %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'hrm:asset_list' %}">Assets</a></li>
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">Overview</span>
+              <span class="" style="margin-top: 0px">
+
+                <div class="dropdown buttons_row">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url "hrm:edit_asset" assetrecord.id %}">Edit</a></li>
+                  </ul>
+                </div>
+
+              </span>
+            </h5>
+          </div>
+            </div>
+            <div class="card-body">
+          <div class="row marl">
+              <div class="col-md-4">
+              <dl>
+
+                  <dt>Asset Name</dt>
+                  <dd>{{assetrecord.name}}</dd>
+
+                  <dt>Category</dt>
+                  <dd>{{assetrecord.category}}</dd>
+
+                  <dt>Assigned To</dt>
+                  <dd>{{assetrecord.assigned_to}}</dd>
+
+                  <dt>Manufacturer</dt>
+                  <dd>{{assetrecord.manufacturer}}</dd>
+                  <dt>Serial number</dt>
+                  <dd>{{assetrecord.serial_number}}</dd>
+                  <dt>Asset code</dt>
+                  <dd>{{assetrecord.asset_code}}</dd>
+              </dl>
+              </div>
+              <div class="col-md-4">
+              <dl>
+
+                  <dt>Purchase Date</dt>
+                  <dd>{{assetrecord.purchase_date}}</dd>
+
+                  <dt>Invoice No</dt>
+                  <dd>{{assetrecord.invoice_number}}</dd>
+                  <dt>Working</dt>
+                  <dd>{{assetrecord.working|yesno:"Yes,No"}}</dd>
+
+                  <dt>Warranty end date</dt>
+                  <dd>{{assetrecord.warranty_end_date}}</dd>
+
+                  <dt>Asset image</dt>
+                  <dd><a href="{{assetrecord.image.url}}"> image</a></dd>
+              </dl>
+              </div>
+              <div class="col-md-4">
+              <dl>
+
+                  <dt>Note</dt>
+                  <dd>{{assetrecord.note}}</dd>
+
+
+
+              </dl>
+              </div>
+        </div>
+
+</div>
+
+    </div>
+<br clear="all">
+  </div>
+  <br clear="all">
+
+</div>
+</div>
+
+
+{% endblock %}

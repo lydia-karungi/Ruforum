@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% load common_tags %}
+{% load humanize %}
+<!-- <a href=""><button class="btn btn-primary" type="button">Logout</button></a> -->
+<div class="row marl justify-content-center">
+  <div class="col-md-10">
+    <div class="card">
+      <div class="card-header">
+      <h3 class="text-center"><strong>Data Entrant  Dashboard</strong> <br><b>Dear {{user.last_name}} {{user.first_name}}</b></h3>
+      <h5>Welcome to the Ruforum Contacts and Events Management system, using this system you can view and add new contacts and Events for Ruforum.For any enquiry, contact the sytem admin
+         <div class="text-center"><a href="mailto: cgs@ruforum.org"> here </a></div>
+      </h5>
+      </div>
+      </div>
+
+    <!-- count_blocks_row starts here -->
+    <div class="row count_blocks_row">
+
+      <div class="col-md-6">
+        <div class="item green">
+          <a href="#" id="reviewed_applications">
+            <div class="title">Male Contacts</div>
+            <div class="count">{{male_contact_count}}</div>
+          </a>
+          <!-- <div class="more"><a href="#">Go Live</a></div> -->
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="item yellow">
+          <a href="#" id="review_applications">
+            <div class="title">Female Contacts</div>
+            <div class="count">{{female_contact_count}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+
+    </div>
+    <!-- count_blocks_row ends here -->
+    <div class="open_sections row">
+      <div class="col-md-12 table_container_row">
+        <div class="card">
+            <div id="scholarshipreview_list"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block js_block %}
+<script type="text/javascript">
+
+  $(document).ready(function () {
+
+
+  });
+
+</script>
+{% endblock js_block %}

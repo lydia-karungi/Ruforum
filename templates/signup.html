@@ -1,0 +1,202 @@
+{% load staticfiles %}
+{% load compress %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RUFORUM</title>
+    <!-- Bootstrap core CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css" />
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+    <!-- Custom styling plus plugins -->
+    {% compress css %}
+    <link href="{% static 'css/main.scss' %}" type="text/x-scss" rel="stylesheet">
+    {% endcompress %}
+    {% block extralinks %}{% endblock %}
+  </head>
+  <body >
+    <div class=" row">
+      <div class="col-xl-8 offset-xl-2">
+
+
+
+          <div class="login_block">
+            <div class="login_form_block">
+
+              <div class="welcome">Let's Create Your Account!</div>
+              <div class=" welcome">
+                <img src="{% static "img/ruforum.png" %}" style="width: 80%;">
+              </div>
+              <form method="POST" action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                  {{form.errors}}
+                  <div class="col-md-12">
+                    <div class="form-group">
+
+                      <label for="title" class="required">Title {% if form.title.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                {{form.title}}
+                <span class="error" id="id_title">{{ form.title.errors }}</span>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+
+                      <label for="first_name" class="required">First Name {% if form.first_name.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                {{form.first_name}}
+                <span class="error" id="id_first_name">{{ form.first_name.errors }}</span>
+                  </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+
+                      <label for="last_name" class="required">Last Name {% if form.last_name.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                {{form.last_name}}
+                <span class="error" id="id_first_name">{{ form.last_name.errors }}</span>
+
+                  </div>
+                  </div>
+                  <div class="col-md-12">
+
+                    <div class="form-group">
+                      <label for="business_email" class="required">Business Email {% if form.business_email.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                {{form.business_email}}
+                <span class="error" id="id_first_name">{{ form.business_email.error }}</span>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="home_address" class="required">Home Address {% if form.home_address.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                {{form.home_address}}
+                <span class="error" id="id_first_name">{{ form.home_address.error }}</span>
+
+                  </div>
+                  </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="gender" class="required">Gender {% if form.gender.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+              {{form.gender}}
+              <span class="error" id="id_first_name">{{ form.gender.error }}</span>
+                </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="country" class="required">Country of Residence {% if form.country.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+              {{form.country}}
+              <span class="error" id="id_first_name">{{ form.country.error }}</span>
+
+                </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                      <label for="mobile" class="required">Mobile {% if form.mobile.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+
+                        <div style="display:inline-flex; width: auto;">
+                          {{form.mobile}}
+                        </div>
+
+                <span class="error" id="id_mobile">{{ form.mobile.errors }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                      <label for="business_tel" class="required">Business Telephone {% if form.business_tel.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                        <div style="display:inline-flex; width: auto;">
+                          {{form.business_tel}}</div>
+
+                <span class="error" id="id_mobile">{{ form.business_tel.errors }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+
+                  <div class="form-group">
+
+                    <label for="nationality" class="required">Nationality {% if form.nationality.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+              {{form.nationality}}
+              <span class="error" id="id_first_name">{{ form.nationality.error }}</span>
+
+                </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="institution" class="required">Institution {% if form.institution.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+              {{form.institution}}
+              <span class="error" id="id_institution">{{ form.institution.error }}</span>
+                </div>
+                </div>
+
+               <div class="col-md-6">
+                <div class="form-group">
+                  <label for="area_of_specialisation" class="required">Area of Specialisation {% if form.area_of_specialisation.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.area_of_specialisation}}
+            <span class="error" id="id_area_of_specialisation">{{ form.area_of_specialisation.errors }}</span>
+              </div>
+               </div>
+
+               <div class="col-md-6">
+                <div class="form-group">
+                    <label for="highest_qualification" class="required">Highest Qualification {% if form.highest_qualification.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+              {{form.highest_qualification}}
+              <span class="error" id="id_highest_qualification">{{ form.highest_qualification.errors }}</span>
+              </div>
+               </div>
+               <div class="col-md-6">
+                <div class="form-group">
+                  <label for="password1" class="required">Password {% if form.password1.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.password1}}
+            <span class="error" id="id_password1">{{ form.password1.errors }}</span>
+              </div>
+               </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+
+                    <label for="password2" class="required">Confirm Password {% if form.password2.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+              {{form.password2}}
+              <span class="error" id="id_password2">{{ form.password2.errors }}</span>
+                </div>
+                </div>
+                <div class="col-auto">
+                  <div class="avatar-wrapper" data-tippy-placement="bottom" title="Upload Profile Picture">
+                      <img alt="" class="profile-pic" src="{% static 'images/user.png'%}"/>
+                      <div class="upload-button"></div>
+                      <input accept="image/*" class="file-upload" name="picture" type="file"/>
+                  </div>
+              </div>
+
+                <div class="forgot col-md-12">Back to login <a href="{% url "common:login" %}">Click Here?</a></div>
+               <button type="submit" class="btn btn-danger" style="margin: 12px;">Signup</button>
+              </div>
+              </form>
+            </div>
+          </div>
+
+      </div>
+    </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="{% static 'js/custom.js' %}"></script>
+
+  </body>
+</html>

@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% load common_tags %}
+{% load humanize %}
+<!-- <a href=""><button class="btn btn-primary" type="button">Logout</button></a> -->
+<div class="row marl justify-content-center">
+  <div class="col-md-10">
+    <div class="card">
+      <div class="card-header">
+      <h3 class="text-center"><strong>PME Dashboard</strong> <br><b>Dear {{user.last_name}} {{user.first_name}}</b></h3>
+      <h5>Welcome to the Ruforum Planning, Marketing and Evaluation system, using this system you can draft work plans, schedule tasks
+        and also manage tasks for the different activities.For any enquiry, contact the System Administrator
+         <a class="text-center" href="mailto: cgs@ruforum.org"> here </a>
+      </h5>
+      </div>
+      </div>
+    <!-- count_blocks_row starts here -->
+    <div class="row count_blocks_row">
+
+      <div class="col-md-6">
+        <div class="item green">
+          <a href="">
+            <div class="title">Workplans</div>
+            <div class="count">{{workplan_count|intcomma}}</div>
+          </a>
+          <!-- <div class="more"><a href="#">Go Live</a></div> -->
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="item yellow">
+          <a href="">
+            <div class="title">Activities</div>
+            <div class="count">{{activities_count|intcomma}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="row count_blocks_row">
+
+      <div class="col-md-3">
+        <div class="item" style="background:#6c757d;">
+          <a href="">
+            <div class="title">Tasks Not Started</div>
+
+            <div class="count">{{task_not_started|length}}</div>
+          </a>
+          <!-- <div class="more"><a href="#">Go Live</a></div> -->
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="item" style="background:#ffc107;">
+          <a href="">
+            <div class="title">Tasks In Progress</div>
+            <div class="count">{{task_in_progress|length}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="item" style="background:#28a745;">
+          <a href="">
+            <div class="title">Tasks Completed</div>
+            <div class="count">{{task_completed|length}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="item" style="background:#dc3545;">
+          <a href="">
+            <div class="title">Tasks Failed</div>
+            <div class="count">{{task_failed|length}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+    </div>
+    <br clear="all">
+  </div>
+</div>
+
+{% endblock %}
+{% block js_block %}
+<script type="text/javascript">
+
+  $(document).ready(function () {
+    $(".tag_class_opp").click(function () {
+      // $(".tag_class_opp").css('cursor', 'pointer')
+      url = ""
+      url = url + "?tag=" + $(this).attr('data-link')
+      window.location.href = url;
+    });
+
+    $(".tag_class_acc").click(function () {
+      // $(".tag_class_acc").css('cursor', 'pointer')
+      url = ""
+      url = url + "?tag=" + $(this).attr('data-link')
+      window.location.href = url;
+    });
+
+  });
+
+</script>
+{% endblock js_block %}

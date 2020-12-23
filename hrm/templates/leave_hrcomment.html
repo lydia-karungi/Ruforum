@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% load paginate %}
+{% load crispy_forms_tags %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'hrm:leave_applications' %}">Leave Applications</a></li>
+    <li class="breadcrumb-item active">HR Comment</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">HR Comment</span>
+            </h5>
+          </div>
+            </div>
+            <div class="card-body">
+          <div class="row marl">
+              <div class="col-md-6">
+              <dl>
+
+                  <dt>Leave Applicant</dt>
+                  <dd>
+                    {{leave.staff}}
+                  </dd>
+
+                  <dt>Request Leave</dt>
+                  <dd>{{leave.leave_assignment.leave_type}}</dd>
+
+                  <dt>Start Date</dt>
+                  <dd>{{leave.from_date}}</dd>
+                  <dt>End Date</dt>
+                  <dd>{{leave.end_date}}</dd>
+                  <dt>Total Number of days Requested</dt>
+                  <dd>{{leave.leave_days_requested}} days</dd>
+                 
+
+              </dl>
+              </div>
+              <div class="col-md-6">
+              <dl>
+                <dt>Contact Person</dt>
+                <dd>{{leave.contact_person}}</dd>
+                <dt>Contact Person's Phone number</dt>
+                <dd>{{leave.contact_person_phone}}</dd>
+                <dt> Contact Person's Phone Email</dt>
+                <dd>{{leave.contact_person_email}}</dd>
+                  <dt>Application Date</dt>
+                  <dd>{{leave.application_date}}</dd>
+                 
+              
+
+              </dl>
+              </div>
+              <div class="col-md-12">
+                  <dl>
+                    <dt>Remarks/Reasons by the Applicant</dt>
+                    <dd>{{leave.remarks}}</dd>
+                    {% if leave.human_resource_comment %}
+                    <dt>HR Comment</dt>
+                    <dd>{{leave.human_resource_comment}}</dd>
+                    {% endif %}
+                  </dl>
+               
+                </div>
+        </div>
+
+</div>
+{% if not leave.human_resource_comment %}
+<div class="card-footer">
+    <form id="formid" action='' method="POST" novalidate enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="col-md-12">
+            {{form.human_resource_comment|as_crispy_field}}
+          </div>
+          <div class="col-md-12">
+            <div class="col-md-12">
+              <div class="row marl buttons_row form_btn_row text-center">
+                <a href="{% url 'hrm:leave_applications' %}" class="btn btn-default clear"
+                id="create_user_cancel">Cancel</a>
+                <button class="btn btn-default save" type="submit">Comment</button>
+               
+              </div>
+            </div>
+          </div>
+    </form>
+</div>
+{% endif %}
+
+    </div>
+<br clear="all">
+  </div>
+  <br clear="all">
+
+</div>
+</div>
+
+
+{% endblock %}

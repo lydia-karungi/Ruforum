@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% load paginate %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'pme:task_list' %}">Tasks</a></li>
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">Overview</span>
+              <span class="" style="margin-top: 0px">
+                {% if perms.tasks.change_task %}
+                <div class="dropdown buttons_row">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'pme:edit_task' taskrecord.id %}">Edit</a></li>
+                  </ul>
+                </div>
+                {% endif %}
+              </span>
+            </h5>
+          </div>
+            </div>
+            <div class="card-body">
+          <div class="row marl">
+              <div class="col-md-12">
+              <h4>Task details</h4>
+              <dl>
+
+                  <dt>Activity:</dt>
+                  <dd>{{taskrecord.activity}}</dd>
+
+                  <dt>Task:</dt>
+                  <dd>{{taskrecord.task_name}}</dd>
+
+                  <dt>Lead:</dt>
+                  <dd>{{taskrecord.lead}}</dd>
+
+                  <dt>Expected output:</dt>
+                  <dd>{{taskrecord.expectedoutput}}</dd>
+                  <dt>Unit:</dt>
+                  <dd>{{taskrecord.unit}}</dd>
+                  <dt>Priority:</dt>
+                  <dd>{{taskrecord.get_priority_display}}</dd>
+                  <dt>Start date:</dt>
+                  <dd>{{taskrecord.start_date}}</dd>
+                  <dt>End date:</dt>
+                  <dd>{{taskrecord.end_date}}</dd>
+                  <dt>Description:</dt>
+                  <dd>{{taskrecord.task_description}}</dd>
+              </dl>
+
+              <h3>Reports</h3>
+              <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open">
+              <div class="card">
+                <div class="card-body">
+                  <div class="card-title text-right">
+                    <span class="float-left">Task Reports -
+                       {% if show_pageitems %}
+                      {% show_pageitems %}
+                      {% else %}
+                      {{ taskrecord.task.all|length }}
+                      {% endif %}</span>
+
+                  </div>
+                    </div>
+                      </div>
+                      <div class="card">
+                  <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                      <thead>
+                        {% if taskrecord.task.all|length > 0 %}
+                        <tr>
+                          <th>#</th>
+
+                          <th>Task</th>
+                          <th>Task Lead</th>
+                          <th>Status</th>
+
+                          <th>Date</th>
+                          <th>report</th>
+                          <th class="text-center">Actions</th>
+                        </tr>
+                        {% endif %}
+                      </thead>
+                      <tbody>
+                        {% if per_page %}
+                        {% paginate per_page taskrecord.task.all as object %}
+                        {% else %}
+                        {% paginate 10 taskrecord.task.all as object %}
+                        {% endif %}
+                        {% for report in taskrecord.task.all %}
+                        <tr class="text-center">
+                          <td scope="row">{{ forloop.counter }}</td>
+
+                            <td>
+                                {{report.task.task_name}}
+                              </td>
+                               <td>
+                                {{report.task.lead}}
+                              </td>
+                              {%  ifequal report.status "completed" %}
+                              <td class="cell status_completed">{{report.get_status_display}}</td>
+                              {% endifequal %}
+                              {% ifequal report.status  "in_progress" %}
+                              <td class="cell status_in_progress">{{report.get_status_display}}</td>
+                              {% endifequal %}
+                              {% ifequal report.status  "not_started" %}
+                              <td class="cell status_not_started">{{report.get_status_display}}</td>
+                              {% endifequal %}
+                              {% ifequal report.status  "failed" %}
+                              <td class="cell status_failed">{{report.get_status_display}}</td>
+                              {% endifequal %}
+                              <td>
+                                  {{report.reported_on}}
+                                </td>
+
+                          {% if report.task_file %}
+                          <td>
+                            <a href="{{report.task_file.url}}" >Task report</a>
+                            </td>
+                            {% else %}
+                            <td>
+                                No report availabe
+                              </td>
+                              {% endif %}
+
+                          <td class="actions">
+
+                            <a title="Edit" href="{% url "pme:edit_task" report.pk %}" class="btn btn-sm btn-success edit"><i
+                                class="fas fa-pencil-alt"></i></a>
+
+
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  {% ifequal taskrecord.task.all|length 0 %}
+                  <h6 class="text-center">No Task Reports Found</h6>
+                  {% endifequal %}
+                  <div class="marl row text-center">
+                    {% show_pages %}
+                  </div>
+
+              </div>
+            </div>
+
+          </div>
+
+
+
+              </div>
+        </div>
+
+</div>
+
+    </div>
+
+  </div>
+</div>
+
+
+{% endblock %}

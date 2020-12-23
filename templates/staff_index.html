@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% load common_tags %}
+{% load humanize %}
+<!-- <a href=""><button class="btn btn-primary" type="button">Logout</button></a> -->
+<div class="row marl justify-content-center">
+
+  <div class="col-md-10">
+    <div class="card m-1">
+      <div class="card-header">
+      <h3 class="text-center"><strong>Staff Dashboard</strong> <br><b>Dear {{user.last_name}} {{user.first_name}}</b></h3>
+      <h5>Welcome to the Ruforum Staff system, using this system you can apply for Leaves, Performance Appraisal and
+        view personal Information.For any enquiry, contact the System Administrator
+         <a class="text-center" href="mailto: cgs@ruforum.org"> here </a>
+      </h5>
+      </div>
+      </div>
+    <!-- count_blocks_row starts here -->
+    <div class="row count_blocks_row">
+
+      <div class="col-md-6">
+        <div class="item sky_blue">
+          <a href="{% url 'hrm:staff_list' %}">
+            <div class="title">Leaves</div>
+            <div class="count">Male: {{male_staff_count|intcomma}} | Female: {{female_staff_count|intcomma}}</div>
+          </a>
+          <!-- <div class="more"><a href="#">Go Live</a></div> -->
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="item red">
+          <a href="">
+            <div class="title">Appraisal</div>
+            <div class="count">{{documents_count|intcomma}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="row count_blocks_row">
+
+    
+      <div class="col-md-6">
+        <div class="item green">
+          <a href="{% url 'common:doc_list' %}">
+            <div class="title">Documents</div>
+            <div class="count">{{documents_count|intcomma}}</div>
+          </a>
+          <!-- <div class="more"><a href="#">Go Live</a></div> -->
+        </div>
+      </div>
+      
+      <div class="col-md-6">
+        <div class="item yellow">
+          <a href="">
+            <div class="title">Upcoming Events</div>
+            <div class="count">{{coming_events_count|intcomma}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- count_blocks_row ends here -->
+    <br clear="all">
+  </div>
+</div>
+
+{% endblock %}
+{% block js_block %}
+<script type="text/javascript">
+
+  $(document).ready(function () {
+    $(".tag_class_opp").click(function () {
+      // $(".tag_class_opp").css('cursor', 'pointer')
+      url = ""
+      url = url + "?tag=" + $(this).attr('data-link')
+      window.location.href = url;
+    });
+
+    $(".tag_class_acc").click(function () {
+      // $(".tag_class_acc").css('cursor', 'pointer')
+      url = ""
+      url = url + "?tag=" + $(this).attr('data-link')
+      window.location.href = url;
+    });
+
+  });
+
+</script>
+{% endblock js_block %}

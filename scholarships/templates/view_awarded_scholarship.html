@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/main.css'%}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css" />
+
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'scholarships:scholarship_list' %}">Scholarships</a></li>
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">Overview</span>
+              <span class="" style="margin-top: 0px">
+                {% if request.user.role == "ADMIN" or request.user.role == "Grants Managers"  or request.user.is_superuser %}
+                <div class="dropdown buttons_row">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a href="{% url 'scholarships:update_scholarship' scholarship.id %}">Edit</a></li>
+                  </ul>
+                </div>
+                {% endif %}
+              </span>
+            </h5>
+          </div>
+          </div>
+          <div class="card-body">
+            <div class="row marl">
+              <div class="col-md-12">
+                      <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_title" data-name="title">Scholarship ID</label>
+                                <div class="application_field" id="title" data-name="title">{{ scholarship.scholarship_id }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_gender" data-name="gender">Student</label>
+                                <div class="application_field" id="gender" data-name="gender">{{ scholarship.student.last_name }} {{ scholarship.student.first_name }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_last_name" data-name="last_name">Student Email</label>
+                                <div class="application_field" id="last_name" data-name="last_name">{{ scholarship.student.business_email }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_first_name" data-name="first_name">Student Phone</label>
+                                <div class="application_field" id="first_name" data-name="first_name">{{ scholarship.student.mobile }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_institution" data-name="institution">Scholarship Type</label>
+                                <div class="application_field" id="institution" data-name="institution">{{ scholarship.application.call.get_scholarship_type_display }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_department" data-name="department">Programme</label>
+                                <div class="application_field" id="department" data-name="department">{{ scholarship.programme_applied_for }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_country" data-name="country">Institution</label>
+                                <div class="application_field" id="country" data-name="country">{{ scholarship.institution }}</div>
+                              </div>
+                            </div>
+
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_country" data-name="country">Start Date</label>
+                                <div class="application_field" id="country" data-name="country">{{ scholarship.start_date }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_nationality" data-name="nationality">Expected Graduation Date</label>
+                                <div class="application_field" id="nationality" data-name="nationality">{{ scholarship.end_date }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_highest_qualification" data-name="highest_qualification">Number of Reports</label>
+                                <div class="application_field" id="highest_qualification" data-name="highest_qualification">{{ scholarship.report_number }}</div>
+                              </div>
+                            </div>
+                        
+                          
+                     
+                         
+                        
+
+              </div>
+       
+
+            </div>
+          </div>
+
+     
+       
+    </div>
+    <br clear="all">
+
+  </div>
+</div>
+
+{% endblock %}
+

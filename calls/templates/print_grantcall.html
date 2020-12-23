@@ -1,0 +1,124 @@
+{% extends 'printbase.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+
+
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-8" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">RUFORUM</span>
+            </h5>
+          </div>
+            </div>
+            <div class="card-body">
+          <div class="row marl">
+              <div class="col-md-12">
+              <h4>Grant Call</h4>
+              <dl>
+
+                  <dt>Title:</dt>
+                  <dd>{{callrecord.title}}</dd>
+
+                  <dt>Call ID:</dt>
+                  <dd>{{callrecord.call_id}}</dd>
+
+                  <dt>Submission Deadline:</dt>
+                  <dd>{{callrecord.submission_deadline}}</dd>
+
+                  <dt>Grant Type:</dt>
+                  <dd>{{callrecord.grant_type}}</dd>
+                  <dt>Commodity Focus:</dt>
+                  <dd>{{callrecord.commodity_focus}}</dd>
+                  <dt>Theme:</dt>
+                  <dd>{{callrecord.proposal_theme}}</dd>
+                  <dt>Sub Theme:</dt>
+                  <dd>{{callrecord.proposal_sub_theme}}</dd>
+              </dl>
+
+              <h3>Documents</h3>
+              <dl>
+
+
+                <dt>Instructions:</dt>
+                <dd><a href="{{callrecord.grant_type.instructions.url}}" download>{{callrecord.grant_type.instructions}}</a></dd>
+
+                <dt>Template:</dt>
+                <dd><a href="{{callrecord.grant_type.template.url}}" download>{{callrecord.grant_type.template}}</a></dd>
+
+
+                <dt>Project Budget Template:</dt>
+                <dd><a href="{{callrecord.grant_type.project_budget_template.url}}" download>{{callrecord.grant_type.project_budget_template}}</a></dd>
+
+
+                <dt>Results Framework Template:</dt>
+                {% if callrecord.user.results_framework_template %}
+                <dd><a href="{{callrecord.grant_type.results_framework_template.url}}" download>{{callrecord.grant_type.results_framework_template}}</a></dd>
+                {% endif %}
+                <dt>Project Timeline Template:</dt>
+                {% if callrecord.project_timeline_template %}
+                <dd><a href="{{callrecord.grant_type.project_timeline_template.url}}" download>{{callrecord.grant_type.project_timeline_template}}</a></dd>
+
+                {% endif %}
+
+                <dt>Review Form Template:</dt>
+                {% if callrecord.review_form_template %}
+                <dd><a href="{{callrecord.grant_type.review_form_template.url}}" download>{{callrecord.grant_type.review_form_template}}</a></dd>
+
+                {% endif %}
+                <dt>Instructions:</dt>
+                {% if callrecord.grant_type.instructions %}
+                <dd><a href="{{callrecord.grant_type.instructions.url}}" download>{{callrecord.grant_type.instructions}}</a></dd>
+                 {% endif %}
+                <dt>Template:</dt>
+                {% if callrecord.grant_type.template %}
+                <dd><a href="{{callrecord.grant_type.template.url}}" download>{{callrecord.grant_type.template}}</a></dd>
+                {% endif %}
+
+                <dt>Project Budget Template:</dt>
+                {% if callrecord.grant_type.project_budget_template %}
+                <dd><a href="{{callrecord.grant_type.project_budget_template.url}}" download>{{callrecord.grant_type.project_budget_template}}</a></dd>
+               {% endif %}
+
+                <dt>Results Framework Template:</dt>
+                {% if callrecord.grant_type.results_framework_template %}
+                <dd><a href="{{callrecord.grant_type.results_framework_template.url}}" download>{{callrecord.grant_type.results_framework_template}}</a></dd>
+                {% endif %}
+                <dt>Project Timeline Template:</dt>
+                {% if callrecord.grant_type.project_timeline_template %}
+                <dd><a href="{{callrecord.grant_type.project_timeline_template.url}}" download>{{callrecord.grant_type.project_timeline_template}}</a></dd>
+
+                {% endif %}
+
+                <dt>Review Form Template:</dt>
+                {% if callrecord.grant_type.review_form_template %}
+                <dd><a href="{{callrecord.grant_type.review_form_template.url}}" download>{{callrecord.grant_type.review_form_template}}</a></dd>
+
+                {% endif %}
+
+              </dl>
+
+
+
+              </div>
+        </div>
+
+</div>
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

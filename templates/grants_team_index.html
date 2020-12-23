@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% load common_tags %}
+{% load humanize %}
+<!-- <a href=""><button class="btn btn-primary" type="button">Logout</button></a> -->
+<div class="row marl justify-content-center">
+  <div class="col-md-10">
+    <div class="card">
+      <div class="card-header">
+      <h3 class="text-center"><strong>Grants Team Dashboard</strong> <br><b>Dear {{user.last_name}} {{user.first_name}}</b></h3>
+      <h5>Welcome to the Ruforum Grants Team system, using this system you can validate grants
+        .For any enquiry, contact the sytem admin
+         <div class="text-center"><a href="mailto: cgs@ruforum.org"> here </a></div>
+      </h5>
+      </div>
+      </div>
+
+    <!-- count_blocks_row starts here -->
+    <div class="row count_blocks_row">
+
+      <div class="col-md-4">
+        <div class="item green">
+          <a href="{% url 'grants_applicationss:validated_list' %}" id="reviewed_applications">
+            <div class="title">Validated Grants</div>
+            <div class="count">{{grantapplications_validation_count}}</div>
+          </a>
+          <!-- <div class="more"><a href="#">Go Live</a></div> -->
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="item yellow">
+          <a href="{% url 'grants_applicationss:validation_list' %}" id="review_applications">
+            <div class="title">Grants Pending Validation</div>
+            <div class="count">{{grantapplications_to_validate}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="item red">
+          <a href="#">
+            <div class="title">Total</div>
+            <div class="count">{{grantapplications_validation_count|intcomma|add:grantapplications_to_validate|intcomma}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- count_blocks_row ends here -->
+    <div class="open_sections row">
+      <div class="col-md-12 table_container_row">
+        <div class="card">
+            <div id="scholarshipreview_list"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block js_block %}
+<script type="text/javascript">
+
+  $(document).ready(function () {
+
+
+  });
+
+</script>
+{% endblock js_block %}

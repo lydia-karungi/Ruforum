@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load paginate %}
+{% load thumbnail %}
+
+{% block content %}
+<!-- main_container starts here -->
+<div class="main_container">
+  <!-- heading_create starts here -->
+  <div class="row marl">
+    <div class="col-lg-12 text-right m-1">
+      <span class="d-inline"><a class="primary_btn" href="{% url "hrm:add_leave_assignment" %}"><i class="fa fa-plus"></i>
+        Add New Leave Assignment</a></span>
+    </div>
+      <span class="text-left ml-4">Leave Assignments</span>
+  </div>
+  <!-- heading_create ends here -->
+
+  <div class="col-md-12 col-lg-12 col-xl-12">
+    <div class="table_container_row row marl no-gutters">
+      <div class="col-md-12">
+
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open">
+           
+            <div class="card">
+                <div class="table-responsive">
+                  <div id="toolbar">
+                    {% if request.user.role == "ADMIN" or request.user.is_superuser or perms.hrm.delete_leavetype %}
+                    <button id="remove" class="btn btn-danger" title="Delete" disabled>
+                      <i class="fa fa-trash"></i>Delete
+                    </button>
+                 {% endif %}
+                  </div>
+                  <table
+                  id="table"
+                  data-toggle="table"
+                  data-show-toggle="true"
+                  data-search="true"
+                  data-show-search-button="true"
+                  data-show-refresh="true"
+                  data-show-fullscreen="true"
+                  data-show-columns="true"
+                  data-show-columns-toggle-all="true"
+                  data-show-export="true"
+                  data-click-to-select="true"
+                  data-minimum-count-columns="2"
+                  data-show-pagination-switch="true"
+                  data-pagination="true"
+                  data-id-field="id"
+                  data-total-field="count"
+                  data-data-field="results"
+                  data-toolbar="#toolbar"
+                  data-side-pagination="server"
+                  data-server-sort="false"
+                  data-export-types="[‘csv’,‘doc’, ‘excel’, ‘pdf’]"
+                  data-page-list="[10, 25, 50, 100, all]"
+                  data-url="/hrm/api/assignment/"
+                  data-response-handler="responseHandler">
+                    <thead>
+                   
+                      <tr class="text-center">
+                        {% if request.user.role == "ADMIN" or request.user.is_superuser or perms.hrm.delete_leavetype %}
+                        <th data-field="state" data-checkbox="true"></th>
+                        {% endif %}
+                        <th data-field="id" data-sortable="true">ID</th>
+                        <th data-field="leave_type" data-sortable="true">Leave</th>
+                        <th data-field="leave_days" data-sortable="true">Leave Days</th>
+                        <th data-field="start_date" data-sortable="true">Start Date</th>
+                        <th data-field="year">Year</th>
+                        <th data-field="staff" data-visible="true">Staffs</th>
+
+                        <th data-formatter="operateFormatter"  class="text-center">Action</th> 
+                      </tr>
+                    
+                    </thead>
+                 
+              
+                  </table>
+                </div>
+              
+  
+</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+{%endblock%}
+{% block js_block %}
+<script type="text/javascript">
+
+var $table = $('#table')
+  var $remove = $('#remove')
+
+  var selections = []
+
+  function getIdSelections() {
+    return $.map($table.bootstrapTable('getSelections'), function (row) {
+      return row.id
+    })
+  }
+
+  function responseHandler(res) {
+    $.each(res.rows, function (i, row) {
+      row.state = $.inArray(row.id, selections) !== -1
+    })
+    return res
+  }
+
+
+
+  function operateFormatter(value, row, index) {
+    var url ="/hrm/"+row.id+"/edit/leave/assignment"
+    var data_id = row.id
+    return [
+      {% if request.user.role == "ADMIN" or request.user.is_superuser or perms.hrm.change_leavetype %}
+      '<a class="btn btn-sm btn-success edit" href="'+url+'" title="Edit">',
+      '<i class="fa fa-pencil-alt"></i>',
+      '</a>  ',
+      {% endif %}
+     
+    ].join('')
+  }
+
+
+  ///used cookies to get crsf token
+  function getCookie(c_name)
+    {
+      if (document.cookie.length > 0)
+        {
+          c_start = document.cookie.indexOf(c_name + "=");
+            if (c_start != -1)
+         {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) c_end = document.cookie.length;
+            return unescape(document.cookie.substring(c_start,c_end));
+         }
+     }
+      return "";
+   }
+
+  function initTable() {
+
+    $table.on('check.bs.table uncheck.bs.table ' +
+      'check-all.bs.table uncheck-all.bs.table',
+    function () {
+      $remove.prop('disabled', !$table.bootstrapTable('getSelections').length)
+  
+      // save your data, here just save the current page
+      selections = getIdSelections()
+      // push or splice the selections if you want to save all data selections
+    })
+    $table.on('all.bs.table', function (e, name, args) {
+      console.log(name, args)
+    })
+    ///multiple delete
+    $remove.click(function () {
+      var ids = getIdSelections()
+      $remove.prop('disabled', true)
+
+      swal({
+  title: "Are you sure?",
+  text: "Once deleted, you will not be able to recover these records!",
+  icon: "warning",
+  buttons: true,
+  dangerMode: true,
+})
+.then((willDelete) => {
+  if (willDelete) {
+    for(id=0; id<ids.length; id++){
+        console.log(ids[id]);
+
+    $.ajax({
+        url: "/hrm/api/assignment/"+ids[id],
+        data: {},
+        headers:{"X-CSRFToken": getCookie("csrftoken")},
+        type: 'DELETE',
+        contentType: 'application/json',
+        success: function(result) {
+          console.log('deleted successfule');
+          swal("Your record/s have been deleted successfully!", {
+            icon: "success",
+    }).then(() =>{
+        window.location.reload()});
+        },
+       });
+    }
+  } else {
+    swal("You have cancelled the deletion of records!");
+  }
+});
+
+    })
+
+
+  }
+
+  $(function() {
+    initTable()
+
+    $('#locale').change(initTable)
+  })
+
+
+  {% for message in messages %}
+  $(document).ready(function() {
+      $.notify("{{message}}", "{{ message.tags }}");
+  });
+  {% endfor %}
+</script>
+{% endblock js_block %}
++

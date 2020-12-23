@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head_css %}
+table.customTable {
+  width: 100%;
+  background-color: #FFFFFF;
+  border-collapse: collapse;
+  border-width: 2px;
+  border-color: #7ea8f8;
+  border-style: solid;
+  color: #000000;
+}
+
+table.customTable td, table.customTable th {
+  border-width: 2px;
+  border-color: #7ea8f8;
+  border-style: solid;
+  padding: 5px;
+}
+
+table.customTable thead {
+  background-color: #7ea8f8;
+}
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    {% if request.user.role == "ADMIN" or request.user.role == "Grants Managers"  or request.user.is_superuser %}
+    <li class="breadcrumb-item"><a href="{% url 'grants:list' %}">Grants</a></li>
+    {% endif %}
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-9">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title text-center">
+            VIEW GRANT
+          </div>
+          </div>
+          <div class="card-body">
+          <div class="row marl">
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="call" class="required">Grant Application</label>
+            {{grant.grant_application}}
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="grant_id" class="required">Grant ID</label>
+            {{grant.grant_id}}
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="title" class="required">Title</label>
+            {{grant.title}}
+            </div>
+            </div>
+              <div class="filter_col col-md-12">
+                <div class="form-group ">
+                  <label  class="required">Project Objectives Address</label>
+                  {{ grant.project_objectives }}
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                  <div class="form-group ">
+                    <label for="exampleInputEmail1" class="required">Summary </label>
+                    {{ grant.summary }}
+                  </div>
+                </div>
+             
+
+
+
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">Keywords</label>
+                  {{ grant.keywords }}
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">Budget</label>
+                  {{ grant.budget }}
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">Start Date</label>
+                  {{ grant.start_date }}
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">End Date</label>
+                  {{ grant.end_date }}
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">New End Date</label>
+                  {{ grant.new_end_date }}
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">Duration</label>
+                  {{ grant.duration }}
+                </div>
+              </div>
+              <div class="filter_col col-12">
+                <div class="form-group">
+                  <label for="id_sattus">Theme</label>
+                  {{ grant.theme }}
+                </div>
+              </div>
+              <div class="filter_col col-12">
+                <div class="form-group">
+                  <label for="id_sattus">Value Chain/Commodity Focus</label>
+                  {{ grant.value_chain }}
+                </div>
+              </div>
+
+
+
+
+                <div class="filter_col col-4">
+                  <div class="form-group">
+                    <label for="id_sattus">PI</label>
+                    {{ grant.pi }}
+                  </div>
+                </div>
+
+
+
+
+                <div class="filter_col col-4">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Students </label>
+                    <ul>
+                      {% for user in users %}
+                          {% if user in grant_obj.users.all %} 
+                              <li>{{user.get_full_name}}</li>
+                          {% endif %}
+                      {% endfor %}
+                      <ul>
+                  </div>
+                </div>
+                <div class="filter_col col-4">
+                  <div class="form-group">
+                    <label for="id_sattus">Approval Status</label>
+                    {{ grant.approval_status }}
+                  </div>
+                </div>
+                <div class="filter_col col-12">
+                    <div class="form-group">
+                      <label for="id_sattus">Collaborators</label>
+                      {{ grant.collaborators }}
+                    </div>
+                  </div>
+                <div class="filter_col col-12">
+                  <div class="form-group">
+                    <label for="id_sattus">Has reports</label>
+                    {{ grant.has_reports }}
+                  </div>
+                </div>
+                <div class="filter_col col-12">
+                  <div class="form-group">
+                    <label for="id_sattus">Number of Reports</label>
+                    {{ grant.report_number }}
+                  </div>
+                </div>
+                <div class="filter_col col-12">
+                  <div class="form-group">
+                    <label for="id_sattus">Reporting period</label>
+                    {{ grant.reporting_period }}
+                  </div>
+                </div>
+
+               
+              </div>
+          
+          </div>
+          </div>
+      <!--end of card body-->
+      </div>
+    </div>
+
+
+  <!-- overview ends here -->
+  <br clear="all">
+
+
+{% endblock %}
+
+{% block run_jquery %}
+$('#id_grant').val("{{ grant.id }}").closest('tr').hide()
+$('#id_created_by').val("{{ user.id }}").closest('tr').hide()
+{% endblock %}

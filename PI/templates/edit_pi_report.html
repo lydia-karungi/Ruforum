@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block breadcrumb %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css" />
+{% endblock %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'PI:reports' %}">Reports</a></li>
+    <li class="breadcrumb-item active">{% if pireport %}Edit {% else %} Create {% endif %}</li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+<form id="formid" action='' method="POST" novalidate enctype="multipart/form-data">{% csrf_token %}
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title text-center">
+            {% if pireport %}EDIT{% else %}CREATE{% endif %} Report 
+          </div>
+            </div>
+           <div class="card-body">
+          <div class="row marl">
+           
+            <div class="filter_col col-md-12">
+              <div class="form-group">
+                <label for="student">student{% if form.student.field.required %}<span
+                    class="error">*</span>{% endif %}</label>
+                {{ form.student }}
+                <span class="error" id="id__completed_thesis_submission_external">{{ form.student.errors }}</span>
+              </div>
+            </div>
+            
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="completed_thesis_submission_external">Has student completed his/her thesis for external submission?{% if form.completed_thesis_submission_external.field.required %}<span
+                      class="error">*</span>{% endif %}</label>
+                  {{ form.completed_thesis_submission_external }}
+                  <span class="error" id="id__completed_thesis_submission_external">{{ form.completed_thesis_submission_external.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="completed_thesis_defence" class="required">Has student completed his/her thesis defence?{% if form.completed_thesis_defence.field.required %}<span
+                      class="error_marker" style="color:red">*</span>{% endif %}</label>
+                  {{ form.completed_thesis_defence }}
+                  <span class="error" id="id__contacts">{{ form.completed_thesis_defence.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="completed_thesis_submission_final" class="required">Has student completed his/her thesis final?
+                     {% if form.completed_thesis_submission_final.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ form.completed_thesis_submission_final }}
+                  <span class="error" id="id__start_date">{{ form.completed_thesis_submission_final.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                <div class="form-group ">
+                  <label for="delay_explanation" class="required">if any of the answers to the above questions is "No", please indicate what is causing delays.{% if form.delay_explanation.field.required %}<span
+                      class="error_marker" style="color:red">*</span>{% endif %}</label>
+                  {{ form.delay_explanation }}
+                  <span class="error" id="id__end_date">{{ form.delay_explanation.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                  <div class="form-group ">
+                    <label for="research_progress" class="required">Give details of the student research Project to date against each his/her objects.{% if form.research_progress.field.required %}<span
+                        class="error_marker" style="color:red">*</span>{% endif %}</label>
+                    {{ form.research_progress }}
+                    <span class="error" id="id__end_date">{{ form.research_progress.errors }}</span>
+                  </div>
+                </div>
+                <div class="filter_col col-md-6">
+                  <div class="form-group">
+                    <label for="financial_report" class="required">Attach financial Report
+                         {% if form.financial_report.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ form.financial_report }}
+                    <span class="error" id="id__ref_number_prefix">{{ form.financial_report.errors }}</span>
+                  </div>
+                </div>
+
+
+                </div>
+              </div>
+          </div>
+          <div class="col-md-12 padding-top">
+            <div class="col-md-12">
+              <div class="row marl buttons_row form_btn_row text-center">
+                <button class="btn btn-default save" type="submit">Save</button>
+                <a href="{% url 'PI:reports' %}" class="btn btn-default clear"
+                  id="create_user_cancel">Cancel</a>
+              </div>
+            </div>
+          </div>
+          </div>
+
+      </div>
+    </div>
+    <!-- <input type="hidden" id="save_new_form" name="savenewform"> -->
+  </div>
+  <!-- overview ends here -->
+</form>
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script>
+<script type="text/javascript">
+
+  // $(document).ready(function() {
+  //   $('.assigned_users').select2();
+  // });
+  $(document).ready(function () {
+  });
+
+
+</script>
+{% endblock js_block %}

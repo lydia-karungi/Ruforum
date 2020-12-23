@@ -1,0 +1,505 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load paginate %}
+{% load thumbnail %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<style>
+  .form-group label{
+    font-weight: 800;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<!-- main_container starts here -->
+<div class="main_container">
+  <!-- heading_create starts here -->
+  <div class="row marl">
+    <div class="col-lg-12 text-right">
+      <span class="d-inline">{% comment %}<a class="primary_btn" href="{% url 'student_reports:add_student_report'%}"><i class="fa fa-plus"></i>
+          Add New
+          Student Report</a>{% endcomment %}</span>
+    </div>
+  </div>
+  <!-- heading_create ends here -->
+  <div class="filter_row list_filter_row row marl">
+    <div class="col-md-12">
+      <div class="card">
+
+          <form id="leads_filter" action="" method="POST">{% csrf_token %}
+            <div class="card-header">
+              <div class="card-title">Filters</div>
+              </div>
+              <div class="card-body">
+              <div class="row marl">
+                <div class="filter_col col-md-2">
+                  <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input type="text" class="form-control" placeholder="First Name" name="first_name"
+                      value="{{request.POST.first_name}}">
+                  </div>
+                </div>
+                <div class="filter_col col-md-2">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Last Name</label>
+                      <input type="text" class="form-control" placeholder="First Name" name="last_name"
+                        value="{{request.POST.last_name}}">
+                    </div>
+                  </div>
+
+
+                <div class="filter_col col-md-2">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" class="required">Date of Submission</label>
+                    <input type="date" id="submitted_on" name="submitted_on" class="form-control"
+                      value="{{request.POST.submitted_on}}">
+                  </div>
+                </div>
+                <div class="filter_col col-md-2">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Grant Type</label>
+                    <select name="state" id="" class="assigned_users_ form-control">
+                      <option value="">
+                        ------------------</option>
+                      {% for type in grant_types %}
+                      <option value="{{type}}" {% if type.0 == request.POST.type %} selected=""
+                        {% endif %}>
+                        {{type}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="filter_col col-md-2">
+                  <div class="form-group">
+                    <!-- <label for="exampleInputEmail1">Total Amount</label>
+                    <input type="number" class="form-control" placeholder="Total Amount" name="total_amount"
+                      value="{{request.POST.total_amount}}"> -->
+                  </div>
+                </div>
+                <input type="hidden" name="tab_status" id="tab_status">
+                <div class="filter_col col-2">
+                  <div class="form-group buttons_row">
+                    <button class="btn btn-primary save" type="submit">Search</button>
+                    <a href="{% url 'student_reports:list' %}" class="btn btn-default clear">Clear</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 col-lg-12 col-xl-12">
+    <div class="table_container_row row marl no-gutters">
+      <div class="col-md-12">
+        <!-- <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="open-tab" data-toggle="tab" href="#open" role="tab" aria-controls="open"
+              aria-selected="true">Open ({{open_leads|length}})</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="close-tab" data-toggle="tab" href="#close" role="tab" aria-controls="close"
+              aria-selected="false">Closed ({{close_leads|length}})</a>
+          </li>
+        </ul> -->
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open">
+            <div class="card">
+              <div class="card-body">
+                <div class="card-title text-right">
+                  <span class="float-left">Student Reports - {% if show_pageitems %}
+                    {% show_pageitems %}{% else %}
+                    {{ student_reports|length }}{% endif %}</span>
+                  <span class="filter_toggle">
+                    <a href="#" class="primary_btn"><i class="fas fa-filter"></i></a>
+                  </span>
+                </div>
+              </div>
+            </div>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      {% if student_reports|length > 0 %}
+                      <tr>
+                        <th width="5%">#</th>
+                        <th>Student</th>
+                        <th>Student Type</th>
+                        <th>Period</th>
+                        <th>Status</th>
+                        <th>Submitted On</th>
+                        <th></th>
+                      </tr>
+                      {% endif %}
+                    </thead>
+                    <tbody>
+                      {% if per_page %}
+                      {% paginate per_page student_reports %}
+                      {% else %}
+                      {% paginate 10 student_reports %}
+                      {% endif %}
+                      {% for student_report in student_reports %}
+                      <tr class="text-center">
+                        <td scope="row">{{ forloop.counter }}</td>
+                        <td>
+                          {{student_report.student}}
+                        </td>
+                        <td>
+                          {{student_report.polymorphic_ctype}}
+                        </td>
+                        <td>
+                            {{student_report.period}}
+                          </td>
+                          <td>
+                              {{student_report.get_state_display}}
+                              </td>
+                              <td>
+                                  {{student_report.submitted_on}}
+                                </td>
+
+                        <td class="actions">
+
+                          <a href="{% url "student_reports:view_student_report" student_report.pk %}" title="View" class="btn btn-sm btn-info edit"><i
+                            class="fas fa-eye"></i></a>
+
+                          <a href="{% url "student_reports:edit_student_report" student_report.pk %}" title="Edit" class="btn btn-sm btn-success edit"><i
+                              class="fas fa-pencil-alt"></i></a>
+                          <a href="" title="Delete"
+                            class="btn btn-danger btn-sm delete remove_document"><i class="fas fa-trash-alt"></i></a>
+
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% ifequal student_reports|length 0 %}
+                <h6 class="text-center">No Student Reports Found</h6>
+                {% endifequal %}
+                <div class="marl row text-center">
+                  {% show_pages %}
+
+            </div>
+          </div>
+          <!-- second tab for closed and other statuses -->
+          <!--
+          <div class="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open">
+            <div class="card">
+              <div class="card-body">
+                <div class="card-title text-right">
+                  <span class="float-left">Open Leads - {% if show_pageitems %}
+                    {% show_pageitems %}{% else %}
+                    {{ open_leads|length }}{% endif %}</span>
+                  <span class="filter_toggle">
+                    <a href="#" class="primary_btn"><i class="fas fa-filter"></i></a>
+                  </span>
+                </div>
+                <div class="table-responsive">
+                  <table class="table ">
+                    <thead>
+                      {% if student_reports|length > 0 %}
+                      <tr>
+                        <th width="5%">ID</th>
+                        <th width="10%">Invoice Title</th>
+                        <th width="8%">Invoice Number</th>
+                        <th width="10%">Email</th>
+                        <th width="10%">Status</th>
+                        <th width="20%">Assigned To</th>
+                        <th width="15%">Created by</th>
+                        <th width="10%">Created On</th>
+                        <th width="10%">Actions</th>
+                      </tr>
+                      {% endif %}
+                    </thead>
+                    <tbody>
+                      {% if per_page %}
+                      {% paginate per_page student_reports %}
+                      {% else %}
+                      {% paginate 10 student_reports %}
+                      {% endif %}
+                      {% for invoice in student_reports %}
+                      <tr class="text-center">
+                        <td scope="row">{{ forloop.counter }}</td>
+                        <td><a href="">
+                            {{ invoice.invoice_title }} </a></td>
+                        <td>{{ invoice.invoice_number }} </td>
+                        <td>{{ invoice.email }} </td>
+                        <td>{{ invoice.status }} </td>
+                        <td>
+                          {% with users=invoice.assigned_to.all %}
+                          {% for user in users %}
+                          {% if user.profile_pic %}
+                          {% thumbnail user.profile_pic "40x40" crop="center" as im %}
+                          <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                            title="{{ user.email }}">
+                          {% endthumbnail %}
+                          {% else %}
+                          <img src="{% static 'images/user.png' %}" title="{{ user.email }}" width="40" height="40">
+                          {% endif %}
+                          {% empty %}
+                          Not Assigned to Any
+                          {% endfor %}
+                          {% endwith %}
+                        </td>
+                        <td>
+                          {% if invoice.created_by.profile_pic %}
+                          {% thumbnail invoice.created_by.profile_pic "40x40" crop="center" as im %}
+                          <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}"
+                            title="{{ lead.created_by }}">
+                          {% endthumbnail %}
+                          {% else %}
+                          <img src="{% static 'images/user.png' %}" alt="Micro profile pic"
+                            style="width: 40px;height: 40px;" />
+                          {% endif %}
+                        </td>
+                        <td>{{ invoice.created_on }}</td>
+                        <td class="actions">
+                          <a href="" class="btn btn-success edit"><i
+                              class="fas fa-pencil-alt"></i></a>
+                          {% if request.user == lead.created_by or request.user.role == "ADMIN" or request.user.is_superuser %}
+                          <a href=""
+                            class="btn btn-danger delete remove_account"><i class="fas fa-trash-alt"></i></a>
+                          {% endif %}
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {%ifequal invoices|length 0%}
+                <h6 class="text-center">No Invoices Found</h6>
+                {%endifequal%}
+                <div class="marl row text-center">
+                  {% show_pages %}
+                </div>
+              </div>
+            </div>
+          </div>
+        -->
+          <!-- second tab div for closed or another status -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br clear="all">
+
+
+{% for student_report in student_reports %}
+
+<div class="modal fade" id="exampleModalCenter_student_report{{student_report.id}}" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">{{ student_report.name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- ... -->
+        <div class="" id="">
+          <div class="">
+            <div class="col-md-12" id="">
+              <div class="card">
+                <div class="card-body" id="datashow">
+                  <div class="card-title text-right">
+                    <h5>
+                      <!-- <span class="float-left title">Overview</span> -->
+                      <span style="margin-top: 0px">
+                        <!-- <div class="dropdown buttons_row">
+                          <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                            <span class="caret"></span></button>
+                          <ul class="dropdown-menu">
+                            <li><a href="">Edit</a></li>
+                          </ul>
+                        </div> -->
+                      </span>
+                    </h5>
+                  </div>
+                  <div class="row marl">
+                    <div class="col-md-4">
+                      {% if student_report.name %}
+                      <div class="filter_col col-md-12" id="iname">
+                        <div class="form-group">
+                          <label class="acc_field_label" for="id_name" data-name="name">Name</label>
+                          <div class="account_field" id="account_name" data-name="name">{{ student_report.name }}</div>
+                        </div>
+                      </div>
+                      {% endif %}
+                      {% if student_report.student_report_type %}
+                      <div class="filter_col col-md-12">
+                        <div class="form-group">
+                          <label class="acc_field_label" for="id_phone" data-name="name">Student Report Type</label>
+                          <div class="account_field" id="account_phone" data-name="name">{{ student_report.student_report_type }}</div>
+                        </div>
+                      </div>
+                      {% endif %}
+                      {% if student_report.start_date %}
+                      <div class="filter_col col-md-12">
+                        <div class="form-group">
+                          <label class="acc_field_label" for="id_status" data-name="name">Start Date</label>
+                          <div class="account_field" id="account_status" data-name="name">{{ student_report.start_date }}</div>
+                        </div>
+                      </div>
+                      {% endif %}
+                      {% if student_report.end_date %}
+                      <div class="filter_col col-md-12">
+                        <div class="form-group">
+                          <label class="acc_field_label" for="id_status" data-name="name">End Date</label>
+                          <div class="account_field" id="account_status" data-name="name">{{ student_report.end_date }}</div>
+                        </div>
+                      </div>
+                      {% endif %}
+                    </div>
+                    <div class="col-md-4">
+                      <div class="filter_col col-md-12">
+                        <div class="form-group">
+                          {% with contacts=student_report.contacts.all  %}
+                          <label class="acc_field_label" for="id_website" data-name="name">Contacts</label>
+                          {% if contacts %}
+                          {% for contact in contacts %}
+                          <div class="account_field" id="account_website" data-name="name">{{ contact }}</div>
+                          {% endfor %}
+                          {% else %}
+                          <div class="account_field" id="account_website" data-name="name">None</div>
+                          {% endif %}
+                          {% endwith %}
+                        </div>
+                      </div>
+
+                      <div class="filter_col col-md-12">
+                        <div class="form-group">
+                          {% with users=student_report.assigned_to.all  %}
+                          <label class="acc_field_label" for="id_website" data-name="name">Assigned To</label>
+                          {% if users %}
+                          {% for user in users %}
+                          <div class="account_field" id="account_website" data-name="name">
+                            <a href="{% url 'common:view_user' user.id %}">
+                              {{ user }}
+                            </a>
+                          </div>
+                          {% endfor %}
+                          {% else %}
+                          <div class="account_field" id="account_website" data-name="name">None</div>
+                          {% endif %}
+                          {% endwith %}
+                        </div>
+                      </div>
+                      {% if student_report.start_time %}
+                      <div class="filter_col col-md-12">
+                        <div class="form-group">
+                          <label class="acc_field_label" for="id_website" data-name="name">Start Time</label>
+                          <div class="account_field" id="account_website" data-name="name">{{student_report.start_time}}</div>
+                        </div>
+                      </div>
+                      {% endif %}
+                      {% if student_report.end_time %}
+                      <div class="filter_col col-md-12">
+                        <div class="form-group">
+                          <label class="acc_field_label" for="id_website" data-name="name">End Time</label>
+                          <div class="account_field" id="account_website" data-name="name">{{student_report.end_time}}</div>
+                        </div>
+                      </div>
+                      {% endif %}
+                    </div>
+                    <div class="col-md-4">
+                      {% if student_report.description %}
+                      <div class="filter_col col-md-12">
+                        <div class="form-group">
+                          <label class="acc_field_label" for="id_website" data-name="name">Description</label>
+                          <div class="account_field" id="account_website" data-name="name">{{ student_report.description }}</div>
+                        </div>
+                      </div>
+                      {% endif %}
+                      {% if student_report.date_of_meeting %}
+                      <div class="filter_col col-md-12">
+                        <div class="form-group">
+                          <label class="acc_field_label" for="id_website" data-name="name">Date Of Meeting</label>
+                          <div class="account_field" id="account_website" data-name="name">{{ student_report.date_of_meeting }}
+                          </div>
+                        </div>
+                      </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="created_information">
+                    Created by <b>{{ student_report.created_by }}</b> created on
+                    <b>{{ student_report.created_on }}</b>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div> -->
+
+
+
+{% endfor %}
+
+{% endblock %}
+{% block js_block %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('.assigned_users').select2();
+    $('#id_tag').select2();
+    $(".filter_toggle").click(function () {
+      $(".list_filter_row").toggle();
+    });
+    var date = new Date();
+    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    $('#submittted_on').datetimepicker({
+      'format': 'YYYY-MM-DD',
+      minDate: today
+    })
+  });
+
+  search = "{{search}}"
+
+  if (search == 'True') {
+    $(".list_filter_row").show();
+  }
+
+  $("#close-tab").click(function (e) {
+    $("#tab_status").val('Closed')
+  })
+
+  $("#open-tab").click(function (e) {
+    $("#tab_status").val('Open')
+  })
+
+  tab_status = "{{tab_status}}"
+  if (tab_status == 'Closed') {
+    $("#close-tab").click()
+  } else {
+    $("#open-tab").click()
+  }
+
+  $('.delete').click(function (e) {
+    e.prstudent_reportDefault()
+    url = $(this).attr('href')
+    if (!confirm('Are you sure you want to delete?'))
+      return;
+    window.location = $(this).attr('href')
+  });
+
+  $("a[rel='page']").click(function (e) {
+    e.prstudent_reportDefault();
+    $('#leads_filter').attr("action", $(this).attr("href"));
+    $('#leads_filter').submit();
+  });
+</script>
+{% endblock js_block %}

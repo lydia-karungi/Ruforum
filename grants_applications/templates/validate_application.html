@@ -1,0 +1,398 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block breadcrumb %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css" />
+{% endblock %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'grants_applicationss:validation_list' %}">Grant Applications</a></li>
+    <li class="breadcrumb-item active">{% if call_obj %}Edit{% else %}Validation{% endif %}</li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+<form id="formid" action='' method="POST" novalidate enctype="multipart/form-data">{% csrf_token %}
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10">
+      <div class="card">
+        
+<div class="card-header">
+          <div class="card-title text-center">
+            VALIDATE GRANT APPLICATION
+          </div>
+        </div>
+          <div class="card-body">
+            <div class="row marl">
+              <div class="col-md-4">
+                      <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_title" data-name="title">Title</label>
+                                <div class="application_field" id="title" data-name="title">{{ application_record.title }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_gender" data-name="gender">Gender</label>
+                                <div class="application_field" id="gender" data-name="gender">{{ application_record.user.get_gender_display }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_last_name" data-name="last_name">Last Name</label>
+                                <div class="application_field" id="last_name" data-name="last_name">{{ application_record.last_name }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_first_name" data-name="first_name">First Name</label>
+                                <div class="application_field" id="first_name" data-name="first_name">{{ application_record.user.first_name }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_institution" data-name="institution">Place of work</label>
+                                <div class="application_field" id="institution" data-name="institution">{{ application_record.institution }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_department" data-name="department">Department at Place of work</label>
+                                <div class="application_field" id="department" data-name="department">{{ application_record.department }}</div>
+                              </div>
+                            </div>
+
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_country" data-name="country">Country</label>
+                                <div class="application_field" id="country" data-name="country">{{ application_record.country }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_nationality" data-name="nationality">Nationality</label>
+                                <div class="application_field" id="nationality" data-name="nationality">{{ application_record.user.get_nationality_display }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_highest_qualification" data-name="highest_qualification">Highest Qualification</label>
+                                <div class="application_field" id="highest_qualification" data-name="highest_qualification">{{ application_record.highest_qualification }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_area_of_specialisation" data-name="area_of_specialisation">Area of specialisation</label>
+                                <div class="application_field" id="area_of_specialisation" data-name="area_of_specialisation">{{ application_record.area_of_specialisation }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_cv" data-name="cv">Curriculum Vitae</label>
+                                <div class="application_field" id="cv" data-name="cv"><a href="{{ application_record.cv.url }}">{{ application_record.cv }}</a></div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_mobile" data-name="mobile">Mobile telephone</label>
+                                <div class="application_field" id="mobile" data-name="mobile">{{ application_record.user.mobile }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_business_tel" data-name="business_tel">Business telephone</label>
+                                <div class="application_field" id="business_tel" data-name="business_tel"> <a href = "mailto: {{ application_record.user.business_tel }}">{{ application_record.user.business_tel }}</a></div>
+                               
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_email" data-name="email">Email</label>
+                                <div class="application_field" id="business_tel" data-name="business_tel">{{ application_record.email }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_business_address" data-name="business_address">Business address</label>
+                                <div class="application_field" id="business_address" data-name="business_address">{{ application_record.user.business_address }}</div>
+                              </div>
+                            </div>
+
+              </div>
+              <div class="col-md-4">
+                      <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Commodity Focus</label>
+                                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.call.commodity_focus.name }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_theme" data-name="theme">Proposal theme</label>
+                                <div class="application_field" id="theme" data-name="theme">{{ application_record.call.proposal_theme.name }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_proposal_theme" data-name="proposal_theme">Subtheme</label>
+                                <div class="application_field" id="proposal_theme" data-name="proposal_theme">{{ application_record.call.proposal_sub_theme.name }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_non_university_partners" data-name="non_university_partners">Non University Partners*</label>
+                                <div class="application_field" id="non_university_partners" data-name="non_university_partners">{{ application_record.non_university_partners }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_other_departments" data-name="other_departments">Other Departments</label>
+                                <div class="application_field" id="other_departments" data-name="other_departments">{{ application_record.other_departments }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_other_universities" data-name="other_universities">Other Universities</label>
+                                <div class="application_field" id="other_universities" data-name="other_universities">{{ application_record.other_universities }}</div>
+                              </div>
+                            </div>
+
+              </div>
+              <div class="col-md-4">
+                      <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_supporting_letter_from_university" data-name="supporting_letter_from_university">Letter from University</label>
+                                <div class="application_field" id="supporting_letter_from_university" data-name="supporting_letter_from_university"><a href="{{ application_record.supporting_letter_from_university.url }}">Letter from University</a></div>
+                              </div>
+                            </div>
+                      <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_project_budget" data-name="project_budget">Project Budgets</label>
+                                <div class="application_field" id="project_budget" data-name="project_budget"><a href="{{ application_record.project_budget.url }}">Project Budgets</a></div>
+                              </div>
+                            </div>
+                   
+                
+                      <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_application_form" data-name="application_form">Application Form</label>
+                                <div class="application_field" id="application_form" data-name="application_form"><a href="{{ application_record.application_form.url }}" target="blank">Application Form</a></div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_application_form" data-name="application_form">Collaborator CVs</label>
+                                {% for cv in collaborators %}
+                                <div class="application_field" id="application_form" data-name="application_form">{{ forloop.counter }}.<a href="{{ cv.cv.url }}" target="blank">{{ cv.cv }}</a></div>
+                                {% endfor %}
+
+
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_application_form" data-name="application_form">Collaborator CVs</label>
+                                {% for letter in supportletters %}
+                                <div class="application_field" id="application_form" data-name="application_form">{{ forloop.counter }}.<a href="{{ letter.letter.url }}" target="blank">{{ letter.letter }}</a></div>
+                                {% endfor %}
+
+
+                              </div>
+                            </div>
+              </div>
+
+            </div>
+          </div>
+          
+         
+        
+
+   
+          <div class="card-header">
+          <fieldset class="form-group">
+            <legend class="mx-3">Validation</legend>
+            <div class="row marl">
+                <div class="col-md-4">
+                  <div class="form-group">
+                      <label for="exampleInputEmail1" class="required">BAC/MSC/PHD Validated
+                        <span class="error_marker"
+                          style="color:red">*</span></label>
+                          {{ form.validated_phd}}
+                      <span class="error" id="id__project_budget">{{ applicationobj.project_budget.errors }}</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1" class="required">Total Budget Validated
+                          <span class="error_marker"
+                            style="color:red">*</span></label>
+                            {{ form.validated_total_budget}}
+                        <span class="error" id="id__project_budget">{{ applicationobj.project_budget.errors }}</span>
+                      </div>
+                  </div>
+                  <div class="col-md-4">
+                      <div class="form-group">
+                          <label for="exampleInputEmail1" class="required">Member University Validated
+                            <span class="error_marker"
+                              style="color:red">*</span></label>
+                              {{ form.validated_member_university}}
+                          <span class="error" id="id__project_budget">{{ applicationobj.validated_member_university.errors }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1" class="required">University Letter Validated
+                              <span class="error_marker"
+                                style="color:red">*</span></label>
+                                {{ form.validated_university_letter}}
+                            <span class="error" id="id__project_budget">{{ applicationobj.validated_university_letter.errors }}</span>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1" class="required">Uploaded Templates Validated
+                                <span class="error_marker"
+                                  style="color:red">*</span></label>
+                                  {{ form.validated_uploaded_templates}}
+                              <span class="error" id="id__project_budget">{{ applicationobj.validated_uploaded_templates.errors }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1" class="required">Main Proposal Validated
+                                  <span class="error_marker"
+                                    style="color:red">*</span></label>
+                                    {{ form.validated_main_proposal}}
+                                <span class="error" id="id__project_budget">{{ applicationobj.validated_main_proposal.errors }}</span>
+                              </div>
+                          </div>
+                          <div class="col-md-12">
+                              <div class="form-group">
+                                  <label for="exampleInputEmail1" class="required">Compliance Comments
+                                    <span class="error_marker"
+                                      style="color:red">*</span></label>
+                                      {{ form.compliance_comments}}
+                                  <span class="error" id="id__project_budget">{{ applicationobj.compliance_comments.errors }}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1" class="required">Compliant
+                                      <span class="error_marker"
+                                        style="color:red">*</span></label>
+                                        {{ form.compliant}}
+                                    <span class="error" id="id__project_budget">{{ applicationobj.compliant.errors }}</span>
+                                  </div>
+                              </div>
+              </div>    
+            <div class="row marl">
+          <div class="col-md-12">
+            <div class="col-md-12">
+                
+              <div class="row marl buttons_row form_btn_row text-center">
+                <button class="btn btn-default save" type="submit">Submit</button>
+                <a href="{% url 'calls:list' %}" class="btn btn-default clear"
+                  id="create_user_cancel">Cancel</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        </fieldset>
+      </div>
+        </div>
+      </div>
+    </div>
+    <!-- <input type="hidden" id="save_new_form" name="savenewform"> -->
+  </div>
+  <!-- overview ends here -->
+</form>
+<br clear="all">
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+<script src="https://malsup.github.io/jquery.applicationobj.js"></script>
+
+<script src="{% static 'js/jquery.formset.js' %}">
+</script>
+<script type="text/javascript">
+    $('.formset_row-{{ formset.prefix }}').formset({
+        addText: 'add another',
+        deleteText: 'remove',
+        prefix: '{{ formset.prefix }}',
+    });
+    $('.formset_row-{{ letter_formset.prefix }}').formset({
+        addText: 'add another',
+        deleteText: 'remove',
+        prefix: '{{ letter_formset.prefix }}',
+    });
+</script>
+<script type="text/javascript">
+
+  // $(document).ready(function() {
+  //   $('.assigned_users').select2();
+  // });
+  $(document).ready(function () {
+
+    $('#recurring_block').hide()
+    $("#id_contacts").select2();
+    $("#id_assigned_to").select2();
+    $("#id_teams").select2();
+    $("#id_start_date").css('color', 'black');
+    $("#id_end_date").css('color', 'black');
+    var date = new Date();
+    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    $('.date').datetimepicker({
+      'format': 'YYYY-MM-DD',
+      minDate: today
+    })
+    
+    if ($('#id_call_type').val() == 'Recurring') {
+      $('#recurring_block').show()
+    }
+    else {
+      $('#recurring_block').hide()
+    }
+
+    $('#id_call_type').on('change', function () {
+      // console.log($(this).val())
+      if ($(this).val() == 'Recurring') {
+        $('#recurring_block').show()
+      }
+      else {
+        $('#recurring_block').hide()
+      }
+    })
+  
+
+  });
+
+  $('form#formid').ajaxForm({
+    type: 'POST',
+    dataType: 'json',
+    url: ".",
+    data: $('#formid').serialize(),
+    success: function (data) {
+      if (data.error) {
+        $('.error').html('')
+        for (var key in data.errors) {
+          $('#id__' + key).html("<p>" + data.errors[key][0] + "</p>");
+        };
+        $('#submit_btn').removeAttr('disabled')
+      }
+      else {
+        window.location = data.success_url;
+      }
+    }
+  });
+  {% for message in messages %}
+  $(document).ready(function() {
+      $.notify("{{message}}", "{{ message.tags }}");
+  });
+  {% endfor %}
+</script>
+{% endblock js_block %}

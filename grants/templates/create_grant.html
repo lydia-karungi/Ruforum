@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block breadcrumb %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css" />
+{% endblock %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'grants:list' %}">Grants</a></li>
+    <li class="breadcrumb-item active">{% if grant %}Edit{% else %}Create{% endif %}</li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+
+<form id="formid" action='' method="POST" novalidate enctype="multipart/form-data">{% csrf_token %}
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title text-center">
+            {% if grant %}EDIT{% else %}ADD NEW{% endif %} GRANT
+          </div>
+          </div>
+          <div class="card-body">
+          <div class="row marl">
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="call" class="required">Grant Application{% if form.call.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.grant_application}}
+            <span class="error" id="id_title">{{ form.call.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="grant_id" class="required">Grant ID{% if form.grant_id.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.grant_id}}
+            <span class="error" id="id_title">{{ form.grant_id.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="title" class="required">Title{% if form.title.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.title}}
+            <span class="error" id="id_title">{{ form.title.errors }}</span>
+            </div>
+            </div>
+              <div class="filter_col col-md-12">
+                <div class="form-group ">
+                  <label for="exampleInputEmail1" class="required">Project Objectives
+                    {% if grant_form.project_objectives.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ grant_form.project_objectives }}
+                  <span class="error" id="id__project_objectives">{{ grant_form.project_objectives.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                  <div class="form-group ">
+                    <label for="exampleInputEmail1" class="required">Summary
+                      {% if grant_form.summary.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ grant_form.summary }}
+                    <span class="error" id="id__summary">{{ grant_form.summary.errors }}</span>
+                  </div>
+                </div>
+
+
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">Budget{% if grant_form.budget.field.required %}<span
+                      class="error">*</span>{% endif %}</label>
+                  {{ grant_form.budget }}
+                  <span class="error" id="id__budget">{{ grant_form.budget.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">Start Date{% if grant_form.start_date.field.required %}<span
+                      class="error">*</span>{% endif %}</label>
+                  {{ grant_form.start_date }}
+                  <span class="error" id="id__start_date">{{ grant_form.start_date.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">End Date{% if grant_form.end_date.field.required %}<span
+                      class="error">*</span>{% endif %}</label>
+                  {{ grant_form.end_date }}
+                  <span class="error" id="id__start_date">{{ grant_form.end_date.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">New End Date{% if grant_form.new_end_date.field.required %}<span
+                      class="error">*</span>{% endif %}</label>
+                  {{ grant_form.new_end_date }}
+                  <span class="error" id="id__start_date">{{ grant_form.new_end_date.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">Duration{% if grant_form.duration.field.required %}<span
+                      class="error">*</span>{% endif %}</label>
+                  {{ grant_form.duration }}
+                  <span class="error" id="id__duration">{{ grant_form.duration.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-12">
+                <div class="form-group">
+                  <label for="id_sattus">Theme{% if grant_form.theme.field.required %}<span
+                      class="error">*</span>{% endif %}</label>
+                  {{ grant_form.theme }}
+                  <span class="error" id="id__start_date">{{ grant_form.theme.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-12">
+                <div class="form-group">
+                  <label for="id_sattus">Value Chain/Commodity Focus{% if grant_form.value_chain.field.required %}<span
+                      class="error">*</span>{% endif %}</label>
+                  {{ grant_form.value_chain }}
+                  <span class="error" id="id__value_chain">{{ grant_form.value_chain.errors }}</span>
+                </div>
+              </div>
+
+
+
+
+                <div class="filter_col col-md-12">
+                  <div class="form-group">
+                    <label for="id_sattus">PI{% if grant_form.pi.field.required %}<span
+                        class="error">*</span>{% endif %}</label>
+                    {{ grant_form.pi }}
+                    <span class="error" id="id__budget">{{ grant_form.pi.errors }}</span>
+                  </div>
+                </div>
+
+
+
+
+                <div class="filter_col col-md-12">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Students </label>
+
+                    {{grant_form.students}}
+                    <span class="error" id="id__students">{{ grant_form.students.errors }}</span>
+
+                    <!-- <label for="id_sattus">Assign To{% if grant_form.assigned_to.field.required %}<span
+                        class="error">*</span>{% endif %}</label>
+                    {{ grant_form.assigned_to }}
+                    <span class="error">{{ grant_form.assigned_to.errors }}</span> -->
+                  </div>
+                </div>
+                <div class="filter_col col-12">
+                  <div class="form-group">
+                    <label for="id_sattus">Approval Status{% if grant_form.approval_status.field.required %}<span
+                        class="error">*</span>{% endif %}</label>
+                    {{ grant_form.approval_status }}
+                    <span class="error">{{ grant_form.approval_status.errors }}</span>
+                  </div>
+                </div>
+                <div class="filter_col col-12">
+                    <div class="form-group">
+                      <label for="id_sattus">Collaborators{% if grant_form.collaborators.field.required %}<span
+                          class="error">*</span>{% endif %}</label>
+                      {{ grant_form.collaborators }}
+                      <span class="error" id="id__start_date">{{ grant_form.collaborators.errors }}</span>
+                    </div>
+                  </div>
+                  <div class="filter_col col-12">
+                    <div class="form-group">
+                      <label for="id_sattus">Has reports{% if grant_form.has_reports.field.required %}<span
+                          class="error">*</span>{% endif %}</label>
+                      {{ grant_form.has_reports }}
+                      <span class="error">{{ grant_form.has_reports.errors }}</span>
+                    </div>
+                  </div>
+                  <div id="report_section" class="col-md-12">
+                    <div class="row">
+                  <div class="filter_col col-6">
+                    <div class="form-group">
+                      <label for="id_sattus">Number of Reports{% if grant_form.report_number.field.required %}<span
+                          class="error">*</span>{% endif %}</label>
+                      {{ grant_form.report_number }}
+                      <span class="error">{{ grant_form.report_number.errors }}</span>
+                    </div>
+                  </div>
+                  <div class="filter_col col-6">
+                    <div class="form-group">
+                      <label for="id_sattus">Reporting Schedule{% if grant_form.reporting_period.field.required %}<span
+                          class="error">*</span>{% endif %}</label>
+                      {{ grant_form.reporting_period }}
+                      <span class="error">{{ grant_form.reporting_period.errors }}</span>
+                    </div>
+                  </div>
+                </div>
+                  </div>
+
+              </div>
+            <div class="col-md-12">
+              <div class="row marl buttons_row form_btn_row text-center">
+                <button class="btn btn-default save" type="submit" id="call_save">Save</button>
+                <a href="{% url 'grants:list' %}" class="btn btn-default clear" id="create_user_cancel">Cancel</a>
+              </div>
+            </div>
+          </div>
+          </div>
+      <!--end of card body-->
+      </div>
+    </div>
+    <input type="hidden" id="save_new_form" name="savenewform">
+
+  <!-- overview ends here -->
+</form>
+<br clear="all">
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script>
+<script type="text/javascript">
+
+  $(document).ready(function () {
+
+    //$("#id_pi").select2();
+    $("#id_students").select2();
+    $("#id_grant_application").select2();
+    $("#id_pi").select2();
+
+  });
+
+
+
+  $(".savenew").on('click', function (e) {
+    e.preventDefault()
+    $("#save_new_form").val('true')
+    $('#formid').submit()
+  });
+  {% for message in messages %}
+  $(document).ready(function() {
+      $.notify("{{message}}", "{{ message.tags }}");
+  });
+  {% endfor %}
+
+
+</script>
+
+{% endblock js_block %}
+
+{% block run_jquery %}
+    {% if not grant %}
+    $('#id_approval_status').closest('.form-group').hide()
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'printbase.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">RUFORUM</span>
+            </h5>
+          </div>
+            </div>
+            <div class="card-body">
+          <div class="row marl">
+              <div class="col-md-12">
+              <h4>Call details</h4>
+              <dl>
+
+                  <dt>Title:</dt>
+                  <dd>{{callrecord.title}}</dd>
+
+                  <dt>Call ID:</dt>
+                  <dd>{{callrecord.call_id}}</dd>
+
+                  <dt>Submission Deadline:</dt>
+                  <dd>{{callrecord.submission_deadline}}</dd>
+
+                  <dt>Scholarship Type:</dt>
+                  <dd>{{callrecord.scholarship_type}}</dd>
+              </dl>
+
+              <h3>Documents</h3>
+              <dl>
+
+
+                  <dt>Instructions:</dt>
+                  {% if callrecord.text %}
+                  <dd><a href="{{callrecord.text.url}}" download>{{callrecord.text}}</a></dd>
+               {% endif %}
+              </dl>
+
+
+
+              </div>
+        </div>
+
+</div>
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% load paginate %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'pme:workplan_list' %}">Work plans</a></li>
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">Overview</span>
+              <span class="" style="margin-top: 0px">
+                {% if perms.activities.change_workplan %}
+                <div class="dropdown buttons_row">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'pme:edit_workplan' workplanrecord.id %}">Edit</a></li>
+                  </ul>
+                </div>
+                {% endif %}
+              </span>
+            </h5>
+          </div>
+            </div>
+            <div class="card-body">
+          <div class="row marl">
+              <div class="col-md-12">
+              <h4>work plan</h4>
+              <dl>
+
+                  <dt>Work Plan:</dt>
+                  <dd>{{workplanrecord.workplan_name}}</dd>
+
+                  <dt>Type:</dt>
+                  <dd>{{workplanrecord.workplantype}}</dd>
+
+                  <dt>Financial Year:</dt>
+                  <dd>{{workplanrecord.financial_year}}</dd>
+
+                  <dt>Department:</dt>
+                  <dd>{{workplanrecord.department}}</dd>
+                  <dt>Unit:</dt>
+                  <dd>{{workplanrecord.unit}}</dd>
+                  <dt>Description:</dt>
+                  <dd>{{workplanrecord.description}}</dd>
+              </dl>
+
+
+
+              </div>
+        </div>
+
+</div>
+
+    </div>
+<br clear="all">
+  </div>
+  <br clear="all">
+
+</div>
+</div>
+
+
+{% endblock %}

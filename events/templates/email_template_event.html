@@ -1,0 +1,13 @@
+{% extends 'root_email_template.html' %}
+
+{% block heading %}
+Dear {{ user }}
+{% endblock heading %}
+
+
+{% block content_body %}
+You have been invited to an Event <b>{{event.title}}</b> organised by {{event.organizer}}
+Date of meeting {{event.start_date}} to {{ event.end_date }}
+{% endblock content_body %}
+
+

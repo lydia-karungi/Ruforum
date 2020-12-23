@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load paginate %}
+{% block content %}
+<!-- main_container starts here -->
+<div class="main_container">
+  <!-- filter_row starts here -->
+ 
+  <div class="row marl">
+    <div class="col-lg-12 text-right m-1">
+  
+      <span class="d-inline"><a href="{% url 'contacts:add_student'%}" class="btn primary_btn"><i class="fa fa-plus"></i>
+          Add New Student</a></span>
+    </div>
+
+  </div>
+
+
+ 
+
+  <!-- filter_row ends here -->
+  <!-- popup for change password start's here  -->
+  <div class="filter_row row marl">
+    <div class="col-md-12 col-lg-12 col-xl-12">
+      <div class="table_container_row row marl no-gutters">
+        <div class="col-md-12">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="open-tab" data-toggle="tab" href="#open" role="tab" aria-controls="open"
+                aria-selected="true">Continuing Students ({{continueing_students|length}})</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="close-tab" data-toggle="tab" href="#close" role="tab" aria-controls="close"
+                aria-selected="false">Graduated Students ({{graduated_students|length}})</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open">
+              
+                  <div class="table-responsive">
+                    <table 
+                    id="table"
+                    data-toggle="table"
+                    data-show-toggle="true"
+                    data-search="true"
+                    data-show-refresh="true"
+                    data-show-fullscreen="true"
+                    data-show-columns="true"
+                    data-show-columns-toggle-all="true"
+                    data-show-export="true"
+                    data-click-to-select="true"
+                    data-minimum-count-columns="2"
+                    data-show-pagination-switch="true"
+                    data-pagination="true"
+                    data-id-field="id"
+                    data-cache="true"
+                    data-virtual-scroll="true"
+                    data-toolbar="#toolbar"
+                    data-export-types="[‘csv’,‘doc’, ‘excel’, ‘pdf’]"
+                    data-page-list="[10, 25, 50, 100, all]"
+                   >
+                      <thead>
+                     
+                        <tr>
+                          <th >Student No</th>
+                          <th >Name</th>
+                          <th >Country</th>
+                          <th>University</th>
+                          <th>Registration NO.</th>
+                          <th data-visible="false">University Department</th>
+                          <th data-visible="false">Degree Program Level</th>
+                          <th data-visible="false">intake Year</th>
+                          <th data-visible="false">Expected Graduation Date</th>
+                          <th data-visible="false">Thesis Title</th>
+                          
+                          <th>Actions</th>
+                        </tr>
+                       
+                      </thead>
+                      <tbody>
+                       
+                        {% for student in continueing_students %}
+                        <tr class="text-center">
+                          <td><a href="{% url 'contacts:student_details' student.id %}">{{ student.student_no }}</a></td>
+                          <td>{{ student.user.get_full_name }}</td>
+                          <td>{{ student.user.get_country_display }}</td>
+                          <td>{{student.university}}</td>
+                        
+
+                          <td>
+                            {% if student.university_reg_no %}
+                      {{student.university_reg_no}}
+                      {% else %}
+                      Not Specified
+                      {% endif %}
+                          </td>
+                          <td>{{student.university_department}}</td>
+                          <td>{{student.degree_program_level}}</td>
+                          <td>{{student.intake_year}}</td>
+                          <td>{{ student.grad_expected}}</td>
+                          <td>{{student.thesis_title}}</td>
+                          <td class="actions">
+                            <!-- <a href="{% url 'common:view_user' user.id %}" class="btn btn-info view"><i class="fas fa-eye"></i>View</a> -->
+                            {% if request.user.role == "ADMIN" or request.user.is_superuser or perms.contacts.can_view_contacts %}
+                            <a href="{% url 'contacts:student_details' student.id %}" title="Detail" class="btn btn-sm btn-info view m-1"><i class="fas fa-eye"></i></a>
+                            {% endif %}
+                            <a href="{% url 'contacts:edit_student' student.id %}" title="Edit" class="btn btn-sm btn-success edit action"><i
+                                class="fas fa-pencil-alt"></i></a>
+                      {% if  request.user.role == "ADMIN" or request.user.role == "Contacts managers" or request.user.is_superuser %}
+                            <a href="" data-id="{{student.pk}}" title="Delete" class="btn btn-sm btn-danger trash action" data-toggle="modal" data-target="#deleteusermodel">
+                            <i class="fas fa-trash-alt"></i></a>
+                                    {% endif %}
+                                <a href="" data-id="{{student.pk}}" class="btn btn-sm btn-info action graduate" title="Graduate" data-toggle="modal" data-target="#graduatestudentmodel"
+                                  ><i class="fa fa-graduation-cap" aria-hidden="true"></i></a>
+
+                        
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  
+               
+
+            </div>
+
+            <!--end of continuing students-->
+            <div class="tab-pane fade" id="close" role="tabpanel" aria-labelledby="close">
+            
+                  <div class="table-responsive">
+                    <table
+                    id="table2"
+                    data-toggle="table"
+                    data-show-toggle="true"
+                    data-search="true"
+                    data-show-refresh="true"
+                    data-show-fullscreen="true"
+                    data-show-columns="true"
+                    data-show-columns-toggle-all="true"
+                    data-show-export="true"
+                    data-click-to-select="true"
+                    data-minimum-count-columns="2"
+                    data-show-pagination-switch="true"
+                    data-pagination="true"
+                    data-id-field="id"
+                    data-cache="true"
+                    data-virtual-scroll="true"
+                    data-toolbar="#toolbar"
+                    data-export-types="[‘csv’,‘doc’, ‘excel’, ‘pdf’]"
+                    data-page-list="[10, 25, 50, 100, all]"
+                    >
+                      <thead>
+                      
+                        <tr>
+                          <th >Name</th>
+                          <th >Country</th>
+                          <th >University</th>
+                          <th >Registration NO.</th>
+                          <th >Actions</th>
+                        </tr>
+                       
+                      </thead>
+                      <tbody>
+                     
+                        {% for student in graduated_students %}
+                        <tr class="text-center">
+                          <td><a href="{% url 'contacts:student_details' student.id %}">{{ student.user.get_full_name }}</a></td>
+                            <td>{{ student.user.get_country_display }}</td>
+                            <td class="text-center">{{student.university}}  </td>
+                          <td>
+
+                            {% if student.university_reg_no %}
+                      {{student.university_reg_no}}
+                      {% else %}
+                      Not Specified
+                      {% endif %}
+                          </td>
+                          <td class="actions">
+                            {% if user.email != admin_email  or request.user.email == admin_email %}
+                            <a href="{% url 'contacts:edit_student' student.id %}" title="Edit" class="btn btn-sm btn-success edit action"><i
+                                class="fas fa-pencil-alt"></i></a>
+
+                            <a href="" data-id="{{student.pk}}" title="Delete" class="btn btn-sm btn-danger trash action" data-toggle="modal" data-target="#deleteusermodel"
+                              {% if request.user.email == user.email %} {% endif %}><i
+                                class="fas fa-trash-alt"></i></a>
+                                <button disabled class="btn btn-sm btn-info " title="Graduate"
+                                  ><i class="fa fa-graduation-cap" aria-hidden="true"></i></button>
+                          {% endif %}
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table
+                    >
+                  </div>
+               
+          </div>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+</div>
+<br clear="all">
+<!--model to handle user deletion confirmation-->
+<!-- Modal -->
+<div class="modal fade" id="deleteusermodel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="exampleModalLabel">Delete Student</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="text-center">Are you sure you want to delete this Student?</p>
+      </div>
+      <div class="modal-footer text-center">
+        <button type="button" class="btn btn-danger " data-dismiss="modal">Cancel</button>
+        <button type="button" id="approval_delete_btn" class="btn btn-primary">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--end of model-->
+<!--model to handle grauation of students -->
+<!-- Modal -->
+<div class="modal fade" id="graduatestudentmodel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="exampleModalLabel">Graduate Student</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+          <div class="form-group">
+            <label for="grad_actual" class="col-form-label">Graduation Date:</label>
+            <input type="date" name="grad_actual" class="form-control" id="id_grad_actual">
+          </div>
+
+
+      </div>
+      <div class="modal-footer text-center">
+        <button type="button" class="btn btn-danger " data-dismiss="modal">Cancel</button>
+        <button type="button" id="graduatebtn" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--end of model-->
+<!-- main_container ends here -->
+{% endblock %}
+{% block js_block %}
+<script type="text/javascript">
+  $(document).ready(function () {
+
+
+    $(".filter_toggle").click(function () {
+      $(".list_filter_row").toggle();
+    });
+
+
+  //student graduation method
+  $('.graduate').click(function () {
+     var item_di=$(this).attr("data-id");
+
+    // console.log(item_di);
+     $('#graduatebtn').click(function(){
+      const graduationDateTextbox =  document.getElementById('id_grad_actual');
+       var graduation_date = graduationDateTextbox.value.trim();
+         var url="/contacts/"+item_di+"/student/graduate/"+graduation_date;
+         var commentval=$('#id_grad_actual').val();
+         if (commentval < 1) {
+
+       $('#id_grad_actual').after('<span class="error">Graduation date is required</span>');
+        $('#graduatebtn').disabled = true;;
+       }else{
+       $(".error").remove();
+       $('#graduatebtn').disabled = false;;
+
+}
+
+     $.ajax({
+      type: "GET",
+      url: url,
+      data: {
+        //'csrfmiddlewaretoken': '{{ csrf_token }}',
+        'grad_actual':graduation_date
+
+      },
+      success: function () {
+        //$('#message').html("<h2>Contact Form Submitted!</h2>")
+        window.location.href="{% url 'contacts:students_list' %}"
+      }
+    });
+    return false;
+
+     });
+   });
+  });
+  //delete user function
+  //picked the id of the user and placed it in the data-id attribute if the url
+  $('.trash').click(function () {
+     var item_di=$(this).attr("data-id");
+    // console.log(item_di);
+     $('#approval_delete_btn').click(function(){
+         var url="/contacts/"+item_di+"/student/delete/";
+       $.get(url, function (data) {
+          // hideSpinner();
+        window.location.reload();
+     });
+
+     });
+   });
+
+   {% for message in messages %}
+  $(document).ready(function() {
+      $.notify("{{message}}", "{{ message.tags }}");
+  });
+  {% endfor %}
+
+</script>
+
+{% endblock js_block %}

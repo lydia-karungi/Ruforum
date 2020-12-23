@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+    {% block extralinks %}
+        <link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+        <style>
+            .opacity_block {
+                opacity: 0.2;
+            }
+        </style>
+    {% endblock extralinks %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'calls:list' %}">Grant Calls</a></li>
+            <li class="breadcrumb-item active">View</li>
+        </ol>
+    </nav>
+    <!-- CASE VIEW STARTS -->
+    <div class="main_container" id="maincontainer">
+        <div class="overview_form_block row marl justify-content-center">
+            <div class="col-md-10" id="opacity_block">
+                <div class="card">
+                    <div class="card-header" id="datashow">
+                        <div class="card-title text-center">
+                            <h5>
+                                <span class="float-left title">Overview</span>
+                                <span class="" style="margin-top: 0px">
+                <div class="dropdown buttons_row text-right">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    {% if perms.calls.change_call %}
+                        <li><a class="dropdown-item" href="{% url 'calls:edit_call' callrecord.id %}">Edit</a></li>
+                    {% endif %}
+                   
+                  </ul>
+                </div>
+
+              </span>
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row marl">
+                            <div class="col-md-10">
+                                <h4>Call details</h4>
+                                <dl>
+
+                                    <dt>Title:</dt>
+                                    <dd>{{ callrecord.title }}</dd>
+
+                                    <dt>Call ID:</dt>
+                                    <dd>{{ callrecord.call_id }}</dd>
+
+                                    <dt>Submission Deadline:</dt>
+                                    <dd>{{ callrecord.submission_deadline }}</dd>
+
+                                    <dt>Grant Type:</dt>
+                                    <dd>{{ callrecord.grant_type }}</dd>
+                                    <dt>Commodity Focus:</dt>
+                                    <dd>{{ callrecord.commodity_focus }}</dd>
+                                    <dt>Theme:</dt>
+                                    <dd>{{ callrecord.proposal_theme }}</dd>
+                                    <dt>Sub Theme:</dt>
+                                    <dd>{{ callrecord.proposal_sub_theme }}</dd>
+                                </dl>
+
+                                <h3>Documents</h3>
+                                <dl>
+
+
+                                    <dt>Instructions:</dt>
+                                    {% if callrecord.grant_type.instructions %}
+                                        <dd><a href="{{ callrecord.grant_type.instructions.url }}"
+                                               download>{{ callrecord.grant_type.instructions }}</a></dd>
+                                    {% endif %}
+                                    <dt>Template:</dt>
+                                    {% if callrecord.grant_type.template %}
+                                        <dd><a href="{{ callrecord.grant_type.template.url }}"
+                                               download>{{ callrecord.grant_type.template }}</a></dd>
+                                    {% endif %}
+
+                                    <dt>Project Budget Template:</dt>
+                                    {% if callrecord.grant_type.project_budget_template %}
+                                        <dd><a href="{{ callrecord.grant_type.project_budget_template.url }}"
+                                               download>{{ callrecord.grant_type.project_budget_template }}</a></dd>
+                                    {% endif %}
+
+                                    <dt>Review Form Template:</dt>
+                                    {% if callrecord.grant_type.review_form_template %}
+                                        <dd><a href="{{ callrecord.grant_type.review_form_template.url }}"
+                                               download>{{ callrecord.grant_type.review_form_template }}</a></dd>
+
+                                    {% endif %}
+
+
+                                </dl>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+     <br clear="all">
+    </div>
+
+
+
+
+{% endblock %}
+<br clear="all">

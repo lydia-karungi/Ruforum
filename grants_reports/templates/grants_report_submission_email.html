@@ -1,0 +1,12 @@
+{% extends 'root_email_template.html' %}
+
+{% block heading %}
+Dear {{ user }}
+{% endblock heading %}
+
+
+{% block content_body %}
+<p>{{message}}</p>
+<p>Thank you.</p>
+
+{% endblock content_body %}

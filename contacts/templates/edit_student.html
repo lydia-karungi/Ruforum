@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block breadcrumb %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css" />
+{% endblock %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'contacts:students_list' %}">Students</a></li>
+    <li class="breadcrumb-item active">{% if student_obj %}Edit{% else %}Create{% endif %}</li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+
+<form id="formid" action='' method="POST" novalidate enctype="multipart/form-data">
+    {% csrf_token %}
+  <div class="overview_form_block row  justify-content-center">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title text-center">
+            {% if student_obj %}EDIT{% else %}ADD{% endif %} Student
+          </div>
+          </div>
+          <div class="card-body">
+          <div class="row mar1">
+
+
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="title" class="required">User Account{% if form.user.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.user}}
+<span class="error" id="id_user">{{ form.user.errors }}</span>
+</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="year_of_birth" class="required">Year of Birth{% if form.year_of_birth.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.year_of_birth}}
+<span class="error" id="id_year_of_birth">{{ form.year_of_birth.errors }}</span>
+</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="university" class="required">University{% if form.university.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.university}}
+<span class="error" id="id_first_name">{{ form.university.errors }}</span>
+</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="university_department" class="required">Department{% if form.university_department.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.university_department}}
+<span class="error" id="id_last_name">{{ form.university_department.errors }}</span>
+</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="university_reg_no" class="required">Registration Number{% if form.university_reg_no.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.university_reg_no}}
+<span class="error" id="id_personal_email">{{ form.university_reg_no.errors }}</span>
+</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="degree_program_level" class="required">Degree Program Level{% if form.degree_program_level.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.degree_program_level}}
+<span class="error" id="id_home_address">{{ form.degree_program_level.errors }}</span>
+</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="degree_program_name" class="required">Degree Program Name{% if form.degree_program_name.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.degree_program_name}}
+<span class="error" id="id_business_address">{{ form.degree_program_name.errors }}</span>
+</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="intake_year" class="required">Intake Year{% if form.intake_year.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.intake_year}}
+<span class="error" id="id_country">{{ form.intake_year.errors }}</span>
+</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="grad_expected" class="required">Expected Graduation date{% if form.grad_expected.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.grad_expected}}
+<span class="error" id="id_nationality">{{ form.grad_expected.errors }}</span>
+</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="grad_actual" class="required">Actual Graduation Date{% if form.grad_actual.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.grad_actual}}
+<span class="error" id="id_gender">{{ form.grad_actual.errors }}</span>
+</div>
+</div>
+<div class="col-md-12">
+  <div class="form-group">
+    <label for="thesis_title" class="required"> Thesis Title{% if form.thesis_title.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.thesis_title}}
+<span class="error" id="id_contact_type">{{ form.thesis_title.errors }}</span>
+</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="cohort" class="required">Cohort{% if form.cohort.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.cohort}}
+<span class="error" id="id_passport_no">{{ form.cohort.errors }}</span>
+</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="supervisor1" class="required">Supervisor 1{% if form.supervisor1.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.supervisor1}}
+<span class="error" id="id_job_title">{{ form.supervisor1.errors }}</span>
+</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="supervisor12 class="required">supervisor 2{% if form.supervisor1.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.supervisor2}}
+<span class="error" id="id_institution">{{ form.supervisor2.errors }}</span>
+</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="supervisor3" class="required">Supervisor 3{% if form.supervisor3.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.supervisor3}}
+<span class="error" id="id_area_of_specialisation">{{ form.supervisor3.errors }}</span>
+</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="grant_type" class="required">Grant Type{% if form.grant_type.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.grant_type}}
+<span class="error" id="id_home_tel">{{ form.grant_type.errors }}</span>
+</div>
+</div>
+<div class="col-md-6">
+  <div class="form-group">
+    <label for="student_type" class="required">Student Type{% if form.student_type.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.student_type}}
+<span class="error" id="id_home_tel">{{ form.student_type.errors }}</span>
+</div>
+</div>
+<div class="col-md-6">
+    <div class="form-group">
+      <label for="graduated" class="required">Graduated{% if form.graduated.field.required %}<span class="error_marker"
+          style="color:red">*</span>{% endif %}</label>
+  {{form.graduated}}
+  <span class="error" id="id_home_tel">{{ form.graduated.errors }}</span>
+  </div>
+  </div>
+<div class="col-md-12">
+  <div class="form-group">
+    <label for="research_abstract" class="required">Research Abstract{% if form.research_abstract.field.required %}<span class="error_marker"
+        style="color:red">*</span>{% endif %}</label>
+{{form.research_abstract}}
+<span class="error" id="id_research_abstract">{{ form.research_abstract.errors }}</span>
+</div>
+</div>
+
+
+
+                <div class="col-md-12">
+
+                  <div class="form-actions row marl text-center">
+                      <button class="btn btn-primary" type="submit" name="save">Save</button>
+                  </div>
+                </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" id="save_new_form" name="savenewform">
+  </div>
+  <!-- overview ends here -->
+</form>
+
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script>
+<script type="text/javascript">
+
+  $(document).ready(function () {
+    //$("#id_pi").select2();
+    $("#id_user").select2()
+    $("#id_teams").select2()
+    $("#id_assigned_to").change(function () {
+      $("#id_assigned_to").attr('name', 'assigned_to')
+    })
+
+  });
+
+
+
+  $(function () {
+     var date = new Date();
+     var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      $('.date').datetimepicker({
+          'format': 'YYYY-MM-DD',
+          minDate:today
+      })
+  });
+  {% for message in messages %}
+  $(document).ready(function() {
+      $.notify("{{message}}", "{{ message.tags }}");
+  });
+  {% endfor %}
+</script>
+
+{% endblock js_block %}

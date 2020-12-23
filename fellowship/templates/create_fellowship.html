@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block breadcrumb %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css" />
+{% endblock %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'fellowship:list' %}">Fellowships</a></li>
+    <li class="breadcrumb-item active">{% if fellowship %}Edit{% else %}Create{% endif %}</li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+
+<form id="formid" action='' method="POST" novalidate enctype="multipart/form-data">{% csrf_token %}
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-9">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title text-center">
+            {% if fellowship %}EDIT{% else %}ADD NEW{% endif %} FELLOWSHIP
+          </div>
+          </div>
+          <div class="card-body">
+          <div class="row marl">
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="call" class="required">Call{% if form.call.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.call}}
+            <span class="error" id="id_title">{{ form.call.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="fellowship_id" class="required">Fellowship ID{% if form.fellowship_id.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.fellowship_id}}
+            <span class="error" id="id_title">{{ form.fellowship_id.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="title" class="required">Title{% if form.title.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.title}}
+            <span class="error" id="id_title">{{ form.title.errors }}</span>
+            </div>
+            </div>
+              
+              <div class="filter_col col-md-12">
+                  <div class="form-group ">
+                    <label for="exampleInputEmail1" class="required">Summary
+                      {% if fellowship_form.summary.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ fellowship_form.summary }}
+                    <span class="error" id="id__summary">{{ fellowship_form.summary.errors }}</span>
+                  </div>
+                </div>
+                {% comment %}
+              <div class="filter_col col-md-4">
+                <div class="form-group ">
+                  <label for="exampleInputEmail1" class="required">Leads{% if fellowship_form.lead.field.required %}<span
+                      class="error_marker" style="color:red">*</span>{% endif %}</label>
+                  <select name="lead" class="form-control" placeholder="Lead" required="" id="id_lead">
+                    <option value="" selected="">---------</option>
+                    {% for lead in leads %}
+                    <option value="{{lead.id}}" {% ifequal fellowship_obj.lead.id lead.id %}selected{% endifequal %}>
+                      {{lead.first_name}} {{lead.last_name}}</option>
+                    {% endfor %}
+                  </select>
+                  <span class="error" id="id__lead">{{ fellowship_form.lead.errors }}</span>
+                </div>
+              </div>
+              {% endcomment %}
+
+
+
+              
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">Budget{% if fellowship_form.budget.field.required %}<span
+                      class="error">*</span>{% endif %}</label>
+                  {{ fellowship_form.budget }}
+                  <span class="error" id="id__budget">{{ fellowship_form.budget.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">Start Date{% if fellowship_form.start_date.field.required %}<span
+                      class="error">*</span>{% endif %}</label>
+                  {{ fellowship_form.start_date }}
+                  <span class="error" id="id__start_date">{{ fellowship_form.start_date.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">End Date{% if fellowship_form.end_date.field.required %}<span
+                      class="error">*</span>{% endif %}</label>
+                  {{ fellowship_form.end_date }}
+                  <span class="error" id="id__start_date">{{ fellowship_form.end_date.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">New End Date{% if fellowship_form.new_end_date.field.required %}<span
+                      class="error">*</span>{% endif %}</label>
+                  {{ fellowship_form.new_end_date }}
+                  <span class="error" id="id__start_date">{{ fellowship_form.new_end_date.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-4">
+                <div class="form-group">
+                  <label for="id_sattus">Duration{% if fellowship_form.duration.field.required %}<span
+                      class="error">*</span>{% endif %}</label>
+                  {{ fellowship_form.duration }}
+                  <span class="error" id="id__duration">{{ fellowship_form.duration.errors }}</span>
+                </div>
+              </div>
+              
+              
+
+
+                <div class="filter_col col-6">
+                  <div class="form-group">
+                    <label for="id_sattus">PI{% if fellowship_form.pi.field.required %}<span
+                        class="error">*</span>{% endif %}</label>
+                    {{ fellowship_form.pi }}
+                    <span class="error" id="id__budget">{{ fellowship_form.pi.errors }}</span>
+                  </div>
+                </div>
+
+
+
+
+                <div class="filter_col col-6">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Students </label>
+                    <select name="students" id="id_students" class="assigned_users form-control" multiple>
+                      {% for user in users %}
+                      <option value="{{user.id}}" {% if user in fellowship_obj.users.all %} selected="" {% endif %}>
+                        {{user.get_full_name}}</option>
+                      {% endfor %}
+                    </select>
+                    <input type="hidden" id="id_students_hidden" name="students_">
+                    <span class="error" id="id__students">{{ fellowship_form.students.errors }}</span>
+
+                    <!-- <label for="id_sattus">Assign To{% if fellowship_form.assigned_to.field.required %}<span
+                        class="error">*</span>{% endif %}</label>
+                    {{ fellowship_form.assigned_to }}
+                    <span class="error">{{ fellowship_form.assigned_to.errors }}</span> -->
+                  </div>
+                </div>
+                <div class="filter_col col-4">
+                  <div class="form-group">
+                    <label for="id_sattus">Approval Status{% if fellowship_form.approval_status.field.required %}<span
+                        class="error">*</span>{% endif %}</label>
+                    {{ fellowship_form.approval_status }}
+                    <span class="error">{{ fellowship_form.approval_status.errors }}</span>
+                  </div>
+                </div>
+                
+
+                {% comment %}
+                <div class="filter_col col-12">
+                  <div class="form-group">
+                    <label>Keywordss</label>
+                    <div class="txt-box-div" id="tag-div"><input type="text" name="tags" id="tags_1"
+                        value="{% for t in fellowship_obj.tags.all %}{{t.name}}, {% endfor %}" class="tags" />
+                    </div>
+                  </div>
+                </div>
+                {
+                <div class="filter_col col-md-12">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Attachment</label>
+                    <input type="file" name="account_attachment">
+                    {% if fellowship_obj.account_attachment.count %}
+                    {% for attachment in fellowship_obj.account_attachment.all %}
+                    <div id="attachment{{attachment.id}}" class="mt-2">
+                      <a target="_blank" href="{{ attachment.attachment.url }}">{{ attachment.file_name }}</a>
+                      {% if not attachment.created_by.role == 'ADMIN' or attachment.created_by.role == request.user.role %}
+                      <a class="action btn primary_btn" onclick="remove_attachment({{attachment.id}})">X</a>
+                      {% endif %}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    <span class="error"></span>
+                  </div>
+                </div>
+                {% endcomment %}
+              </div>
+            <div class="col-md-12">
+              <div class="row marl buttons_row form_btn_row text-center">
+                <button class="btn btn-default save" type="submit" id="call_save">Save</button>
+                <a href="{% url 'fellowship:list' %}" class="btn btn-default clear" id="create_user_cancel">Cancel</a>
+              </div>
+            </div>
+          </div>
+          </div>
+      <!--end of card body-->
+      </div>
+    </div>
+    <input type="hidden" id="save_new_form" name="savenewform">
+
+  <!-- overview ends here -->
+</form>
+
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script>
+<script type="text/javascript">
+
+  // $(document).ready(function() {
+  //   $('.assigned_users').select2();
+  // });
+  $(document).ready(function () {
+    //$("#id_pi").select2();
+    $("#id_students").select2();
+    $("#id_call").select2();
+    $("#id_pi").select2();
+    $("#id_assigned_to").change(function () {
+      $("#id_assigned_to").attr('name', 'assigned_to')
+      
+    })
+    // $("#id_assigned_to")
+    // var data_assigned_to = []
+    // data_assigned_to = $('#id_assigned_to').val()
+    // $('#id_assigned_to_').val($('#id_assigned_to').val())
+    // console.log($('#id_assigned_to').val())
+    // console.log($('#id_assigned_to_').val())
+    // $('#id_assigned_to').change(function(){
+    //   data_assigned_to = []
+    //   data_assigned_to.push($(this).val())
+    //   $('#id_assigned_to_hidden').val(data_assigned_to)
+    // })
+  });
+
+  $("#copy_billing_btn").click(function () {
+    var address_line = $("#id_address_line").val();
+    var street = $("#id_street").val();
+    var city = $("#id_city").val();
+    var state = $("#id_state").val();
+    var postcode = $("#id_postcode").val();
+    var country = $("#id_country").val();
+  });
+
+  $(".savenew").on('click', function (e) {
+    e.preventDefault()
+    $("#save_new_form").val('true')
+    $('#formid').submit()
+  });
+
+  function onAddTag(tag) {
+    alert("Added a tag: " + tag);
+  }
+  function onRemoveTag(tag) {
+    alert("Removed a tag: " + tag);
+  }
+
+  function onChangeTag(input, tag) {
+    alert("Changed a tag: " + tag);
+  }
+
+  $(function () {
+
+    $('#tags_1').tagsInput({ width: 'auto' });
+    $('#tags_2').tagsInput({
+      width: 'auto',
+      onChange: function (elem, elem_tags) {
+        var languages = ['php', 'ruby', 'javascript'];
+        $('.tag', elem_tags).each(function () {
+          if ($(this).text().search(new RegExp('\\b(' + languages.join('|') + ')\\b')) >= 0)
+            $(this).css('background-color', 'yellow');
+        });
+      }
+    });
+    $('#tags_3').tagsInput({
+      width: 'auto',
+
+      //autocomplete_url:'test/fake_plaintext_endpoint.html' //jquery.autocomplete (not jquery ui)
+      autocomplete_url: 'test/fake_json_endpoint.html' // jquery ui autocomplete requires a json endpoint
+    });
+
+
+    // Uncomment this line to see the callback functions in action
+    //      $('input.tags').tagsInput({onAddTag:onAddTag,onRemoveTag:onRemoveTag,onChange: onChangeTag});
+
+    // Uncomment this line to see an input with no interface for adding new tags.
+    //      $('input.tags').tagsInput({interactive:false});
+  });
+
+
+  {% comment %}
+  function remove_attachment(x) {
+    const con = confirm("Do you want to Delete it for Sure!?");
+    if (con == true) {
+      $.post('{% url "cases:remove_attachment" %}', {
+        "attachment_id": x
+      }, function (data) {
+        if (data.error) {
+          alert(data.errors)
+        } else {
+          $("#attachment" + data.attachment_object).remove()
+        }
+      })
+    }
+  }
+  {% endcomment %}
+
+
+  $(function () {
+     var date = new Date();
+     var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      $('.date').datetimepicker({
+          'format': 'YYYY-MM-DD',
+          minDate:today
+      })
+  });
+</script>
+
+{% endblock js_block %}
+
+{% block run_jquery %}
+    {% if not fellowship %}
+    $('#id_approval_status').closest('.form-group').hide()
+    {% endif %}
+{% endblock %}

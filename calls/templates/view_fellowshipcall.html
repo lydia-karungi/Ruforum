@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'calls:fellowship-list' %}">Fellowship Calls</a></li>
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-center">
+            <h5>
+              <span class="float-left title">Overview</span>
+              <span class="" style="margin-top: 0px">
+
+                <div class="dropdown buttons_row text-right">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    {% if perms.calls.change_call %}
+                    <li><a class="dropdown-item" href="{% url 'calls:edit_fellowshipcall' callrecord.id %}">Edit</a></li>
+                    {% endif %}
+                    <li><a class="dropdown-item" href="{% url 'calls:print_fellowshipcall' callrecord.id %}" target="blank" >print</a></li>
+                  </ul>
+                </div>
+
+
+
+              </span>
+            </h5>
+          </div>
+            </div>
+            <div class="card-body">
+          <div class="row marl">
+              <div class="col-md-12">
+              <h4>Fellowship Call details</h4>
+              <dl>
+
+                  <dt>Title:</dt>
+                  <dd>{{callrecord.title}}</dd>
+
+                  <dt>Call ID:</dt>
+                  <dd>{{callrecord.call_id}}</dd>
+                  <dt>Stipulated Start Date:</dt>
+                  <dd>{{callrecord.start_date}}</dd>
+                  <dt>Stipulated End Date</dt>
+                  <dd>{{callrecord.end_date}}</dd>
+                  <dt>Duration:</dt>
+                  <dd>{{callrecord.duration}}</dd>
+
+                  <dt>Submission Deadline:</dt>
+                  <dd>{{callrecord.submission_deadline}}</dd>
+
+                  <dt>Goal:</dt>
+                  <dd>{{callrecord.goal}}</dd>
+                  <dt>Objective:</dt>
+                  <dd>{{callrecord.objectives}}</dd>
+                  <dt>who can apply:</dt>
+                  <dd>{{callrecord.who_can_apply}}</dd>
+                  <dt>Financial Support:</dt>
+                  <dd>{{callrecord.financial_support}}</dd>
+                  <dt> Home University:</dt>
+                  <dd>{{callrecord.member_university}}</dd>
+                  <dt>Home Institution Obligations:</dt>
+                  <dd>{{callrecord.institute_obligations}}</dd>
+                  <dt> Host University:</dt>
+                  <dd>{{callrecord.host_institute}}</dd>
+                  <dt>Host Institution Obligations:</dt>
+                  <dd>{{callrecord.home_institute_obligations}}</dd>
+
+              </dl>
+
+
+
+
+              </div>
+        </div>
+
+</div>
+
+    </div>
+
+  </div>
+</div>
+<br clear="all">
+
+{% endblock %}

@@ -1,0 +1,544 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block breadcrumb %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css" />
+
+  <link rel="stylesheet" type="text/css"
+  href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" />
+
+<link type="text/css" href="{% static "css/fullcalendar.min.css" %}" rel="stylesheet">
+<link type="text/css" href="{% static "css/fullcalendar.print.min.css" %}" rel="stylesheet" media="print">
+{% endblock %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'events:list' %}">Events</a></li>
+    <li class="breadcrumb-item active">{% if event_obj %}Edit{% else %}Create{% endif %}</li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-body">
+                  <div class="card-header with-border">
+                    <h6 class="card-title"> Draggable Options </h6>
+                  </div>
+                  <input type="hidden" id="exact_date" value="" />
+                    <div class="list-group" id="list_group">
+                        <span class="list-group-item calendar-options text-green hrsale-drag-option" data-record="0"> <i
+                                class="fa fa-space-shuttle"></i> Holidays</span>
+                        <span class="list-group-item calendar-options text-aqua hrsale-drag-option" data-record="1"> <i
+                                class="fa fa-envelope"></i> Approved Leaves</span>
+                        <span class="list-group-item calendar-options text-light-blue hrsale-drag-option" data-record="2"> <i
+                                class="fa fa-plane"></i>Approved Travel</span>
+                        <span class="list-group-item calendar-options text-yellow hrsale-drag-option" data-record="3"> <i
+                                class="fa fa-graduation-cap"></i> Trainings</span>
+                        <span class="list-group-item calendar-options text-purple hrsale-drag-option" data-record="4"> <i
+                                class="fa fa-pencil-square"></i> Projects</span>
+                        <span class="list-group-item calendar-options text-maroon hrsale-drag-option" data-record="5"> <i
+                                class="fa fa-tasks"></i> Tasks</span>
+                        <span class="list-group-item calendar-options text-navy hrsale-drag-option" data-record="6"> <i
+                                class="fa fa-calendar-plus-o"></i> Events</span>
+                        <span class="list-group-item calendar-options text-teal hrsale-drag-option" data-record="7"> <i
+                                class="fa fa-calendar-check-o"></i> Meetings</span>
+                        <span class="list-group-item calendar-options text-light-blue hrsale-drag-option" data-record="8"> <i
+                                class="fa fa-trophy"></i> Goals</span>
+                        <span class="list-group-item calendar-options text-red"> <i class="fa fa-gift"></i> Upcoming Birthday</span>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-9">
+              <div class="card">
+                <div class="card-body">
+                  <div id='calendar_hr'></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock %}
+
+<style type="text/css">
+    .popover-title {
+        font-size: .9rem !important;
+        border-color: rgba(0,0,0,.05) !important;
+        background-color: #fff !important;
+        font-weight:bold !important;
+    }
+    .popover-title {
+        padding: .5rem .75rem !important;
+        margin-bottom: 0 !important;
+        color: inherit !important;
+        border-bottom: 1px solid #ebebeb !important;
+        border-top-left-radius: calc(.3rem - 1px) !important;
+        border-top-right-radius: calc(.3rem - 1px) !important;
+    }
+    .popover {
+        border-color: rgba(0,0,0,.1) !important;
+    }
+    .popover {
+        color: rgba(70,90,110,.85) !important;
+    }
+    .popover .arrow {
+        position: absolute !important;
+        display: block !important;
+    }
+    .popover-content {
+        font-size: .8rem !important;
+        color: rgba(70,90,110,.85) !important;
+    }
+
+    .popover-content {
+        padding: .5rem .75rem !important;
+    }
+    </style>
+
+{% block js_block %}
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script>
+<script src="{% static "js/jquery.browser.min.js" %}"></script>
+<script src="{% static "js/fullcalendar.min.js" %}"></script>
+    <script>
+      $(function () {
+
+        /* initialize the external events
+         -----------------------------------------------------------------*/
+        function init_events(ele) {
+          ele.each(function () {
+
+            // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+            // it doesn't need to have a start or end
+            var eventObject = {
+              title: $.trim($(this).text()) // use the element's text as the event title
+            }
+
+            // store the Event Object in the DOM element so we can get to it later
+            $(this).data('eventObject', eventObject)
+
+            // make the event draggable using jQuery UI
+            $(this).draggable({
+              zIndex        : 1070,
+              revert        : true, // will cause the event to go back to its
+              revertDuration: 0  //  original position after the drag
+            })
+
+          })
+        }
+
+        init_events($('#list_group span.hrsale-drag-option'))
+
+        /* initialize the calendar
+         -----------------------------------------------------------------*/
+        //Date for the calendar events (dummy data)
+        var date = new Date()
+        var d    = date.getDate(),
+            m    = date.getMonth(),
+            y    = date.getFullYear()
+
+        $('#calendar_hr').fullCalendar({
+          header: {
+               left: 'today',
+               center: 'prev, title, next',
+               right: 'month,agendaWeek,agendaDay,listWeek'
+           },
+            views: {
+                listDay: { buttonText: 'list day' },
+                listWeek: { buttonText: 'list week' }
+              },
+             themeSystem: 'bootstrap4',
+
+            eventRender: function(event, element) {
+            element.attr('title',event.title).tooltip();
+            element.attr('href', 'javascript:void(0);');
+            element.click(function() {
+                if(event.unq==1){
+                    $.ajax({
+                        url : site_url+"timesheet/read_holiday_record/",
+                        type: "GET",
+                        data: 'jd=1&is_ajax=1&mode=modal&data=view_holiday&holiday_id='+event.holiday_id,
+                        success: function (response) {
+                            if(response) {
+                                $('.payroll_template_modal').modal('show')
+                                $("#ajax_modal_payroll").html(response);
+                            }
+                        }
+                    });
+                } else if(event.unq==2){
+                    $.ajax({
+                        url : site_url+"timesheet/read_leave_record/",
+                        type: "GET",
+                        data: 'jd=1&is_ajax=1&mode=modal&data=view_leave&leave_id='+event.leave_id,
+                        success: function (response) {
+                            if(response) {
+                                $('.payroll_template_modal').modal('show')
+                                $("#ajax_modal_payroll").html(response);
+                            }
+                        }
+                    });
+                } else if(event.unq==4){
+                    $.ajax({
+                        url : site_url+"travel/read/",
+                        type: "GET",
+                        data: 'jd=1&is_ajax=1&mode=view_modal&data=view_travel&travel_id='+event.travel_id,
+                        success: function (response) {
+                            if(response) {
+                                $('.payroll_template_modal').modal('show')
+                                $("#ajax_modal_payroll").html(response);
+                            }
+                        }
+                    });
+                } else if(event.unq==5){
+                    $.ajax({
+                        url : site_url+"training/read/",
+                        type: "GET",
+                        data: 'jd=1&is_ajax=1&mode=view_modal&data=view_training&training_id='+event.training_id,
+                        success: function (response) {
+                            if(response) {
+                                $('.payroll_template_modal').modal('show')
+                                $("#ajax_modal_payroll").html(response);
+                            }
+                        }
+                    });
+                } else if(event.unq==6){
+                    $.ajax({
+                        url : site_url+"project/read/",
+                        type: "GET",
+                        data: 'jd=1&is_ajax=1&mode=view_modal&data=view_project&project_id='+event.project_id,
+                        success: function (response) {
+                            if(response) {
+                                $('.payroll_template_modal').modal('show')
+                                $("#ajax_modal_payroll").html(response);
+                            }
+                        }
+                    });
+                } else if(event.unq==7){
+                    $.ajax({
+                        url : site_url+"timesheet/read_task_record/",
+                        type: "GET",
+                        data: 'jd=1&is_ajax=1&mode=view_modal&data=view_task&task_id='+event.task_id,
+                        success: function (response) {
+                            if(response) {
+                                $('.payroll_template_modal').modal('show')
+                                $("#ajax_modal_payroll").html(response);
+                            }
+                        }
+                    });
+                } else if(event.unq==8){
+                    $.ajax({
+                        url : site_url+"events/read_event_record/",
+                        type: "GET",
+                        data: 'jd=1&is_ajax=1&mode=modal&data=view_event&event_id='+event.event_id,
+                        success: function (response) {
+                            if(response) {
+                                $('.payroll_template_modal').modal('show')
+                                $("#ajax_modal_payroll").html(response);
+                            }
+                        }
+                    });
+                } else if(event.unq==9){
+                    $.ajax({
+                        url : site_url+"meetings/read_meeting_record/",
+                        type: "GET",
+                        data: 'jd=1&is_ajax=1&mode=modal&data=view_meeting&meeting_id='+event.meeting_id,
+                        success: function (response) {
+                            if(response) {
+                                $('.payroll_template_modal').modal('show');
+                                $("#ajax_modal_payroll").html(response);
+                            }
+                        }
+                    });
+                } else if(event.unq==10){
+                    $.ajax({
+                        url : site_url+'goal_tracking/read_goal/',
+                        type: "GET",
+                        data: 'jd=1&is_ajax=1&mode=modal&data=view_tracking&tracking_id='+event.tracking_id,
+                        success: function (response) {
+                            if(response) {
+                                $('.payroll_template_modal').modal('show');
+                                $("#ajax_modal_payroll").html(response);
+                            }
+                        }
+                    });
+                }
+            });
+
+            },
+          theme:true,
+
+            eventLimit: false, // allow "more" link when too many events
+            navLinks: true, // can click day/week names to navigate views
+          events: [
+                                        {
+                    holiday_id: '1',
+                    title: "National Holiday",
+                    start: '2018-09-14',
+                    end: '2018-09-17',
+                    color: '#00a65a !important',
+                    unq: '1',
+                },
+                            {
+                    holiday_id: '2',
+                    title: "Holiday1",
+                    start: '2018-07-02',
+                    end: '2018-07-03',
+                    color: '#00a65a !important',
+                    unq: '1',
+                },
+                                                                                                                                        {
+                    leave_id: '1',
+                    title: "Casual Leave By Jhon Smith",
+                    start: '2019-01-10',
+                    end: '2019-01-12',
+                    color: '#00c0ef !important',
+                    unq: '2',
+                },
+                                                                                                                            {
+                    travel_id: '1',
+                    title: "Business Trip By Fiona Grace",
+                    start: '2018-09-23',
+                    end: '2018-09-26',
+                    color: '#3c8dbc !important',
+                    unq: '4',
+                },
+                                                                {
+                    travel_id: '2',
+                    title: "Business Trip By Jhon Smith",
+                    start: '2018-03-21',
+                    end: '2018-03-23',
+                    color: '#3c8dbc !important',
+                    unq: '4',
+                },
+                                                                {
+                    travel_id: '3',
+                    title: "BTrip By Jhon Smith",
+                    start: '2018-04-03',
+                    end: '2018-04-05',
+                    color: '#3c8dbc !important',
+                    unq: '4',
+                },
+                                                                {
+                    travel_id: '4',
+                    title: "asd By Jhon Smith",
+                    start: '2018-05-15',
+                    end: '2018-05-18',
+                    color: '#3c8dbc !important',
+                    unq: '4',
+                },
+                                                                {
+                    travel_id: '5',
+                    title: "sdf By Jhon Smith",
+                    start: '2019-09-09',
+                    end: '2019-09-09',
+                    color: '#3c8dbc !important',
+                    unq: '4',
+                },
+                                                                                                                            {
+                    training_id: '1',
+                    title: "Job Training",
+                    start: '2018-03-27',
+                    end: '2018-03-29',
+                    color: '#f39c12 !important',
+                    unq: '5',
+                },
+                                                                {
+                    training_id: '2',
+                    title: "Job Training",
+                    start: '2018-04-05',
+                    end: '2018-04-06',
+                    color: '#f39c12 !important',
+                    unq: '5',
+                },
+                                                                {
+                    training_id: '3',
+                    title: "Workshop",
+                    start: '2018-09-25',
+                    end: '2018-09-28',
+                    color: '#f39c12 !important',
+                    unq: '5',
+                },
+                                                                                        {
+                    project_id: '5',
+                    title: "CodeIgniter",
+                    start: '2018-05-16',
+                    end: '2018-05-18',
+                    color: '#605ca8 !important',
+                    unq: '6',
+                },
+                            {
+                    project_id: '6',
+                    title: "Test 2",
+                    start: '2018-05-31',
+                    end: '2018-06-08',
+                    color: '#605ca8 !important',
+                    unq: '6',
+                },
+                            {
+                    project_id: '7',
+                    title: "Test 3",
+                    start: '2018-06-01',
+                    end: '2018-06-06',
+                    color: '#605ca8 !important',
+                    unq: '6',
+                },
+                            {
+                    project_id: '8',
+                    title: "Another Project",
+                    start: '2018-06-01',
+                    end: '2018-06-04',
+                    color: '#605ca8 !important',
+                    unq: '6',
+                },
+                                                                {
+                    task_id: '1',
+                    title: "jQuery Conflict",
+                    start: '2018-03-23',
+                    end: '2018-03-26',
+                    color: '#d81b60 !important',
+                    unq: '7',
+                },
+                            {
+                    task_id: '2',
+                    title: "Js Error",
+                    start: '2018-03-21',
+                    end: '2018-03-24',
+                    color: '#d81b60 !important',
+                    unq: '7',
+                },
+                            {
+                    task_id: '3',
+                    title: "Magento Small Changes",
+                    start: '2018-03-17',
+                    end: '2018-03-23',
+                    color: '#d81b60 !important',
+                    unq: '7',
+                },
+                            {
+                    task_id: '4',
+                    title: "Testwewe",
+                    start: '2018-04-02',
+                    end: '2018-04-02',
+                    color: '#d81b60 !important',
+                    unq: '7',
+                },
+                            {
+                    task_id: '5',
+                    title: "Wordpress",
+                    start: '2018-04-02',
+                    end: '2018-04-02',
+                    color: '#d81b60 !important',
+                    unq: '7',
+                },
+                                                                                        {
+                    event_id: '6',
+                    title: "Microsoft",
+                    start: '2019-01-09T02:00',
+                    color: '#001f3f !important',
+                    unq: '8',
+                },
+                                                                {
+                    meeting_id: '6',
+                    title: "Tech Info",
+                    start: '2018-07-29T01:05',
+                    color: '#39cccc !important',
+                    unq: '9',
+                    className: "regular"
+                },
+                                                                                        {
+                    tracking_id: '3',
+                    title: "Test Ticket",
+                    start: '2018-03-29',
+                    end: '2018-03-31',
+                    color: '#3c8dbc !important',
+                    unq: '10',
+                    participant : ['uploads/profile/default_female.jpg','uploads/profile/default_male.jpg']
+                },
+                            {
+                    tracking_id: '5',
+                    title: "test goal",
+                    start: '2018-07-30',
+                    end: '2018-07-31',
+                    color: '#3c8dbc !important',
+                    unq: '10',
+                    participant : ['uploads/profile/default_female.jpg','uploads/profile/default_male.jpg']
+                },
+                                                ],
+          editable  : false,
+          droppable : true, // this allows things to be dropped onto the calendar !!!
+          selectable: false,
+          drop      : function (date, allDay) { // this function is called when something is dropped
+                var event_date = date.format();
+                $('#exact_date').val(event_date);
+                var this_record = $(this).data('record');
+                $('.view-modal-data').modal('show');
+                var ex_date = $('#exact_date').val();
+                $.ajax({
+                url : site_url+"calendar/add_cal_record/",
+                type: "GET",
+                data: 'jd=1&is_ajax=1&mode=modal&data=event&event_date='+ex_date+"&record="+this_record,
+                success: function (response) {
+                    if(response) {
+                        $("#ajax_modal_view").html(response);
+                    }
+                }
+            })
+          },
+        })
+      })
+    </script>
+    <style type="text/css">
+    .trumbowyg-box.trumbowyg-editor-visible {
+      min-height: 90px !important;
+    }
+    .fc-day-grid-event {
+        padding: 0px 5px !important;
+    }
+    .fc-events-container .fc-event {
+        padding: 2px !important;
+    }
+    .trumbowyg-editor {
+      min-height: 90px !important;
+    }
+    .fc-day:hover, .fc-day-number:hover, .fc-content:hover{cursor: pointer;}
+
+    .fc-close {
+        font-size: .9em !important;
+        margin-top: 2px !important;
+    }
+    .fc-close {
+        float: right !important;
+    }
+
+    .fc-close {
+        color: #666 !important;
+    }
+    .fc-event.fc-draggable, .fc-event[href], .fc-popover .fc-header .fc-close {
+        cursor: pointer;
+    }
+    .fc-widget-header {
+        background: #E4EBF1 !important;
+    }
+    .fc-widget-content {
+        background: #FFFFFF;
+    }
+
+    .hide-calendar .ui-datepicker-calendar { display:none !important; }
+    .hide-calendar .ui-priority-secondary { display:none !important; }
+    .fc-event { line-height: 2.0 !important; }
+    .hrsale-drag-option {
+        cursor: move !important;
+    }
+    </style>
+
+    {% endblock %}

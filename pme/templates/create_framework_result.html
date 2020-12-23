@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block breadcrumb %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css" />
+{% endblock %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'pme:framework_result_list' %}">Framework Results</a></li>
+    <li class="breadcrumb-item active">{% if activity %}Edit{% else %}Create{% endif %}</li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+<form id="formid" action='' method="POST" novalidate enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-name text-center">
+            {% if frameworkresult %}EDIT{% else %}CREATE{% endif %} Framework Result
+          </div>
+          </div>
+            <div class="card-body">
+          <div class="row marl">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="name" class="required">Framework{% if form.framework.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.framework}}
+            <span class="error" id="id_title">{{ form.framework.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="result" class="required">Result{% if form.result.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.result}}
+            <span class="error" id="id_title">{{ form.result.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="key_performance_indicator" class="required">Key Performance Indicator{% if form.key_performance_indicator.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.key_performance_indicator}}
+            <span class="error" id="id_title">{{ form.key_performance_indicator.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="expected_output" class="required">Is it Core ?{% if form.is_core.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.is_core}}
+            <span class="error" id="id_title">{{ form.is_core.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="resultarea" class="required">Unit of Measure{% if form.unit_of_measure.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.unit_of_measure}}
+            <span class="error" id="id_title">{{ form.unit_of_measure.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="year" class="required">Year{% if form.year.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.year}}
+            <span class="error" id="id_title">{{ form.year.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="baseline" class="required">Baseline {% if form.baseline.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.baseline}}
+            <span class="error" id="id_title">{{ form.baseline.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="target" class="required">Target{% if form.target.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.target}}
+            <span class="error" id="id_title">{{ form.target.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="sourceoffunding" class="required"> Actual {% if form.actual.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.actual}}
+            <span class="error" id="id_title">{{ form.actual.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="description" class="required">Data Source{% if form.data_source.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.data_source}}
+            <span class="error" id="id_title">{{ form.data_source.errors }}</span>
+            </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                  <label for="collection_method" class="required">Collection Method{% if form.collection_method.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+              {{form.collection_method}}
+              <span class="error" id="id_title">{{ form.collection_method.errors }}</span>
+              </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="description" class="required">Rating scale Methodology{% if form.rating_scale_methodology.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+              {{form.rating_scale_methodology}}
+              <span class="error" id="id_title">{{ form.rating_scale_methodology.errors }}</span>
+              </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="description" class="required">Responsible Staff{% if form.responsible_staff.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+              {{form.responsible_staff}}
+              <span class="error" id="id_title">{{ form.responsible_staff.errors }}</span>
+              </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="description" class="required">Collection Frequency{% if form.collection_frequency.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+              {{form.collection_frequency}}
+              <span class="error" id="id_title">{{ form.collection_frequency.errors }}</span>
+              </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-md-12">
+            <div class="col-md-12">
+              <div class="row marl buttons_row form_btn_row text-center">
+                <button class="btn btn-default save" type="submit">Save</button>
+                <a href="{% url 'pme:framework_result_list' %}" class="btn btn-default clear"
+                  id="create_user_cancel">Cancel</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <input type="hidden" id="save_new_form" name="savenewform"> -->
+  </div>
+  <!-- overview ends here -->
+</form>
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script>
+<script type="text/javascript">
+
+  // $(document).ready(function() {
+  //   $('.assigned_users').select2();
+  // });
+  $(document).ready(function () {
+
+    $('#recurring_block').hide()
+    $("#id_contacts").select2();
+    $("#id_assigned_to").select2();
+    $("#id_teams").select2();
+    $("#id_start_date").css('color', 'black');
+    $("#id_end_date").css('color', 'black');
+    var date = new Date();
+    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    $('.date').datetimepicker({
+      'format': 'YYYY-MM-DD',
+      minDate: today
+    })
+
+    if ($('#id_unit_type').val() == 'Recurring') {
+      $('#recurring_block').show()
+    }
+    else {
+      $('#recurring_block').hide()
+    }
+
+    $('#id_unit_type').on('change', function () {
+      // console.log($(this).val())
+      if ($(this).val() == 'Recurring') {
+        $('#recurring_block').show()
+      }
+      else {
+        $('#recurring_block').hide()
+      }
+    })
+    // if ($('#recurring_block').length) {
+    //   if ($('#id_unit_type').val() == 'Recurring') {
+    //     $('#recurring_block').show()
+    //   }
+    //   else {
+    //     $('#recurring_block').hide()
+    //   }
+    // }
+
+  });
+  {% for message in messages %}
+  $(document).ready(function() {
+      $.notify("{{message}}", "{{ message.tags }}");
+  });
+  {% endfor %}
+</script>
+{% endblock js_block %}

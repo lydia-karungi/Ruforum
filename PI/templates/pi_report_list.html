@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load paginate %}
+{% load thumbnail %}
+
+{% block content %}
+<!-- main_container starts here -->
+<div class="main_container">
+  <div class="row marl">
+    <div class="col-lg-12 text-right m-1">
+      <span class="d-inline"><a class="primary_btn" href="{% url "PI:pi_grant_list" %}"><i class="fa fa-plus"></i>
+        Add New Report</a></span>
+    </div>
+     
+  </div>
+
+  <div class="col-md-12 col-lg-12 col-xl-12">
+    <div class="table_container_row row marl no-gutters">
+      <div class="col-md-12">
+
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open">
+           
+            <div class="card">
+                <div class="table-responsive">
+                  <div id="toolbar">
+                    
+                    <h4>
+                    <span class="float-left badge badge-secondary">Reports -
+                   
+                      {{ reports_list|length }}</span></h4>
+                  </div>
+                  <table
+                  id="table"
+                  data-toggle="table"
+                  data-show-toggle="true"
+                  data-search="true"
+                  data-show-search-button="true"
+                  data-show-refresh="true"
+                  data-show-fullscreen="true"
+                  data-show-columns="true"
+                  data-show-columns-toggle-all="true"
+                  data-show-export="true"
+                  data-click-to-select="true"
+                  data-minimum-count-columns="2"
+                  data-show-pagination-switch="true"
+                  data-pagination="true"
+                  data-id-field="id"
+                  data-page-size='5'
+                  data-toolbar="#toolbar"
+                  
+                  data-export-types="[‘csv’,‘doc’, ‘excel’, ‘pdf’]"
+                  data-page-list="[5, 10, 25, 50, all]"
+                  >
+                    <thead>
+                     
+                      <tr class="text-center">
+                        <th>No.</th>
+                        <th>Month</th>
+                        <th>Grant ID</th>
+                        <th> Grant Title </th>
+   
+                        <th>Status</th>
+                      </tr>
+                     
+                    </thead>
+                    <tbody>
+                     
+                      {% for report in reports_list %}
+                      <tr class="text-center">
+                        <td scope="row">{{ forloop.counter }}</td>
+                        <td>
+                          {{report.month}}
+                        </td>
+                     
+                        <td>
+                          {{report.grant_id}}
+                        </td>
+                        <td>
+                          {{report.grant_title|truncatechars:30}}
+                        </td>
+                   
+
+                        <td class="actions">
+                          {% if report.month == 3 and report.reporting_period == 3 or report.month == 6 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month6" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 6 and report.reporting_period == 3 or report.month == 12 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month12" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 9 and report.reporting_period == 3 or report.month == 18 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month18" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 12 and report.reporting_period == 3 or report.month == 24 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month24" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 15 and report.reporting_period == 3 or report.month == 30 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month30" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 18 and report.reporting_period == 3 or report.month == 36 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month36" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 21 and report.reporting_period == 3 or report.month == 42 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month42" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 24 and report.reporting_period == 3 or report.month == 48 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month48" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 27 and report.reporting_period == 3 or report.month == 54 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month54" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 30 and report.reporting_period == 3 or report.month == 60 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month60" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 33 and report.reporting_period == 3 or report.month == 66 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month66" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 36 and report.reporting_period == 3 or report.month == 72 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month72" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 39 and report.reporting_period == 3 or report.month == 78 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month78" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 42 and report.reporting_period == 3 or report.month == 84 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month84" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 45 and report.reporting_period == 3 or report.month == 90 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month90" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 48 and report.reporting_period == 3 or report.month == 96 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month96" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 51 and report.reporting_period == 3 or report.month == 102 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month102" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 54 and report.reporting_period == 3 or report.month == 108 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_month108" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+                          {% if report.month == 57 and report.reporting_period == 3 or report.month == 114 and report.reporting_period == 6 %}
+                          <a href="{% url "grants:view_last_report" report.id %}">
+                            <span class="label label-{{report.css_class}}">{{report.status}}</span>
+                          </a>
+                          {% endif %}
+
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table
+                  >
+                </div>
+              
+  
+</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %}
+{% block js_block %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script type="text/javascript">
+
+</script>
+{% endblock js_block %}

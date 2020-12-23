@@ -1,0 +1,682 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block breadcrumb %}
+{% block extralinks %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/main.css'%}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css" />
+
+{% endblock %}
+{% block extrahead %}
+<style>
+  .modal-confirm {
+    color: #636363;
+    width: 400px;
+  }
+
+  .modal-confirm .modal-content {
+    padding: 20px;
+    border-radius: 5px;
+    border: none;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .modal-confirm .modal-header {
+    border-bottom: none;
+    position: relative;
+  }
+
+  .modal-confirm h4 {
+    text-align: center;
+    font-size: 26px;
+    margin: 30px 0 -10px;
+  }
+
+  .modal-confirm .close {
+    position: absolute;
+    top: -5px;
+    right: -2px;
+  }
+
+  .modal-confirm .modal-body {
+    color: #999;
+  }
+
+  .modal-confirm .modal-footer {
+    border: none;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 13px;
+    padding: 10px 15px 25px;
+  }
+
+  .modal-confirm .modal-footer a {
+    color: #999;
+  }
+
+  .modal-confirm .icon-box {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    border-radius: 50%;
+    z-index: 9;
+    text-align: center;
+    border: 3px solid #f15e5e;
+  }
+
+  .modal-confirm .icon-box i {
+    color: #f15e5e;
+    font-size: 46px;
+    display: inline-block;
+    margin-top: 13px;
+  }
+
+  .modal-confirm .btn {
+    color: #fff;
+    border-radius: 4px;
+    background: #60c7c1;
+    text-decoration: none;
+    transition: all 0.4s;
+    line-height: normal;
+    min-width: 120px;
+    border: none;
+    min-height: 40px;
+    border-radius: 3px;
+    margin: 0 5px;
+    outline: none !important;
+  }
+
+  .modal-confirm .btn-info {
+    background: #c1c1c1;
+  }
+
+  .modal-confirm .btn-info:hover,
+  .modal-confirm .btn-info:focus {
+    background: #a8a8a8;
+  }
+
+  .modal-confirm .btn-danger {
+    background: #f15e5e;
+  }
+
+  .modal-confirm .btn-danger:hover,
+  .modal-confirm .btn-danger:focus {
+    background: #ee3535;
+  }
+
+  .trigger-btn {
+    display: inline-block;
+    margin: 100px auto;
+  }
+</style>
+{% endblock %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'grants_applications:list' %}">Grant Applications</a></li>
+    <li class="breadcrumb-item active">{% if call_obj %}Edit{% else %}Add{% endif %}</li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+<form id="grantapplicationform" action='' method="POST" novalidate enctype="multipart/form-data">{% csrf_token %}
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title text-center">
+            {% if applicationobj %}EDIT{% else %}ADD{% endif %} GRANT APPLICATION
+          </div>
+        </div>
+        <div class="card-body">
+
+
+            <div class="row marl">
+              <!--first tab begins here-->
+
+
+               <!--end of first tab-->
+
+            <!--second tab begins here-->
+          <div class="form-group  tab">
+            <legend class="mx-3">Project Information</legend>
+            <div class="row marl">
+
+              <div class="filter_col col-md-4">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Call ID
+                    {% if form.call.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ form.call}}
+                  <span class="error" id="id__call">{{ form.call.errors }}</span>
+                </div>
+              </div>
+              <input type="hidden" name="user"/>
+              <input type="hidden" name="title"/>
+              <input type="hidden" name="last_name"/>
+              <input type="hidden" name="institution"/>
+              <input type="hidden"name="highest_qualification"/>
+              <div class="filter_col col-md-4">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Project Duration (months)
+                    {% if form.duration_months.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ form.duration_months }}
+                  <span class="error" id="id__duration_months">{{ form.duration_months.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-4">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Number of students to be trained
+                    {% if form.students_to_train.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ form.students_to_train }}
+                  <span class="error" id="id__students_to_train">{{ form.students_to_train.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-4">
+                <div class="form-group">
+                  <label for="department" class="required">Department at Place of work
+                    {% if form.department.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ form.department}}
+                  <span class="error" id="id__department">{{ form.department.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-4">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Country of implementation
+                    {% if form.country.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ form.country }}
+                  <span class="error" id="id__country">{{ form.country.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-4">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Total budget (In US$)
+                    {% if form.total_budget.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ form.total_budget}}
+                  <span class="error" id="id__total_budget">{{ form.total_budget.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Proposal title
+                    {% if form.proposal.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ form.proposal}}
+                  <span class="error" id="id__proposal_title">{{ form.proposal.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Proposal summery
+                    {% if form.proposal_title.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ form.proposal_title}}
+                  <span class="error" id="id__proposal_title">{{ form.proposal_title.errors }}</span>
+                </div>
+              </div>
+
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Contact Details for the Dean
+                    {% if form.dean_contact.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ form.dean_contact }}
+                  <span class="error" id="id__dean_contact">{{ form.dean_contact.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-12">
+                <div class="form-group">
+                  <label for="id_sattus">Curriculum Vitae{% if profile_form.cv.field.required %}<span
+                      class="error">*</span>{% endif %}</label>
+                  {{ form.cv }}
+                  <span class="error" id="id__cv">{{ profile_form.cv.errors }}</span>
+                </div>
+              </div>
+
+
+
+                </div>
+              </div>
+              <!--end of second tab-->
+           <!--third tab begins here-->
+              <div class="form-group tab">
+                <legend class="mx-3">Collaborator Information</legend>
+                <div class="row marl">
+
+                  <div class="filter_col col-md-12">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1" class="required">Non University Partners*
+                        {% if form.non_university_partners.field.required %}<span class="error_marker"
+                          style="color:red">*</span>{% endif %}</label>
+                      {{ form.non_university_partners}}
+                      <span class="error"
+                        id="id_non_university_partners">{{ form.non_university_partners.errors }}</span>
+                    </div>
+                  </div>
+
+
+                  <div class="filter_col col-md-12">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1" class="required">Other Departments
+                        {% if form.other_departments.field.required %}<span class="error_marker"
+                          style="color:red">*</span>{% endif %}</label>
+                      {{ form.other_departments}}
+                      <span class="error" id="id__other_departments">{{ form.other_departments.errors }}</span>
+                    </div>
+                  </div>
+
+
+
+
+
+                  <div class="filter_col col-md-12">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1" class="required">Other Universities
+                        {% if form.other_universities.field.required %}<span class="error_marker"
+                          style="color:red">*</span>{% endif %}</label>
+                      {{ form.other_universities }}
+                      <span class="error" id="id__other_universities">{{ form.other_universities.errors }}</span>
+                    </div>
+                  </div>
+
+
+                  <div class="col-md-12" >
+                    <fieldset><strong>Please attach abbreviated CVs for your project collaborators (up to four, not
+                        required for FAPA):</strong>
+                      {% include 'collaborator_formset.html' %}
+                    </fieldset>
+                  </div>
+
+
+                <legend class="mx-3">Support letters from partner institution</legend>
+                <div class="row marl">
+                  <div class="col-md-12">
+                    <strong>Please provide up to four supporting letters for your application (not required for
+                      FAPA):</strong>
+                    {% include 'letter_formset.html' %}
+
+                  </div>
+                </div>
+                </div>
+                </div>
+                <!--end of third tab-->
+             <!--fourth tab begins here-->
+              <div class=" tab">
+                <legend class="mx-3">Letter from University</legend>
+                <div class="row marl">
+                  <div class="col-md-12">
+                    <strong>Please provide a supporting letter from your university:</strong>
+                    <div class="form-group">
+                      <label for="exampleInputEmail1" class="required">Letter
+                        {% if form.supporting_letter_from_university.field.required %}<span class="error_marker"
+                          style="color:red">*</span>{% endif %}</label>
+                      {{ form.supporting_letter_from_university}}
+                      <span class="error"
+                        id="id__supporting_letter_from_university">{{ form.supporting_letter_from_university.errors }}</span>
+                    </div>
+                  </div>
+
+
+
+                <legend class="mx-3">Project Budgets</legend>
+
+                {{ form.project_budget.errors }}
+                    <div class="project_budget" id="project_budget_"> <a class="pure-button pure-button-warning"
+                        href="#id_call" target="blank">Select a Call to access the project budget template.</a>
+
+                    </div>
+                    <div>
+                      {% for call in calls %}
+                      <span class="project_budget" id="project_budget_{{call.id}}"> <a class="instructions"
+                          href="{{call.grant_type.project_budget_template.url}}" target="blank">
+                          Download the project budget template.
+                        </a> </span>
+                      {% endfor %}
+                    </div>
+                    <strong>Please upload your completed project budget here (not required for FAPA):</strong>
+
+                     {{ form.project_budget}}
+                     {{ form.project_budget.errors }}
+
+
+                
+
+
+
+                <legend class="mx-3">Application Form</legend>
+
+
+                    <div class="call_grant_type_downloads" id="call_grant_type_downloads_">
+                      <p class="pure-form-text"><a class='pure-button pure-button-warning' href='#id_call'>Select a Call
+                          to access the relevant instructions and application form template.</a></p>
+
+                    </div>
+                    <div>
+                      {% for call in calls %}
+                      <ul class="call_grant_type_downloads" id="call_grant_type_downloads_{{call.id}}">
+                        <li><a class="instructions"
+                            href="{{call.grant_type.instructions.url}}" target="blank">{{call.grant_type.instructions.name}}</a></li>
+                        <li><a class="template"
+                            href="{{call.grant_type.template.url}}" target="blank">{{call.grant_type.template.name}} </a></li>
+                      </ul>
+                      {% endfor %}
+                    </div>
+                    <strong>Please download and read the instructions, and then download and complete the application
+                      form, which will be different for each grant type:</strong>
+                    <div class="form-group">
+                      <label for="exampleInputEmail1" class="required">
+                        {% if form.application_form.field.required %}<span class="error_marker"
+                          style="color:red">*</span>{% endif %}</label>
+                      {{ form.application_form}}
+                      <span class="error" id="id__application_form">{{ form.application_form.errors }}</span>
+                    </div>
+                </div>
+                </div>
+                <!--end of fourth tab-->
+               <!--fifth tab begins from here-->
+              <div class="tab">
+                <legend class="mx-3">Declaration</legend>
+
+                <div class="row marl">
+
+                    <div class="col-md-12">
+                      <strong>By clicking the submit button I declare that the above information is true and correct to
+                        the best of my knowledge. I acknowledge that establishment of falsehood in the above information
+                        is grounds for immediate disqualification of my application.</strong>
+                        </div>
+
+                      <div class="row marl buttons_row form_btn_row text-center">
+                        <!--<button class="btn btn-default save" type="submit" name="savedraft">Save as Draft</button>
+                        <button class="btn btn-default save" type="submit" name="submit">Submit Final</button>
+                        <a href="{% url 'calls:list' %}" class="btn btn-default clear"
+                          id="create_user_cancel">Cancel</a>-->
+
+                      </div>
+
+                  </div>
+                </div>
+                <!--last tab-->
+                <div class="col-md-12">
+                  <div style="overflow:auto;">
+                    <div style="float:right; margin-top: 20px;">
+                        <button type="button" class="btn previous">Previous</button>
+                        <button type="button" class="next btn btn-primary">Next</button>
+                    <button type="button" class="btn btn-primary submit">Submit</button>
+                    </div>
+              </div>
+              </div>
+              </div>
+              <div class="card-footer">
+                <div style="text-align:center;margin-top:6px;">
+                  <span class="step">1</span>
+                  <span class="step">2</span>
+                  <span class="step">3</span>
+                  <span class="step">4</span>
+
+
+                </div>
+              </div>
+          </div>
+
+        </div>
+        <!-- <input type="hidden" id="save_new_form" name="savenewform"> -->
+
+      </div>
+    </div>
+    <!-- overview ends here -->
+</form>
+<div id="myModal" class="modal fade">
+  <div class="modal-dialog modal-confirm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="icon-box">
+          <i class="material-icons">warning</i>
+        </div>
+        <h4 class="modal-title">Are you sure?</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Do you really want to save your application? You will not be able to edit it after this.</p>
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="btnConfirmSave">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+<script src="{% static 'js/jquery.validate.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/multi-form.js' %}"></script>
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script>
+
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+
+    $.validator.addMethod('year', function (value, element, param) {
+      return (value != 0) && (value >= 1900) && (value == parseInt(value, 10));
+    }, 'Please enter a valid year not less than 1900!');
+    $.validator.addMethod('username', function (value, element, param) {
+      var nameRegex = /^[a-zA-Z0-9]+$/;
+      return value.match(nameRegex);
+    }, 'Only a-z, A-Z, 0-9 characters are allowed');
+
+
+    var val = {
+      // Specify validation rules
+      rules: {
+        highest_qualification: {
+          required:true},
+          area_of_specialisation: {
+          required: true
+
+        },
+        department: {
+          required: true
+        },
+        date: {
+          date: true,
+          required: true,
+          minlength: 2,
+          maxlength: 2,
+          digits: true
+        },
+        application_form: {
+          required: true
+        },
+       /* dean_contact: {
+          requied: true
+        },*/
+        proposal: {
+          required: true
+        },
+        proposal_title: {
+          required: true
+        }
+      },
+      // Specify validation error messages
+      messages: {
+        highest_qualification:
+          "Please fill in your highest level of education",
+          department: {
+          required: "Department is required"
+        },
+        non_university_partners: {
+          required: "Please include at least one non University partner"
+        },
+        other_departments: {
+          required: "Please include at least one other department"
+        },
+
+        dean_contact: {
+          required: "Dean's contact is required"
+        },
+        proposal_title: {
+          required: "Please write short notes about your proposal"
+        },
+        proposal: {
+          required: "Proposal is Required"
+        },
+        area_of_specialisation: {
+          required: "Area of specialization  is required",
+
+        },
+        other_universities: {
+          required: "Please include at least one other University"
+        },
+        supporting_letter_from_university:{
+          requied:"Supporting letter is required"
+        },
+        project_timeline:{
+          requied:"Please upload the project timeline"
+        },
+        application_form:{
+          requied:"Please upload the application form"
+        }
+      }
+    }
+    $("#grantapplicationform").multiStepForm(
+      {
+        // defaultStep:0,
+        beforeSubmit: function (form, submit) {
+          console.log("called before submiting the form");
+          console.log(form);
+          console.log(submit);
+        },
+        validations: val,
+      }
+    ).navigateTo(0);
+
+
+
+  });
+  $('.formset_row-{{ collaborator_formset.prefix }}').formset({
+    addText: 'add another',
+    deleteText: 'remove',
+    prefix: '{{ collaborator_formset.prefix }}',
+  });
+
+  $('.formset_row-{{ letter_formset.prefix }}').formset({
+    addText: 'add another',
+    deleteText: 'remove',
+    prefix: '{{ letter_formset.prefix }}',
+  });
+  $('.formset_row-{{ project_formset.prefix }}').formset({
+    addText: 'add another',
+    deleteText: 'remove',
+    prefix: '{{ project_formset.prefix }}',
+  });
+</script>
+<script type="text/javascript">
+
+  // $(document).ready(function() {
+  //   $('.assigned_users').select2();
+  // });
+  $(document).ready(function () {
+
+    $('#myModal').on('show', function () {
+      var id = $(this).data('id'),
+        removeBtn = $(this).find('.danger');
+    })
+
+    $('#saveFinal').on('click', function (e) {
+      e.preventDefault();
+
+      var id = $(this).data('id');
+      $('#myModal').data('id', id).modal('show');
+    });
+
+    $('#btnConfirmSave').click(function () {
+      // handle deletion here
+      //var id = $('#myModal').data('id');
+      //$('[data-id='+id+']').remove();
+      $('#myModal').modal('hide');
+      var input = $("<input>")
+        .attr("type", "hidden")
+        .attr("name", "savefinal").val("bla");
+      $('#formid').append(input);
+
+      $('#formid').submit();
+    });
+
+    $("#id_assigned_to").select2();
+    $("#id_teams").select2();
+    $("#id_start_date").css('color', 'black');
+    $("#id_end_date").css('color', 'black');
+    var date = new Date();
+    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    $('.date').datetimepicker({
+      'format': 'YYYY-MM-DD',
+      minDate: today
+    })
+
+    if ($('#id_call_type').val() == 'Recurring') {
+      $('#recurring_block').show()
+    }
+    else {
+      $('#recurring_block').hide()
+    }
+
+    $('#id_call_type').on('change', function () {
+      // console.log($(this).val())
+      if ($(this).val() == 'Recurring') {
+        $('#recurring_block').show()
+      }
+      else {
+        $('#recurring_block').hide()
+      }
+    })
+    // if ($('#recurring_block').length) {
+    //   if ($('#id_call_type').val() == 'Recurring') {
+    //     $('#recurring_block').show()
+    //   }
+    //   else {
+    //     $('#recurring_block').hide()
+    //   }
+    // }
+
+  });
+
+
+  $('#id_call').each(function (i, element) {
+    var call_select = $(this);
+    var downloads = $('.call_grant_type_downloads');
+    var project_budget = $('.project_budget'),
+      results_framework = $('.results_framework')
+    project_timeline = $('.project_timeline');
+    call_select.bind("change", function (event) {
+      var value = call_select.val();
+      downloads.hide();
+      project_budget.hide();
+      results_framework.hide();
+      project_timeline.hide();
+      $('#call_grant_type_downloads_' + value).show();
+      $('#project_budget_' + value).show();
+      $('#results_framework_' + value).show();
+      $('#project_timeline_' + value).show();
+    });
+    call_select.trigger("change");
+  });
+  {% for message in messages %}
+  $(document).ready(function() {
+      $.notify("{{message}}", "{{ message.tags }}");
+  });
+  {% endfor %}
+</script>
+{% endblock js_block %}

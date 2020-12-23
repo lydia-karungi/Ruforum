@@ -1,0 +1,623 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/main.css'%}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css" />
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'grants_applications:list' %}">Grant Applications</a></li>
+    <li class="breadcrumb-item active">Review</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">Overview</span>
+              <span class="" style="margin-top: 0px">
+                {% if request.user.role == "ADMIN" or request.user.role == "Grants Managers"  or request.user.is_superuser %}
+                <div class="dropdown buttons_row">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a href="{% url 'grants_applications:edit_application' application_record.id %}">Edit</a></li>
+                  </ul>
+                </div>
+                {% endif %}
+              </span>
+            </h5>
+          </div>
+          </div>
+          <div class="card-body">
+            <div class="row marl">
+              <div class="col-md-4">
+                      <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_title" data-name="title">Title</label>
+                                <div class="application_field" id="title" data-name="title">{{ application_record.title }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_gender" data-name="gender">Gender</label>
+                                <div class="application_field" id="gender" data-name="gender">{{ application_record.user.get_gender_display }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_last_name" data-name="last_name">Last Name</label>
+                                <div class="application_field" id="last_name" data-name="last_name">{{ application_record.last_name }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_first_name" data-name="first_name">First Name</label>
+                                <div class="application_field" id="first_name" data-name="first_name">{{ application_record.user.first_name }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_institution" data-name="institution">Place of work</label>
+                                <div class="application_field" id="institution" data-name="institution">{{ application_record.institution }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_department" data-name="department">Department at Place of work</label>
+                                <div class="application_field" id="department" data-name="department">{{ application_record.department }}</div>
+                              </div>
+                            </div>
+
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_country" data-name="country">Country</label>
+                                <div class="application_field" id="country" data-name="country">{{ application_record.country }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_nationality" data-name="nationality">Nationality</label>
+                                <div class="application_field" id="nationality" data-name="nationality">{{ application_record.user.get_nationality_display }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_highest_qualification" data-name="highest_qualification">Highest Qualification</label>
+                                <div class="application_field" id="highest_qualification" data-name="highest_qualification">{{ application_record.highest_qualification }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_area_of_specialisation" data-name="area_of_specialisation">Area of specialisation</label>
+                                <div class="application_field" id="area_of_specialisation" data-name="area_of_specialisation">{{ application_record.area_of_specialisation }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_cv" data-name="cv">Curriculum Vitae</label>
+                                <div class="application_field" id="cv" data-name="cv"><a href="{{ application_record.cv.url }}">{{ application_record.cv }}</a></div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_mobile" data-name="mobile">Mobile telephone</label>
+                                <div class="application_field" id="mobile" data-name="mobile">{{ application_record.user.mobile }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_email" data-name="email">Email</label>
+                                <div class="application_field" id="business_tel" data-name="business_tel">{{ application_record.email }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_business_tel" data-name="business_tel">Business telephone</label>
+                                <div class="application_field" id="business_tel" data-name="business_tel">{{ application_record.user.business_tel }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_business_address" data-name="business_address">Business address</label>
+                                <div class="application_field" id="business_address" data-name="business_address">{{ application_record.user.business_address }}</div>
+                              </div>
+                            </div>
+
+              </div>
+              <div class="col-md-4">
+                      <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_commodity_focus" data-name="commodity_focus">Commodity Focus</label>
+                                <div class="application_field" id="commodity_focus" data-name="commodity_focus">{{ application_record.call.commodity_focus.name }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_theme" data-name="theme">Proposal theme</label>
+                                <div class="application_field" id="theme" data-name="theme">{{ application_record.call.proposal_theme.name }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_proposal_theme" data-name="proposal_theme">Subtheme</label>
+                                <div class="application_field" id="proposal_theme" data-name="proposal_theme">{{ application_record.call.proposal_sub_theme.name }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_non_university_partners" data-name="non_university_partners">Non University Partners*</label>
+                                <div class="application_field" id="non_university_partners" data-name="non_university_partners">{{ application_record.non_university_partners }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_other_departments" data-name="other_departments">Other Departments</label>
+                                <div class="application_field" id="other_departments" data-name="other_departments">{{ application_record.other_departments }}</div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_other_universities" data-name="other_universities">Other Universities</label>
+                                <div class="application_field" id="other_universities" data-name="other_universities">{{ application_record.other_universities }}</div>
+                              </div>
+                            </div>
+
+              </div>
+              <div class="col-md-4">
+                      <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_supporting_letter_from_university" data-name="supporting_letter_from_university">Letter from University</label>
+                                <div class="application_field" id="supporting_letter_from_university" data-name="supporting_letter_from_university"><a href="{{ application_record.supporting_letter_from_university.url }}">Letter from University</a></div>
+                              </div>
+                            </div>
+                      <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_project_budget" data-name="project_budget">Project Budgets</label>
+                                <div class="application_field" id="project_budget" data-name="project_budget"><a href="{{ application_record.project_budget.url }}">Project Budgets</a></div>
+                              </div>
+                            </div>
+                  
+                      <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_application_form" data-name="application_form">Application Form</label>
+                                <div class="application_field" id="application_form" data-name="application_form"><a href="{{ application_record.application_form.url }}" target="blank">Application Form</a></div>
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_application_form" data-name="application_form">Collaborator CVs</label>
+                                {% for cv in collaborators %}
+                                <div class="application_field" id="application_form" data-name="application_form">{{ forloop.counter }}.<a href="{{ cv.cv.url }}" target="blank">{{ cv.cv }}</a></div>
+                                {% endfor %}
+
+
+                              </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                              <div class="form-group">
+                                <label class="application_field_label" for="id_application_form" data-name="application_form">Support Letters</label>
+                                {% for letter in supportletters %}
+                                <div class="application_field" id="application_form" data-name="application_form">{{ forloop.counter }}.<a href="{{ letter.letter.url }}" target="blank">{{ letter.letter }}</a></div>
+                                {% endfor %}
+
+
+                              </div>
+                            </div>
+              </div>
+
+            </div>
+          </div>
+
+        <!-- Reviews Section starts-->
+        {% if perms.grants_applications.review_grant_applications %}
+        <div class="card-header" id="datashow">
+          <div class="panel-heading card-title view-pad">
+            <h5>Reviews</h5>
+            <div class="spinner-border  text-primary" id="spinner"></div>
+          </div>
+
+          <div class="card-body">
+          <div class="row">
+            <div class="col-md-12">
+
+              <form id="review_form" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row marl">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="id_score" class="required">Score
+                        {% if review_form.score.field.required %}<span class="error_marker"
+                          style="color:red">*</span>{% endif %}</label>
+                      {{ review_form.score}}
+                      <span class="error" id="id__score">{{ review_form.score.errors }}</span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                <div class="form-group">
+                    <label for="id_recommendation" class="required">Recommendation
+                        {% if review_form.recommendation.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                    {{ review_form.recommendation}}
+                    <span class="error" id="id__recommendation">{{ review_form.recommendation.errors }}</span>
+                </div>
+                </div>
+                <div class="col-md-12">
+                <div class="form-group">
+                    <label for="id_comments" class="required">Comments
+                        {% if review_form.comments.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                    {{ review_form.comments}}
+                    <span class="error" id="id__comments">{{ review_form.comments.errors }}</span>
+                </div>
+                </div>
+
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="id_review_form" class="required">Review Form |
+                       {% if application_record.call.grant_type.review_form_template %}
+                       <a href="{{ application_record.call.grant_type.review_form_template.url }}" target="blank">Download Review Form Template</a>
+                       {% else %}
+                       No review template
+                       {% endif %}
+                        {% if review_form.review_form.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                    {{ review_form.review_form}}
+                    <span class="error" id="id__title">{{ review_form.review_form.errors }}</span>
+                </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                      <label for="id_review_form" class="required">Application Form |
+                         {% if application_record.application_form %}
+                         <a href="{{ application_record.application_form.url }}" target="blank">Download application form</a>
+                         {% else %}
+                         No Application  form
+                         {% endif %}
+                          {% if review_form.application_form.field.required %}<span class="error_marker"
+                              style="color:red">*</span>{% endif %}</label>
+                      {{ review_form.application_form}}
+                      <span class="error" id="id__title">{{ review_form.application_form.errors }}</span>
+                  </div>
+                  </div>
+                <div class="col-md-12">
+                <div >
+
+                  <div>
+                    <p id="ReviewError" style="display:none; color:red"></p>
+                  </div>
+                  </br>
+                  <div class="buttons_row">
+                    <button class="btn btn-default save" id="review_submit" type="submit">Submit</button>
+                  </div>
+                </div>
+                </div>
+                <input type="hidden" value="{{application_record.id}}" name="application">
+                </div>
+              </form>
+
+              {% endif %}
+              <ul class="list-group" id="reviews_div">
+                {% for review in reviews %}
+                <li class="list-group-item list-row" id="review{{review.id}}">
+                  {% if request.user.is_superuser or request.user.role == 'ADMIN' or request.user == review.reviewed_by %}
+                  <div class="float-right right-container">
+                    <div class="list-row-buttons btn-group float-right">
+                      <button class="btn primary_btn btn-sm dropdown-toggle" data-toggle="dropdown"
+                        type="button">Actions <span class="caret"></span></button>
+                      <ul class="dropdown-menu text-center">
+                        <li>
+                          <a class="action" onclick="edit_review({{review.id}})">Edit</a>
+                        </li>
+                        <li>
+                          <a class="action" onclick="remove_review({{review.id}})">Remove</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  {% endif %}
+                  <div class="table-responsive">
+                  <table class="table table-hover table-bordered">
+
+                    <thead>
+                      <tr>
+                          <th>Date</th>
+                          <th>Score</th>
+                          <th>Reviewer</th>
+                          <th>Recommendation</th>
+                          <th >Comments</th>
+                          <th>application forn</th>
+                          <th>Review Form</th>
+                      </tr>
+                    </thead>
+
+                      <tr>
+                        <td>{{review.date|date:'d/m/Y'}}</td>
+                        <td>{{review.score}}</td>
+                        <td>{{review.reviewer}}</td>
+                        <td>{{review.get_recommendation_display}}</td>
+                        <td>{{review.comments}}</td>
+                        <td>
+                          {% if review.application_form %}
+                         <a href="{{review.application_form.url}}" target="blank">Application Form</a>
+                         {% else %}
+                         No Reviewed application Form submitted
+                         {% endif %}
+                       </td>
+                        <td>
+                           {% if review.review_form %}
+                          <a href="{{review.review_form.url}}" target="blank">Review Form</a>
+                          {% else %}
+                          No Review Form submitted
+                          {% endif %}
+                        </td>
+                      </tr>
+                  </table>
+</div>
+                  <div class="stream-post-container" id="review_name{{review.id}}">
+                    <pre>{{ review.review }}</pre>
+                  </div>
+                  <div class="stream-container">
+                    <pre class="float-left">{{ review.reviewed_by }}</pre>
+                    <pre class="float-right date">{{ review.reviewed_on|date:'m/d/Y,  h:i:s A' }}</pre>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <div class="modal fade" id="Reviews_Cases_Modal" role="dialog" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Update Your Review</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                </div>
+                <form id="review_edit_form" method="POST">
+                  <div class="modal-body">
+                    <div class="form-group">
+                      <textarea class="form-control mentions" textarea cols="40" rows="3" id="id_editreview"
+                        name="review" placeholder="Submit Your Reviews" style="color:black;"></textarea><span>
+                        <p id="ReviewEditError" style="display:none; color:red"></p>
+                      </span>
+                      <input type="hidden" value="{{ application.id }}" name="applicationid">
+                      <input type="hidden" value="" name="reviewid" id="reviewid">
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-default save" id="review_edit" type="submit">Update</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Reviews Section Ends-->
+
+      </div>
+    </div>
+    <br clear="all">
+
+  </div>
+</div>
+
+{% endblock %}
+{% block js_block %}
+<script src="{% static 'js/jquery.validate.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/multi-form.js' %}"></script>
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script>
+<script src="{% static 'js/sweetalert.min.js' %}"></script>
+
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#spinner").hide();
+
+    $.validator.addMethod('date', function (value, element, param) {
+      return (value != 0) && (value <= 31) && (value == parseInt(value, 10));
+    }, 'Please enter a valid date!');
+    $.validator.addMethod('month', function (value, element, param) {
+      return (value != 0) && (value <= 12) && (value == parseInt(value, 10));
+    }, 'Please enter a valid month!');
+    $.validator.addMethod('year', function (value, element, param) {
+      return (value != 0) && (value >= 1900) && (value == parseInt(value, 10));
+    }, 'Please enter a valid year not less than 1900!');
+    $.validator.addMethod('username', function (value, element, param) {
+      var nameRegex = /^[a-zA-Z0-9]+$/;
+      return value.match(nameRegex);
+    }, 'Only a-z, A-Z, 0-9 characters are allowed');
+
+
+ var val = {
+      // Specify validation rules
+      rules: {
+        score: {
+          required:true,
+          max:100,
+          min:0,
+          digits:true
+        }, question3mks: {
+          required: true,
+          digits:true,
+          max:8,
+          min:0
+        },
+        question4mks: {
+          required: true,
+          digits:true,
+          max:4,
+          min:0
+        },
+        question1mks: {
+          required: true,
+          min: 0,
+          max: 8,
+          digits: true
+        },
+        question5mks: {
+          required: true,
+          digits:true,
+          max:5,
+          min:0
+        },
+        question6mks: {
+          required: true,
+          max:5,
+          min:0,
+          digits:true
+        },
+        question7mks: {
+          required: true,
+          max:5,
+          min:0,
+          digits:true
+        },
+        question8mks: {
+          required: true,
+          digits:true,
+          max:8,
+          min:0
+        },
+
+
+        question15mks: {
+          required: true,
+          max:5,
+          min:0,
+          digits:true
+        },
+      
+        question17mks: {
+          required: true,
+          max:5,
+          min:0,
+          digits:true
+        },
+        question18mks: {
+          required: true,
+          max:7,
+          min:0,
+          digits:true
+        },
+
+        qn17_comment:{
+          required:true
+        },
+        qn18_comment:{
+          required:true
+        },
+
+
+      },
+      // Specify validation error messages
+      messages: {
+        score:{
+          required:"please enter score"
+          },
+          qn2_comment: {
+          required: "please comment"
+        },
+        qn3_comment: {
+          required: "please comment"
+        },
+        qn4_comment: {
+          required: "please comment"
+        },
+
+        qn5_comment: {
+          required: "please comment"
+        },
+        qn6_comment: {
+          required: "please comment"
+        },
+        qn7_comment: {
+          required: "please comment"
+        },
+        qn8_comment: {
+          required: "please comment",
+
+        },
+        qn9_comment: {
+          required: "please comment"
+        },
+        qn10_comment:{
+          requied:"please comment"
+        },
+        qn11_comment:{
+          requied:"please comment"
+        },
+        qn13_comment:{
+          requied:"please comment"
+        },
+
+
+
+        qn12_comment:{
+          requied:"please comment"
+        }
+      }
+    }
+
+  $("#review_form").submit(function (e) {
+    e.preventDefault();
+
+    var formData = new FormData($("#review_form")[0]);
+    $.ajax({
+      url: "/grantapplications/review/add/",
+      type: "POST",
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      beforeSend: function () {
+    // ... your initialization code here (so show loader) ...
+    $("#spinner").show();
+     },
+      success: function (response) {
+        $("#spinner").hide();
+        if(response.errormessage != null){
+        swal({text:response.errormessage,icon:"error"}).then(() =>{
+        window.location.href="{% url 'grants_applicationss:review_list' %}"});
+        console.log(response.errormessage);
+        }
+        else{
+          swal({text:"successfully reviewed", icon:"success"}).then(() =>{
+        window.location.href="{% url 'grants_applicationss:reviewed_list' %}"});
+        }
+
+
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        $("#spinner").hide();
+            swal({
+          text: textStatus,
+          icon: "error",
+});
+        }
+
+    });
+  });
+
+  //end document ready function
+  });
+</script>
+<script src="{% static 'js/bootstrap-suggest.js' %}"></script>
+
+{% endblock js_block %}

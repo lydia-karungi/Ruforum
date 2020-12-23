@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load paginate %}
+{% load thumbnail %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<style>
+    .form-group label{
+      font-weight: 800;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+<!-- main_container starts here -->
+<div class="main_container">
+  <!-- heading_create starts here -->
+  <div class="row marl">
+    <div class="col-lg-12 text-right">
+      <span class="d-inline"><a class="primary_btn" href="#"><i class="fa fa-plus"></i>
+          Enroll students</a></span>
+    </div>
+  </div>
+  <div class="filter_row list_filter_row row marl">
+    <div class="col-md-12">
+      <div class="card">
+
+          <form id="contacts_filter" action="" method="POST">
+              {% csrf_token %}
+            <div class="card-header text-center">
+              <div class="card-title">Filters</div>
+              </div>
+              <div class="card-body">
+              <div class="row marl">
+                <div class="filter_col col-md-2">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">FIRST NAME</label>
+                    <input type="text" class="form-control" placeholder="First Name" name="first_name"
+                      value="{{request.POST.first_name}}">
+                  </div>
+                </div>
+                <div class="filter_col col-md-2">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">LAST NAME</label>
+                      <input type="text" class="form-control" placeholder="First Name" name="last_name"
+                        value="{{request.POST.last_name}}">
+                    </div>
+                  </div>
+                  <div class="filter_col col-md-2">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Registration No.</label>
+                      <input type="text" class="form-control" placeholder="reg no." name="university_reg_no"
+                        value="{{request.POST.university_reg_no}}">
+                    </div>
+                  </div>
+                <div class="filter_col col-md-2">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Country</label>
+                    <select class="form-control" name="country">
+                      <option value="">
+                        Select country</option>
+                      {% for country in countries.0.1 %}
+                      <option value="{{country.0}}">
+                        {{country.1}}</option>
+                      {% endfor %}
+                      {% for country in countries.1.1 %}
+                      <option value="{{country.0}}">
+                        {{country.1}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+             
+                <div class="filter_col text-center col-3">
+                  <div class="form-group buttons_row">
+                    <button class="btn btn-primary save" type="submit">Search</button>
+                    <a href="{% url 'PI:student_list' %}" class="btn btn-default clear">Clear</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+      </div>
+    </div>
+  </div>
+  <!-- heading_create ends here -->
+  <!-- filter_row starts here -->
+  <div class="table_container_row row marl ">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title text-right">
+
+            <span class="float-left">Students - {% if show_pageitems %} {% show_pageitems %}{% else %}
+              {{student_obj_list|length}}{% endif %}</span>
+
+            <span class="filter_toggle">
+              <a href="#"  title="filter" class="primary_btn"><i class="fas fa-filter"></i></a>
+            </span>
+
+          </div>
+          </div>
+         
+
+
+<div class="table-responsive">
+            <table class="table table-hover table-bordered ">
+              <thead>
+                {% if student_obj_list|length > 0 %}
+                <tr>
+                  <th >S.no</th>
+                  <th >Name</th>
+                  <th >Country</th>
+                  <th>University</th>
+                  <th>Registration NO.</th>
+                  <th>Support</th>
+                  <th>Enrolled In</th>
+                  <th class="text-center">Actions</th>
+                </tr>
+                {% endif %}
+              </thead>
+              <tbody>
+                {% if per_page %}
+                {% paginate per_page student_obj_list %}
+                {% else%}
+                {% paginate 15 student_obj_list %}
+                {% endif %}
+                {% for enrollment in student_obj_list %}
+                <tr style="text-align:center;">
+                  <td scope="row">{{ forloop.counter|add:endless.page.start_index|add:-1 }}</td>
+                  <td><a href="#" data-target="#exampleModalCenter_contact{{contact.id}}">{{contact.first_name}}
+                    {{enrollment.student.user.first_name}}  {{enrollment.student.user.last_name}}</a></td>
+                  <td>
+                    {{enrollment.student.user.get_country_display}}
+                  </td>
+                  <td>
+                   {{enrollment.student.university}}
+                  </td>
+                  <td>
+                    {% if enrollment.student.university_reg_no %}
+                    {{enrollment.student.university_reg_no}}
+                    {% else %}
+                    Not Specified
+                    {% endif %}
+                  </td>
+                  <td>
+                    {{enrollment.get_Support_type_display }}
+                   </td>
+                   <td>
+                    {{enrollment.get_study_year_display }} year
+                   </td>
+                  <td class="action">
+              
+                    <a href="" data-id="{{enrollment.id}}" class="btn btn-sm btn-danger delete unroll" title="Unroll" data-toggle="modal" data-target="#unrollmodel"
+                                  ><i class="fa fa-minus" aria-hidden="true"></i></a>
+                                  <a href="{% url 'PI:edit_pi_student' enrollment.student.id %}" title="Edit" class="btn btn-sm btn-success edit action m-1"><i
+                                    class="fas fa-pencil-alt"></i></a>
+                       
+                 
+                  </td>
+                </tr>
+                {% endfor%}
+              </tbody>
+            </table>
+</div>
+</div>
+          {%ifequal student_obj_list|length 0 %}
+          <h6 class="text-center">No Contact Records Found</h6>
+          {%endifequal%}
+          <div class="marl row text-center">
+            {% show_pages %}
+          </div>
+          </div>
+    <br clear="all">
+  </div>
+  <!-- filter_row ends here -->
+<!--model to handle call deletion confirmation-->
+<!-- Modal -->
+<div class="modal fade" id="unrollmodel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="exampleModalLabel">Unroll Student</h5>
+          <button type="button" class="close fg" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="text-center">Are you sure you want to unroll this student?</p>
+        </div>
+        <div class="modal-footer text-center">
+          <button type="button" class="btn btn-danger  fg" data-dismiss="modal">Cancel</button>
+          <button type="button" id="approval_unrollment_btn" class="btn btn-primary">unroll</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--end of model-->
+
+
+{%endblock%}
+{% block js_block %}
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('.assigned_users').select2();
+    $(".filter_toggle").click(function () {
+      $(".list_filter_row").toggle();
+    });
+  });
+
+  search = "{{search}}"
+
+  if (search == 'True') {
+    $(".list_filter_row").show();
+  }
+
+///unroll student
+$('.unroll').click(function () {
+     var item_di=$(this).attr("data-id");
+     $('.fg').click(function(){
+    location.reload();
+   });
+     $('#approval_unrollment_btn').click(function(){
+        var url="/PI/"+item_di+"/unroll/";
+        
+        //   showSpinner();
+       $.get(url, function (data) {
+          // hideSpinner();
+        window.location.reload();
+     });
+
+     });
+   });
+
+  $("a[rel='page']").click(function (e) {
+    e.preventDefault();
+    $('#contacts_filter').attr("action", $(this).attr("href"));
+    $('#contacts_filter').submit();
+  });
+</script>
+{% endblock js_block %}

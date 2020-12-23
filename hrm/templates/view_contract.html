@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% load paginate %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'hrm:contract_list' %}">Contracts</a></li>
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">Overview</span>
+              <span class="" style="margin-top: 0px">
+
+                <div class="dropdown buttons_row">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url "hrm:edit_contract" contractrecord.id %}">Edit</a></li>
+                  </ul>
+                </div>
+
+              </span>
+            </h5>
+          </div>
+            </div>
+            <div class="card-body">
+          <div class="row marl">
+              <div class="col-md-6">
+          
+
+                  <strong>Contractor's Name</strong>: {{contractrecord.contract_name}}<br>
+                  <b>Services Offered</b>: {{contractrecord.services_offered}}<br>
+                  <b>Contract Type</b>: {{contractrecord.get_contract_type_display}}<br>
+                  <b>Amount</b>: {{contractrecord.contract_amount}}<br>
+                  <b>Contract Start Date</b>: {{contractrecord.start_date|date}}<br>
+                  <b>Contract End Date</b>: {{contractrecord.end_date|date}}<br>
+                  <b>Installment paid</b>: {{contractrecord.installment_paid}}<br>
+              </div>
+              <div class="col-md-6">
+        
+                <b>Contract Status</b>: {{contractrecord.contract_status}}<br>
+                
+                <b>Contract Manager</b>: {{contractrecord.contract_manager}}<br>
+                <b>Funder</b>: {{contractrecord.funder}}<br>
+                {% if contractrecord.new_start_date %}
+                <b>New Start Date</b>: {{contractrecord.new_start_date}}<br>
+                {% endif %}
+                {% if contractrecord.new_end_date %}
+                <b>Services Offered</b>: {{contractrecord.new_end_date}}<br>
+                {% endif %}
+            </div>
+            <div class="col-md-12">
+                <dt>
+                    Payment Details
+                </dt>
+                <dd>
+                    {{contractrecord.payment_details}}
+                </dd>
+
+            </div>
+       
+        </div>
+
+</div>
+
+    </div>
+<br clear="all">
+  </div>
+  <br clear="all">
+
+</div>
+</div>
+
+
+{% endblock %}

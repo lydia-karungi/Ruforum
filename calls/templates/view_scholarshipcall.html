@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'calls:scholarship-list' %}">Scholarship Calls</a></li>
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">Overview</span>
+              <span class="" style="margin-top: 0px">
+
+                <div class="dropdown buttons_row">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    {% if perms.calls.change_call %}
+                    <li><a class="dropdown-item" href="{% url 'calls:edit_scholarshipcall' callrecord.id %}">Edit</a></li>
+                    {% endif %}
+                    <li><a class="dropdown-item" href="{% url 'calls:print_scholarshipcall' callrecord.id %}" target="blank">Print</a></li>
+                  </ul>
+                </div>
+
+              </span>
+            </h5>
+          </div>
+            </div>
+            <div class="card-body">
+          <div class="row marl">
+              <div class="col-md-12">
+              <h4>Call details</h4>
+              <dl>
+
+                  <dt>Title:</dt>
+                  <dd>{{callrecord.title}}</dd>
+
+                  <dt>Call ID:</dt>
+                  <dd>{{callrecord.call_id}}</dd>
+
+                  <dt>Submission Deadline:</dt>
+                  <dd>{{callrecord.submission_deadline}}</dd>
+
+                  <dt>Scholarship Type:</dt>
+                  <dd>{{callrecord.scholarship_type}}</dd>
+              </dl>
+
+              <h3>Documents</h3>
+              <dl>
+
+
+                  <dt>Instructions:</dt>
+                  {% if callrecord.text %}
+                  <dd><a href="{{callrecord.text.url}}" download>{{callrecord.text}}</a></dd>
+               {% endif %}
+               {% if request.user.role == "ADMIN" or request.user.is_superuser or perms.contacts.can_delete_contacts %}
+               <dt>Review Form:</dt>
+               <dd>
+                {% if callrecord.review_form %}
+                <dd><a href="{{callrecord.review_form.url}}" download>Review Form</a></dd>
+                {% endif %}
+               </dd>
+               {% endif %}
+
+              </dl>
+
+
+
+              </div>
+        </div>
+
+</div>
+
+    </div>
+
+  </div>
+</div>
+<br clear="all">
+
+
+{% endblock %}

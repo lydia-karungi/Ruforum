@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load paginate %}
+{% block content %}
+<!-- main_container starts here -->
+<div class="main_container">
+  <!-- filter_row starts here -->
+  <div class="row marl">
+    <div class="col-lg-12 text-right">
+      <span class="d-inline"><a href="{% url 'common:create_group'%}" class="btn primary_btn"><i class="fa fa-plus"></i>
+          Add New Group</a></span>
+    </div>
+  </div>
+  <!-- modal begins -->
+  <div class="modal fade" id="pass_change_div" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="padding:20px 50px;">
+          <h4><span class="glyphicon glyphicon-lock"></span> Change Password</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body" style="padding:20px 50px;">
+          <form role="form" id="chang_password_form" method="POST"
+            action="{% url 'common:change_password_by_admin' %}">{% csrf_token %}
+            <div class="form-group">
+              <label for="usrname"><span class="glyphicon glyphicon-group"></span> New Password</label>
+              <input type="password" class="form-control" name="new_passwoord" id="new_passwoord"
+                placeholder="New Password">
+              <p id="password_eror" style="color:red"></p>
+              <input type="hidden" id="useer_id" name="useer_id">
+            </div>
+            <button id="submit_password" type="submit" class="btn btn-success btn-block"><span
+                class="glyphicon glyphicon-off"></span> Change</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal ends -->
+
+  <div class="filter_row list_filter_row row marl">
+    <div class="col-md-12">
+      <div class="card">
+
+          <form id="groups_filter" method="POST" action="">{% csrf_token %}
+            <div class="card-header">
+              <div class="card-title text-center">Filters</div>
+              </div>
+              <div class="card-body">
+              <div class="row marl">
+                <div class="filter_col col-md-6">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Name</label>
+                    <input type="text" class="form-control" placeholder="Groupname" name="groupname" {% if request.POST %}
+                      value="{{request.POST.groupname}}" {%endif%} />
+                  </div>
+                </div>
+            
+                
+                <div class="filter_col col-md-6">
+                  <div class="form-group buttons_row">
+                    <button class="btn btn-primary save" type="submit">Search</button>
+                    <a href="{% url 'common:groups_list' %}" class="btn btn-default clear">Clear</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+      </div>
+    </div>
+  </div>
+  <!-- filter_row ends here -->
+  <!-- popup for change password start's here  -->
+  <div class="filter_row row marl">
+    <div class="col-md-12 col-lg-12 col-xl-12">
+      <div class="table_container_row row marl no-gutters">
+        <div class="col-md-12">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+             
+            </li>
+
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open">
+              <div class="card">
+                
+                  <div class="panel-heading-list card-title text-right">
+                    <span class="total_count float-left">Active Groups - {% if show_pageitems %}
+                      {% show_pageitems %}{% else %}{{groups|length}}{% endif %}</span>
+                    <span class="filter_toggle ">
+                      <a href="#" class="primary_btn"><i class="fas fa-filter"></i></a>
+                    </span>
+                  </div>
+
+              </div>
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                      <thead>
+                        {% if groups|length > 0 %}
+                        <tr>
+                          <th >Name</th>
+                          <th >User Count</th>
+                          <th>Actions</th>
+                        </tr>
+                        {% endif %}
+                      </thead>
+                      <tbody>
+                        {% if per_page %}
+                        {% paginate per_page groups %}
+                        {% else %}
+                        {% paginate 20 groups %}
+                        {% endif %}
+                        {% for group in groups %}
+                        <tr class="text-center">
+                          <td><a href="{% url 'common:users_list' %}?gid={{group.id}}">{{ group.name }}</a></td>
+
+                          <td><a href="{% url 'common:users_list' %}?gid={{group.id}}">{{ group.user_set.all.count }}</a></td>
+                          <td class="actions">
+                            <!-- <a href="{% url 'common:view_group' group.id %}" class="btn btn-info view"><i class="fas fa-eye"></i>View</a> -->
+                                {% if user.email != admin_email  or request.user.email == admin_email %}
+                            <a href="{% url 'common:edit_group' group.id %}" title="Edit" class="btn btn-sm btn-success edit action"><i
+                                class="fas fa-pencil-alt"></i></a>
+
+                            <a href="{% url 'common:remove_group' group.id %}" title="Delete" class="btn btn-sm btn-danger trash action"
+                              {% if request.group.email == group.email %}  {% endif %}><i
+                                class="fas fa-trash-alt"></i></a>
+
+
+                                {% endif %}
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  {% ifequal groups|length 0 %}
+                  <h6 class="text-center">No Active Groups Found</h6>
+                  {% endifequal %}
+                  <div class="text-center row marl">
+                    {% show_pages %}
+                  </div>
+
+            </div>
+
+          </div>
+          <br clear="all">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- main_container ends here -->
+{% endblock %}
+{% block js_block %}
+<script type="text/javascript">
+  $(document).ready(function () {
+    $(".filter_toggle").click(function () {
+      $(".list_filter_row").toggle();
+    });
+  });
+
+  $('.trash').click(function (e) {
+    e.preventDefault()
+    url = $(this).attr('href')
+    if (!confirm('Are you sure you want to delete?'))
+      return;
+    window.location = $(this).attr('href')
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    var group_id;
+    $(".fa-passwd-reset").click(function (e) {
+      e.preventDefault();
+      group_id = $(this).attr('data-id')
+      $("#password_eror").text("");
+      $("#pass_change_div").modal();
+    });
+    $("#submit_password").click(function (e) {
+      e.preventDefault();
+      if ($("#new_passwoord").val().length < 4) {
+        $("#password_eror").text("* Password must be atleast 4 characters long! ")
+      }
+      else {
+        $("#password_eror").text("");
+        $('#useer_id').val(group_id);
+        $("#chang_password_form").submit()
+      }
+    });
+    $("a[rel='page']").click(function (e) {
+      e.preventDefault();
+      $('#groups_filter').attr("action", $(this).attr("href"));
+      $('#groups_filter').submit();
+    });
+  });
+</script>
+{% endblock js_block %}

@@ -1,0 +1,934 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block breadcrumb %}
+    {% block extralinks %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css"
+              rel="stylesheet">
+        <link rel="stylesheet" type="text/css"
+              href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css"/>
+
+    {% endblock %}
+    {% block extrahead %}
+        <style>
+            .modal-confirm {
+                color: #636363;
+                width: 400px;
+            }
+
+            .modal-confirm .modal-content {
+                padding: 20px;
+                border-radius: 5px;
+                border: none;
+                text-align: center;
+                font-size: 14px;
+            }
+
+            .modal-confirm .modal-header {
+                border-bottom: none;
+                position: relative;
+            }
+
+            .modal-confirm h4 {
+                text-align: center;
+                font-size: 26px;
+                margin: 30px 0 -10px;
+            }
+
+            .modal-confirm .close {
+                position: absolute;
+                top: -5px;
+                right: -2px;
+            }
+
+            .modal-confirm .modal-body {
+                color: #999;
+            }
+
+            .modal-confirm .modal-footer {
+                border: none;
+                text-align: center;
+                border-radius: 5px;
+                font-size: 13px;
+                padding: 10px 15px 25px;
+            }
+
+            .modal-confirm .modal-footer a {
+                color: #999;
+            }
+
+            .modal-confirm .icon-box {
+                width: 80px;
+                height: 80px;
+                margin: 0 auto;
+                border-radius: 50%;
+                z-index: 9;
+                text-align: center;
+                border: 3px solid #f15e5e;
+            }
+
+            .modal-confirm .icon-box i {
+                color: #f15e5e;
+                font-size: 46px;
+                display: inline-block;
+                margin-top: 13px;
+            }
+
+            .modal-confirm .btn {
+                color: #fff;
+                border-radius: 4px;
+                background: #60c7c1;
+                text-decoration: none;
+                transition: all 0.4s;
+                line-height: normal;
+                min-width: 120px;
+                border: none;
+                min-height: 40px;
+                border-radius: 3px;
+                margin: 0 5px;
+                outline: none !important;
+            }
+
+            .modal-confirm .btn-info {
+                background: #c1c1c1;
+            }
+
+            .modal-confirm .btn-info:hover,
+            .modal-confirm .btn-info:focus {
+                background: #a8a8a8;
+            }
+
+            .modal-confirm .btn-danger {
+                background: #f15e5e;
+            }
+
+            .modal-confirm .btn-danger:hover,
+            .modal-confirm .btn-danger:focus {
+                background: #ee3535;
+            }
+
+            .trigger-btn {
+                display: inline-block;
+                margin: 100px auto;
+            }
+        </style>
+    {% endblock %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'grants_applications:list' %}">Grant Applications</a></li>
+            <li class="breadcrumb-item active">{% if call_obj %}Edit{% else %}Add{% endif %}</li>
+        </ol>
+    </nav>
+{% endblock %}
+{% block content %}
+    <form id="grantapplicationform" action='' method="POST" novalidate enctype="multipart/form-data">{% csrf_token %}
+        <div class="overview_form_block row marl justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title text-center">
+                            {% if applicationobj %}EDIT{% else %}NEW {% endif %}GRANT APPLICATION FORM
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+
+                        <div class="row marl">
+                            <!--first tab begins here-->
+
+                            <div class="tab" id="tab1">
+                                <div class="col-md-12">
+                                    <div class="alert alert-warning text-center" role="alert">
+                                        Please ensure that you have downloaded and filled the project budget and the application form from the instructions in the grant call details before you proceed!
+                                      </div>
+                                    <legend class="mx-3">Personal Information</legend>
+
+                                </div>
+                                <div class="row">
+                                    <div class="filter_col col-md-6">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Title
+                                                {% if form.title.field.required %}<span class="error_marker"
+                                                                                        style="color:red">*</span>{% endif %}
+                                            </label>
+                                            {{ form.title }}
+                                            <span class="error" id="id__title">{{ form.title.errors }}</span>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="filter_col col-md-6">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">First Name
+                                                {% if form.first_name.field.required %}<span class="error_marker"
+                                                                                             style="color:red">*</span>{% endif %}
+                                            </label>
+                                            {{ form.first_name }}
+                                            <span class="error" id="id__first_name">{{ form.first_name.errors }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="filter_col col-md-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Last Name
+                                                {% if form.last_name.field.required %}<span class="error_marker"
+                                                                                            style="color:red">*</span>{% endif %}
+                                            </label>
+                                            {{ form.last_name }}
+                                            <span class="error" id="id__last_name">{{ form.last_name.errors }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="filter_col col-md-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Gender
+                                                {% if form.gender.field.required %}<span class="error_marker"
+                                                                                         style="color:red">*</span>{% endif %}
+                                            </label>
+                                            {{ form.gender }}
+                                            <span class="error" id="id__gender">{{ form.gender.errors }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="filter_col col-md-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Place of work
+                                                {% if form.institution.field.required %}<span class="error_marker"
+                                                                                              style="color:red">*</span>{% endif %}
+                                            </label>
+                                            {{ form.institution }}
+                                            <span class="error"
+                                                  id="id__institution">{{ form.institution.errors }}</span>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="filter_col col-md-4">
+                                        <div class="form-group">
+                                            <label for="department" class="required">Department at Place of work
+                                                {% if form.department.field.required %}<span class="error_marker"
+                                                                                             style="color:red">*</span>{% endif %}
+                                            </label>
+                                            {{ form.department }}
+                                            <span class="error" id="id__department">{{ form.department.errors }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="filter_col col-md-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Country of Residence
+                                                {% if form.country.field.required %}<span class="error_marker"
+                                                                                          style="color:red">*</span>{% endif %}
+                                            </label>
+                                            {{ form.country }}
+                                            <span class="error" id="id__country">{{ form.country.errors }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="filter_col col-md-4">
+                                        <div class="form-group ">
+                                            <label for="exampleInputEmail1"
+                                                   class="required">Nationality{% if form.nationality.field.required %}
+                                                <span
+                                                        class="error_marker" style="color:red">*</span>{% endif %}
+                                            </label>
+                                            {{ form.nationality }}
+                                            <span class="error"
+                                                  id="id__nationality">{{ form.profile_nationality.errors }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="filter_col col-md-6">
+                                        <div class="form-group ">
+                                            <label for="exampleInputEmail1" class="required">Highest
+                                                Qualification{% if form.highest_qualification.field.required %}
+                                                    <span class="error_marker"
+                                                          style="color:red">*</span>{% endif %}</label>
+                                            {{ form.highest_qualification }}
+                                            <span class="error"
+                                                  id="id__highest_qualification">{{ form.highest_qualification.errors }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="filter_col col-md-6">
+                                        <div class="form-group ">
+                                            <label for="exampleInputEmail1" class="required">Area of
+                                                specialisation{% if form.area_of_specialisation.field.required %}
+                                                    <span class="error_marker"
+                                                          style="color:red">*</span>{% endif %}</label>
+                                            {{ form.area_of_specialisation }}
+                                            <span class="error"
+                                                  id="id__area_of_specialisation">{{ form.area_of_specialisation.errors }}</span>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="filter_col col-md-6">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Mobile telephone
+                                                {% if form.mobile.field.required %}<span class="error_marker"
+                                                                                         style="color:red">*</span>{% endif %}
+                                            </label>
+                                            <div style="display:inline-flex; width: auto;">  {{ form.mobile }}</div>
+                                        </div>
+                                        <span class="error" id="id__mobile">{{ form.mobile.errors }}</span>
+                                    </div>
+                                    <div class="filter_col col-md-6">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Business telephone
+                                                {% if form.business_tel.field.required %}<span class="error_marker"
+                                                                                               style="color:red">*</span>{% endif %}
+                                            </label>
+                                            <div style="display:inline-flex; width: auto;">  {{ form.business_tel }}</div>
+                                        </div>
+                                        <span class="error" id="id__business_tel">{{ form.business_tel.errors }}</span>
+                                    </div>
+                                   <div class="filter_col col-md-12">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Email
+                                                {% if form.email.field.required %}<span class="error_marker" style="color:red">*</span>{% endif %}
+                                            </label>
+                                              {{ form.email }}
+                                        </div>
+                                        <span class="error" id="id__business_tel">{{ form.email.errors }}</span>
+                                    </div>
+                                    <div class="filter_col col-md-12">
+                                        <div class="form-group ">
+                                            <label for="id_contacts" class="required">Business
+                                                address{% if form.business_address.field.required %}
+                                                    <span class="error_marker"
+                                                          style="color:red">*</span>{% endif %}</label>
+                                            {{ form.business_address }}
+                                            <span class="error"
+                                                  id="id__business_address">{{ form.business_address.errors }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="filter_col col-12">
+                                        <div class="form-group">
+                                            <label for="id_sattus">Curriculum Vitae{% if form.cv.field.required %}<span
+                                                    class="error">*</span>{% endif %}</label>
+                                            {{ form.cv }}
+                                            <span class="error" id="id__cv">{{ form.cv.errors }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end of first tab-->
+
+                            <!--second tab begins here-->
+                            <div class="form-group  tab">
+                                <legend class="mx-3">Project Information</legend>
+                                <div class="row marl">
+
+                                    <div class="filter_col col-md-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Call ID
+                                                {% if form.call.field.required %}<span class="error_marker"
+                                                                                       style="color:red">*</span>{% endif %}
+                                            </label>
+                                            {{ form.call }}
+                                            <span class="error" id="id__call">{{ form.call.errors }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="filter_col col-md-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Project Duration (months)
+                                                {% if form.duration_months.field.required %}<span class="error_marker"
+                                                                                                  style="color:red">*</span>{% endif %}
+                                            </label>
+                                            {{ form.duration_months }}
+                                            <span class="error"
+                                                  id="id__duration_months">{{ form.duration_months.errors }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="filter_col col-md-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Number of students to be
+                                                trained
+                                                {% if form.students_to_train.field.required %}<span class="error_marker"
+                                                                                                    style="color:red">*</span>{% endif %}
+                                            </label>
+                                            {{ form.students_to_train }}
+                                            <span class="error"
+                                                  id="id__students_to_train">{{ form.students_to_train.errors }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="filter_col col-md-6">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Country of implementation
+                                                {% if form.country.field.required %}<span class="error_marker"
+                                                                                          style="color:red">*</span>{% endif %}
+                                            </label>
+                                            {{ form.country }}
+                                            <span class="error" id="id__country">{{ form.country.errors }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="filter_col col-md-6">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Total budget (In US$)
+                                                {% if form.total_budget.field.required %}<span class="error_marker"
+                                                                                               style="color:red">*</span>{% endif %}
+                                            </label>
+                                            {{ form.total_budget }}
+                                            <span class="error"
+                                                  id="id__total_budget">{{ form.total_budget.errors }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="filter_col col-md-12">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Proposal title
+                                                {% if form.proposal.field.required %}<span class="error_marker"
+                                                                                           style="color:red">*</span>{% endif %}
+                                            </label>
+                                            {{ form.proposal }}
+
+                                            <span class="error" id="id__proposal_">{{ form.proposal.errors }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="filter_col col-md-12">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Proposal summary
+                                                {% if form.proposal_title.field.required %}<span class="error_marker"
+                                                                                                 style="color:red">*</span>{% endif %}
+                                                <span id="count"
+                                                      style="color:blue">0</span> words</label>
+                                            {{ form.proposal_title }}
+                                            <small id="hint_id_proposal_title">{{ form.proposal_title.help_text }}</small>
+                                            <span class="error"
+                                                  id="id__proposal_title">{{ form.proposal_title.errors }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="filter_col col-md-12">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Contact Details for the
+                                                Dean
+                                                {% if form.dean_contact.field.required %}<span class="error_marker"
+                                                                                               style="color:red">*</span>{% endif %}
+                                            </label>
+                                            {{ form.dean_contact }}
+                                            <span class="error"
+                                                  id="id__dean_contact">{{ form.dean_contact.errors }}</span>
+                                        </div>
+                                    </div>
+
+                                    <legend class="mx-3">Letter from University</legend>
+                                    <div class="col-md-10">
+                                        <strong>Please provide a supporting letter from your university:</strong>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Letter
+                                                {% if form.supporting_letter_from_university.field.required %}
+                                                    <span class="error_marker"
+                                                          style="color:red">*</span>{% endif %}</label>
+                                            {{ form.supporting_letter_from_university }}
+                                            <span class="error"
+                                                  id="id__supporting_letter_from_university">{{ form.supporting_letter_from_university.errors }}</span>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <!--end of second tab-->
+                            <!--third tab begins here-->
+                            <div class="form-group tab">
+                                <legend class="mx-3">Collaborator Information</legend>
+                                <div class="row marl">
+
+                                    <div class="filter_col col-md-12">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Non University Partners
+                                                {% if form.non_university_partners.field.required %}
+                                                    <span class="error_marker"
+                                                          style="color:red">*</span>{% endif %}</label>
+                                            {{ form.non_university_partners }}
+                                            <span class="error"
+                                                  id="id_non_university_partners">{{ form.non_university_partners.errors }}</span>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="filter_col col-md-12">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Other Departments
+                                                {% if form.other_departments.field.required %}<span class="error_marker"
+                                                                                                    style="color:red">*</span>{% endif %}
+                                            </label>
+                                            {{ form.other_departments }}
+                                            <span class="error"
+                                                  id="id__other_departments">{{ form.other_departments.errors }}</span>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="filter_col col-md-12">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1" class="required">Other Universities
+                                                {% if form.other_universities.field.required %}
+                                                    <span class="error_marker"
+                                                          style="color:red">*</span>{% endif %}</label>
+                                            {{ form.other_universities }}
+                                            <span class="error"
+                                                  id="id__other_universities">{{ form.other_universities.errors }}</span>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-12" style="display: inline-block !important;">
+                                        <fieldset><strong>Please attach abbreviated CVs for your project collaborators
+                                            (up to four, not
+                                            required for FAPA):</strong>
+                                            {% include 'collaborator_formset.html' %}
+
+                                        </fieldset>
+                                    </div>
+
+
+                                    <legend class="mx-3">Support letters from partner institution</legend>
+                                    <div class="row marl">
+                                        <div class="col-md-12">
+                                            <strong>Please provide up to four supporting letters for your application
+                                                (not required for
+                                                FAPA):</strong>
+                                            <div style="display:inline;">
+                                                {% include 'letter_formset.html' %}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end of third tab-->
+                            <!--fourth tab begins here-->
+                            <div class="tab">
+
+                                <div class="row marl">
+
+
+                                    <legend class="mx-3">Project Budgets</legend>
+                                    <div class="row marl">
+                                        <div class="col-md-12">
+
+                                            {{ form.project_budget.errors }}
+                                            <div class="project_budget" id="project_budget_"><a
+                                                    class="pure-button pure-button-warning"
+                                                    href="#id_call">Select a Call to access the project budget
+                                                template.</a>
+
+                                            </div>
+                                          
+                                            <strong>Please upload your completed project budget here (not required for
+                                                FAPA):</strong>
+
+                                            {{ form.project_budget }}
+                                            {{ form.project_budget.errors }}
+
+                                        </div>
+                                    </div>
+
+                                    <legend class="mx-3">Application Form</legend>
+
+                                    <div class="row marl">
+                                        <div class="col-md-12">
+                                            <div class="call_grant_type_downloads" id="call_grant_type_downloads_">
+                                                <p class="pure-form-text"><a class='pure-button pure-button-warning'
+                                                                             href='#id_call'>Select a Call
+                                                    to access the relevant instructions and application form
+                                                    template.</a></p>
+
+                                            </div>
+                                          
+                                           
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1" class="required"><strong>Please upload the completed application
+                                                    form, which will be different for each grant type</strong>
+                                                    {% if form.application_form.field.required %}
+                                                        <span class="error_marker"
+                                                              style="color:red">*</span>{% endif %}</label>
+                                                {{ form.application_form }}
+                                                <span class="error"
+                                                      id="id__application_form">{{ form.application_form.errors }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end of fourth tab-->
+                            <!--fifth tab begins from here-->
+                            <div class="tab">
+                                <legend class="mx-3">Declaration</legend>
+
+                                <div class="row marl">
+
+                                    <div class="col-md-12">
+
+                                        <strong>By checking the checkbox I declare that the above information is true
+                                            and correct to
+                                            the best of my knowledge. I acknowledge that establishment of falsehood in
+                                            the above information
+                                            is grounds for immediate disqualification of my application.</strong>
+                                        </p>
+                                        <div id="div_id_i_agree" class="control-group pure-control-group"><label
+                                                for="id_i_agree" class="checkbox requiredField">
+                                            <input type="checkbox" name="i_agree" required class="checkboxinput"
+                                                   id="id_i_agree"/>
+                                            I agree to the above declaration
+                                        </label>
+                                            <p id="error_id_i_agree" class="field-error-inline-html5validation"></div>
+                                        </p>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <!--last tab-->
+                            <div class="col-md-12 m-1">
+                                <div style="overflow:auto;">
+                                    <div style="float:right; margin-top: 20px;">
+                                        <button type="button" class="btn previous">Previous</button>
+                                        <button type="button" class="next btn btn-primary">Next</button>
+                                        <button type="button" class="btn btn-primary preview">Preview</button>
+                                        <button type="button" class="btn btn-success submit">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-footer">
+                                <div style="text-align:center;margin-top:6px;">
+                                    <a href="#tab1"><span class="step">1</span></a>
+                                    <span class="step">2</span>
+                                    <span class="step">3</span>
+                                    <span class="step">4</span>
+                                    <span class="step">5</span>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- <input type="hidden" id="save_new_form" name="savenewform"> -->
+
+                </div>
+            </div>
+            <!-- overview ends here -->
+    </form>
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog modal-confirm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="icon-box">
+                        <i class="material-icons">warning</i>
+                    </div>
+                    <h4 class="modal-title">Are you sure?</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Do you really want to save your application? You will not be able to edit it after this.</p>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmSave">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="submit_application_model" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="exampleModalLabel">Warning</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">Do you really want to submit your application? You will not be able to edit
+                        it after this.</p>
+                </div>
+                <div class="modal-footer text-center">
+                    <button type="button" class="btn btn-danger " data-dismiss="modal">Cancel</button>
+                    <button type="button" id="approval_submit_btn" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br clear="all">
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+    <script src="{% static 'js/jquery.validate.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/multi-form.js' %}"></script>
+    <script type='text/javascript'
+            src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+    <script src="https://malsup.github.io/jquery.form.js"></script>
+
+    <script src="{% static 'js/jquery.formset.js' %}"></script>
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var call_id=$("#id_call").val();
+            $("#id_call").attr('readonly', true);
+            var count = document.getElementById('count');
+            var input = document.getElementById('id_proposal_title');
+            var globalWordCounter = 0;
+            var WORD_LIMIT = 250;
+
+            input.addEventListener('keydown', function (e) {
+                if (globalWordCounter > WORD_LIMIT && e.code !== "Backspace") {
+                    e.preventDefault();
+                    return alert("You have reached the word limit");
+                }
+            });
+
+            input.addEventListener('keyup', function (e) {
+                wordCounter(e.target.value);
+            });
+
+            function isWord(str) {
+                var alphaNumericFound = false;
+                for (var i = 0; i < str.length; i++) {
+                    var code = str.charCodeAt(i);
+                    if ((code > 47 && code < 58) || // numeric (0-9)
+                        (code > 64 && code < 91) || // upper alpha (A-Z)
+                        (code > 96 && code < 123)) { // lower alpha (a-z)
+                        alphaNumericFound = true;
+                        return alphaNumericFound;
+                    }
+                }
+                return alphaNumericFound;
+            }
+
+            function wordCounter(text) {
+                var text = input.value.split(' ');
+                var wordCount = 0;
+                for (var i = 0; i < text.length; i++) {
+                    if (!text[i] == ' ' && isWord(text[i])) {
+                        wordCount++;
+                    }
+                }
+                globalWordCounter = wordCount;
+                count.innerText = wordCount;
+            }
+
+            //$('.delete-row').show();
+            $.validator.addMethod('year', function (value, element, param) {
+                return (value != 0) && (value >= 1900) && (value == parseInt(value, 10));
+            }, 'Please enter a valid year not less than 1900!');
+            $.validator.addMethod('username', function (value, element, param) {
+                var nameRegex = /^[a-zA-Z0-9]+$/;
+                return value.match(nameRegex);
+            }, 'Only a-z, A-Z, 0-9 characters are allowed');
+
+
+            var val = {
+                // Specify validation rules
+                rules: {
+                    highest_qualification: {
+                        required: true
+                    },
+                    area_of_specialisation: {
+                        required: true
+
+                    },
+                    department: {
+                        required: true
+                    },
+                    date: {
+                        date: true,
+                        required: true,
+                        minlength: 2,
+                        maxlength: 2,
+                        digits: true
+                    },
+                    application_form: {
+                        required: true
+                    },
+                     cv: {
+                       required: true
+                     },
+                    proposal: {
+                        required: true
+                    },
+                    proposal_title: {
+                        required: true
+                    }
+                },
+                // Specify validation error messages
+                messages: {
+                    highest_qualification:
+                        "Please fill in your highest level of education",
+                    department: {
+                        required: "Department is required"
+                    },
+                    non_university_partners: {
+                        required: "Please include at least one non University partner"
+                    },
+                    other_departments: {
+                        required: "Please include at least one other department"
+                    },
+
+                    dean_contact: {
+                        required: "Dean's contact is required"
+                    },
+                    proposal_title: {
+                        required: "Please write short notes about your proposal"
+                    },
+                    proposal: {
+                        required: "Proposal is Required"
+                    },
+                    area_of_specialisation: {
+                        required: "Area of specialization  is required",
+
+                    },
+                    other_universities: {
+                        required: "Please include at least one other University"
+                    },
+                    supporting_letter_from_university: {
+                        requied: "Supporting letter is required"
+                    },
+                    project_timeline: {
+                        requied: "Please upload the project timeline"
+                    },
+                    application_form: {
+                        requied: "Please upload the application form"
+                    }
+                }
+            }
+            $("#grantapplicationform").multiStepForm(
+                {
+                    // defaultStep:0,
+                    beforeSubmit: function (form, submit) {
+                        console.log("called before submiting the form");
+                        console.log(form);
+                        console.log(submit);
+                    },
+                    validations: val,
+                }
+            ).navigateTo(0);
+
+
+        });
+
+        $('.formset_row-{{ collaborator_formset.prefix }}').formset({
+            addText: 'Add another',
+            deleteText: 'remove',
+            prefix: '{{ collaborator_formset.prefix }}',
+        });
+
+        $('.formset_row-{{ letter_formset.prefix }}').formset({
+            addText: 'Add another',
+            deleteText: 'remove',
+            prefix: '{{ letter_formset.prefix }}',
+        });
+        $('.formset_row-{{ project_formset.prefix }}').formset({
+            addText: 'Add another',
+            deleteText: 'remove',
+            prefix: '{{ project_formset.prefix }}',
+        });
+
+        //pop up model before submit
+        $("#grantapplicationform").submit(function (e) {
+            e.preventDefault();
+            $("#submit_application_model").modal('show');
+            $("#approval_submit_btn").click(function () {
+                $("#grantapplicationform")[0].submit();
+            });
+
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+            $('#myModal').on('show', function () {
+                var id = $(this).data('id'),
+                    removeBtn = $(this).find('.danger');
+            })
+
+            $('#saveFinal').on('click', function (e) {
+                e.preventDefault();
+
+                var id = $(this).data('id');
+                $('#myModal').data('id', id).modal('show');
+            });
+
+            $('#btnConfirmSave').click(function () {
+                // handle deletion here
+                //var id = $('#myModal').data('id');
+                //$('[data-id='+id+']').remove();
+                $('#myModal').modal('hide');
+                var input = $("<input>")
+                    .attr("type", "hidden")
+                    .attr("name", "savefinal").val("bla");
+                $('#formid').append(input);
+
+                $('#formid').submit();
+            });
+
+            $("#id_assigned_to").select2();
+            $("#id_teams").select2();
+            $("#id_start_date").css('color', 'black');
+            $("#id_end_date").css('color', 'black');
+            var date = new Date();
+            var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            $('.date').datetimepicker({
+                'format': 'YYYY-MM-DD',
+                minDate: today
+            })
+
+            if ($('#id_call_type').val() == 'Recurring') {
+                $('#recurring_block').show()
+            } else {
+                $('#recurring_block').hide()
+            }
+
+            $('#id_call_type').on('change', function () {
+                // console.log($(this).val())
+                if ($(this).val() == 'Recurring') {
+                    $('#recurring_block').show()
+                } else {
+                    $('#recurring_block').hide()
+                }
+            })
+            // if ($('#recurring_block').length) {
+            //   if ($('#id_call_type').val() == 'Recurring') {
+            //     $('#recurring_block').show()
+            //   }
+            //   else {
+            //     $('#recurring_block').hide()
+            //   }
+            // }
+
+        });
+
+
+        $('#id_call').each(function (i, element) {
+            var call_select = $(this);
+            var downloads = $('.call_grant_type_downloads');
+            var project_budget = $('.project_budget'),
+                results_framework = $('.results_framework')
+            project_timeline = $('.project_timeline');
+            call_select.bind("change", function (event) {
+                var value = call_select.val();
+                downloads.hide();
+                project_budget.hide();
+                results_framework.hide();
+                project_timeline.hide();
+                $('#call_grant_type_downloads_' + value).show();
+                $('#project_budget_' + value).show();
+                $('#results_framework_' + value).show();
+                $('#project_timeline_' + value).show();
+            });
+            call_select.trigger("change");
+        });
+        {% for message in messages %}
+            $(document).ready(function () {
+                $.notify("{{message}}", "{{ message.tags }}");
+            });
+        {% endfor %}
+    </script>
+{% endblock js_block %}

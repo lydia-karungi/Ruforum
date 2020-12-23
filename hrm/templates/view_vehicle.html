@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% load paginate %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'hrm:vehicle_list' %}">Vehicles</a></li>
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">Overview</span>
+              <span class="" style="margin-top: 0px">
+
+                <div class="dropdown buttons_row">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url "hrm:edit_vehicle" vehiclerecord.id %}">Edit</a></li>
+                  </ul>
+                </div>
+
+              </span>
+            </h5>
+          </div>
+            </div>
+            <div class="card-body">
+          <div class="row marl">
+              <div class="col-md-4">
+              <dl>
+
+                  <dt>Registration Plate No</dt>
+                  <dd>{{vehiclerecord.registration_plate}}</dd>
+
+                  <dt>Assigned To</dt>
+                  <dd>{{vehiclerecord.assigned_to.user.get_full_name}}</dd>
+
+                  <dt> Date of purchase</dt>
+                  <dd>{{vehiclerecord.date_of_purchase}}</dd>
+
+                  <dt>Fuel type</dt>
+                  <dd>{{vehiclerecord.get_fuel_type_display}}</dd>
+                  <dt>mileage</dt>
+                  <dd>{{vehiclerecord.mileage}}</dd>
+                  <dt>Vehicle type</dt>
+                  <dd>{{vehiclerecord.get_vehicle_type_display}}</dd>
+              </dl>
+              </div>
+              <div class="col-md-4">
+              <dl>
+
+                  <dt>Make</dt>
+                  <dd>{{vehiclerecord.make}}</dd>
+
+                  <dt>Model</dt>
+                  <dd>{{vehiclerecord.vehicle_model}}</dd>
+
+                  <dt> Chassis Number</dt>
+                  <dd>{{vehiclerecord.chassis_number}}</dd>
+
+                  <dt>Engine No</dt>
+                  <dd>{{vehiclerecord.engine_number}}</dd>
+                  <dt>Insurance No</dt>
+                  <dd>{{vehiclerecord.insurance_number}}</dd>
+                  <dt>Insurance Valid up to</dt>
+                  <dd>{{vehiclerecord.insurance_valid_upto}}</dd>
+                  <dt>Insurance Status</dt>
+                  <dd>{{vehiclerecord.insurance_status}}</dd>
+              </dl>
+              </div>
+              <div class="col-md-4">
+              <dl>
+
+                  <dt>Registration card</dt>
+                  <dd><a href="{{vehiclerecord.registration_card.url}}">registration card</a></dd>
+
+                  <dt>Insurance card</dt>
+                <dd><a href="{{vehiclerecord.insurance.url}}">card</a></dd>
+
+                  <dt>vehicle photo</dt>
+                <dd><a href="{{vehiclerecord.photo.url}}">photo</a></dd>
+
+
+              </dl>
+              </div>
+        </div>
+
+</div>
+
+    </div>
+<br clear="all">
+  </div>
+  <br clear="all">
+
+</div>
+</div>
+
+
+{% endblock %}

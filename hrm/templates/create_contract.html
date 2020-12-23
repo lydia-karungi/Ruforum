@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block breadcrumb %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css" />
+{% endblock %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'hrm:contract_list' %}">Contracts</a></li>
+    <li class="breadcrumb-item active">{% if contract %}Edit{% else %}Add{% endif %}</li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+<form id="formid" action='' method="POST" novalidate enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-name text-center">
+            {% if contract %}EDIT{% else %}ADD NEW{% endif %} CONTRACT
+          </div>
+          </div>
+          <div class="card-body">
+          <div class="row marl">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="registration_plate" class="required">Contract Title{% if form.contract_name.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.contract_name}}
+            <span class="error" id="id_title">{{ form.contract_name.errors }}</span>
+            </div>
+            </div>
+
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="assigned_to" class="required">Services Offered{% if form.services_offered.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.services_offered}}
+            <span class="error" id="id_title">{{ form.services_offered.errors }}</span>
+            </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="date_of_purchase" class="required">Contract Type{% if form.contract_type.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.contract_type}}
+            <span class="error" id="id_title">{{ form.contract_type.errors }}</span>
+            </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="fuel_type" class="required">Contract Amount{% if form.contract_amount.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.contract_amount}}
+            <span class="error" id="id_title">{{ form.contract_amount.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="mileage" class="required">Start Date{% if form.start_date.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.start_date}}
+            <span class="error" id="id_title">{{ form.start_date.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="vehicle_type" class="required">End Date{% if form.end_date.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.end_date}}
+            <span class="error" id="id_title">{{ form.end_date.errors }}</span>
+            </div>
+            </div>
+            {% if contract %}
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="make" class="required">New Start Date{% if form.new_start_date.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.new_start_date}}
+            <span class="error" id="id_title">{{ form.new_start_date.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="vehicle_model" class="required">New End Date{% if form.vehicle_model.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.new_end_date}}
+            <span class="error" id="id_title">{{ form.new_end_date.errors }}</span>
+            </div>
+            </div>
+            {% endif %}
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="vehicle_model" class="required">Contract Status{% if form.contract_status.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.contract_status}}
+            <span class="error" id="id_title">{{ form.contract_status.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="chassis_number" class="required">Installment Paid{% if form.installment_paid.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.installment_paid}}
+            <span class="error" id="id_title">{{ form.installment_paid.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="engine_number" class="required">Payment Details{% if form.payment_details.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.payment_details}}
+            <span class="error" id="id_title">{{ form.payment_details.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="registration_card" class="required">Contract Manager{% if form.contract_manager.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.contract_manager}}
+            <span class="error" id="id_title">{{ form.contract_manager.errors }}</span>
+            </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="vehicle_model" class="required">Funder{% if form.funder.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+            {{form.funder}}
+            <span class="error" id="id_title">{{ form.funder.errors }}</span>
+            </div>
+            </div>
+           
+        
+            <div class="col-md-12">
+              <div class="col-md-12">
+                <div class="row marl buttons_row form_btn_row text-center">
+                  <button class="btn btn-default save" onclick="this.disabled=true,this.form.submit();" type="submit">Save</button>
+                  <a href="{% url 'hrm:department_list' %}" class="btn btn-default clear"
+                    id="create_user_cancel">Cancel</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          </div>
+          <br clear="all">
+        </div>
+      </div>
+
+    <!-- <input type="hidden" id="save_new_form" name="savenewform"> -->
+  </div>
+  <!-- overview ends here -->
+</form>
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script>
+<script type="text/javascript">
+
+  // $(document).ready(function() {
+  //   $('.assigned_users').select2();
+  // });
+  $(document).ready(function () {
+
+    $('#recurring_block').hide()
+    $("#id_contacts").select2();
+    $("#id_assigned_to").select2();
+    $("#id_teams").select2();
+    $("#id_start_date").css('color', 'black');
+    $("#id_end_date").css('color', 'black');
+    var date = new Date();
+    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    $('.date').datetimepicker({
+      'format': 'YYYY-MM-DD',
+      minDate: today
+    })
+
+    if ($('#id_event_type').val() == 'Recurring') {
+      $('#recurring_block').show()
+    }
+    else {
+      $('#recurring_block').hide()
+    }
+
+    $('#id_event_type').on('change', function () {
+      // console.log($(this).val())
+      if ($(this).val() == 'Recurring') {
+        $('#recurring_block').show()
+      }
+      else {
+        $('#recurring_block').hide()
+      }
+    })
+    // if ($('#recurring_block').length) {
+    //   if ($('#id_event_type').val() == 'Recurring') {
+    //     $('#recurring_block').show()
+    //   }
+    //   else {
+    //     $('#recurring_block').hide()
+    //   }
+    // }
+
+  });
+
+  $('form#formid4').ajaxForm({
+    type: 'POST',
+    dataType: 'json',
+    url: ".",
+    data: $('#formid').serialize(),
+    success: function (data) {
+      if (data.error) {
+        $('.error').html('')
+        for (var key in data.errors) {
+          $('#id__' + key).html("<p>" + data.errors[key][0] + "</p>");
+        };
+        $('#submit_btn').removeAttr('disabled')
+      }
+      else {
+        window.location = data.success_url;
+      }
+    }
+  });
+  {% for message in messages %}
+  $(document).ready(function() {
+      $.notify("{{message}}", "{{ message.tags }}");
+  });
+  {% endfor %}
+</script>
+{% endblock js_block %}

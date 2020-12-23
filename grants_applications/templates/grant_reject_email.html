@@ -1,0 +1,13 @@
+{% extends 'root_email_template.html' %}
+
+{% block heading %}
+Dear {{ user }}
+{% endblock heading %}
+
+
+{% block content_body %}
+<p>Thank you for responding to the RUFORUM Call, <br>
+After double reviewing your proposal by external reviewers, we regret to inform you that your application did not go through. We however, encourage you to apply for subsequent calls.
+<br>Regards </p>
+<p>Grants Manager </p>
+{% endblock content_body %}

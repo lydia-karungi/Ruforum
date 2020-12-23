@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load paginate %}
+{% load thumbnail %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<style>
+  .form-group label{
+    font-weight: 800;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<!-- main_container starts here -->
+<div class="main_container">
+ 
+
+  <div class="col-md-12 col-lg-12 col-xl-12">
+    <div class="table_container_row row marl no-gutters">
+      <div class="col-md-12">
+
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open">
+           
+            <div class="card">
+                <div>
+                  <div id="toolbar">
+                    <span class="text-left ml-4">Review Grant Applications  - {% if show_pageitems %}
+                      {% show_pageitems %}{% else %}
+                      {{ grants_applications|length }}{% endif %}</span> <br>
+                      <div class="col-lg-12 text-right m-1">
+                      {% if request.user.role == "ADMIN" or request.user.is_superuser or perms.grants_applications.assign_grant_application_reviewers %}
+                      <span class="d-inline"><a class="btn btn-sm btn-info " href="{% url 'grants_applications:assign_reviewers'%}"><i class="fa fa-users"></i>
+                          Assign Reviewers</a></span>
+                          {% endif %}
+                          </div>
+                  </div>
+                
+                  <table
+                  data-toggle="table"
+                  data-show-columns-toggle-all="true"
+                  data-search="true"
+                  data-show-columns="true"
+                  data-show-export="true"
+                  data-click-to-select="true"
+                  data-minimum-count-columns="2"
+                  data-show-pagination-switch="true"
+                  data-pagination="true"
+                  data-id-field="id"
+                  data-export-types="[‘csv’,‘doc’, ‘excel’, ‘pdf’]"
+                  data-page-list="[10, 25, 50, 100, all]"
+                  >
+                    <thead>
+                      {% if grants_applications|length > 0 %}
+                      <tr class="text-center">
+                        <th>#</th>
+                        <th>Date</th>
+                        <th >Call ID</th>
+                        <th>Applicant</th>
+                        <th>Title</th>
+                        <th data-visible="false">Applicant's Gender</th>
+                        <th data-visible="false">Email</th>
+                        <th data-visible="false" >Country</th>
+                        <th data-visible="false">Commodity Focus</th>
+                        <th data-visible="false"> Highest qualification</th>
+                        <th data-visible="false">Total Budget</th>
+                        <th data-visible="false">Compliance Comments</th>
+          
+                        <th >Actions</th>
+                      </tr>
+                      {% endif %}
+                    </thead>
+                    <tbody>
+                      {% for application in grants_applications %}
+                      <tr class="text-center">
+                        <td scope="row">{{ forloop.counter }}</td>
+
+                        <td>{{ application.last_modified }}</td>
+                        <td>{{ application.call.call_id}}</td>
+                        <td>
+                            {{application.user}}
+                          </td>
+                        <td>
+                          {{application.proposal_title|truncatechars:50 }}
+                        </td>
+                        <td>
+                          {{application.get_gender_display}}
+                        </td>
+                   
+                        <td>
+                          {{application.email}}
+                        </td>
+                        <td>{{application.get_country_display}}</td>
+                        <td>{{application.call.commodity_focus.name }}</td>
+                        <td>{{application.highest_qualification}}</td>
+                        <th>{{application.total_budget}}</th>
+                        <th>{{application.compliance_comments}}</th>
+
+                        <td class="actions">
+
+                         
+                          <a href="{% url 'grants_applications:review_application' application.pk %}" class="btn btn-info edit btn-sm m-1" title="Review application"><i
+                            class="fas fa-check"></i></a>
+                         <a href="{% url 'grants_applications:view_application' application.pk %}" class="btn btn-info edit btn-sm" title="view application"><i
+                            class="fas fa-eye"></i></a>
+
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table
+                  >
+                </div>
+              
+  
+</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %}
+{% block js_block %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('.assigned_users').select2();
+    $('#id_tag').select2();
+    $(".filter_toggle").click(function () {
+      $(".list_filter_row").toggle();
+    });
+    var date = new Date();
+    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    $('#date_of_meeting').datetimepicker({
+      'format': 'YYYY-MM-DD',
+      minDate: today
+    })
+  });
+
+  search = "{{search}}"
+
+  if (search == 'True') {
+    $(".list_filter_row").show();
+  }
+
+  $("#close-tab").click(function (e) {
+    $("#tab_status").val('Closed')
+  })
+
+  $("#open-tab").click(function (e) {
+    $("#tab_status").val('Open')
+  })
+
+  tab_status = "{{tab_status}}"
+  if (tab_status == 'Closed') {
+    $("#close-tab").click()
+  } else {
+    $("#open-tab").click()
+  }
+
+
+
+  $("a[rel='page']").click(function (e) {
+    e.preventDefault();
+    $('#leads_filter').attr("action", $(this).attr("href"));
+    $('#leads_filter').submit();
+  });
+  function disabledelete(){
+    document.getElementById("deleteapp").disable=true;
+    alert("Application already submitted!");
+  }
+
+  //delete grant Application function
+//picked the id of the grant app and placed it in the data-id attribute if the url
+$('.delete').click(function () {
+   var item_di=$(this).attr("data-id");
+  // console.log(item_di);
+   $('#approval_delete_btn').click(function(){
+       var url="/grantapplications/"+item_di+"/delete/";
+     $.get(url, function (data) {
+        // hideSpinner();
+      window.location.reload();
+   });
+
+   });
+ });
+ {% for message in messages %}
+  $(document).ready(function() {
+      $.notify("{{message}}", "{{ message.tags }}");
+  });
+  {% endfor %}
+</script>
+{% endblock js_block %}

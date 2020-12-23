@@ -1,0 +1,12 @@
+{% extends 'root_email_template.html' %}
+
+
+
+{% block heading %}
+Hello {{ user.first_name }}
+{% endblock heading %}
+
+
+{% block content_body %}
+Your Grant Application for {{application.call}} call has been successfully received. Thank you.
+{% endblock content_body %}

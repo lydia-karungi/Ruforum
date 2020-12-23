@@ -1,0 +1,4 @@
+<option value="">----select-----</option>
+{% for subtheme in sub_themes %}
+<option value="{{ subtheme.pk }}">{{ subtheme.name }}</option>
+{% endfor %}

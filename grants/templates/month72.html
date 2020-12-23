@@ -1,0 +1,714 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+    {% block extralinks %}
+        {% load crispy_forms_tags %}
+        {% load comments %}
+        <link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+        <style>
+            .opacity_block {
+                opacity: 0.2;
+            }
+        </style>
+    {% endblock extralinks %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {% if request.user.role == "ADMIN" or request.user.role == "Grants Managers"  or request.user.is_superuser %}
+            <li class="breadcrumb-item"><a href="{% url 'grants:grants_reports' %}">Grant Reports</a></li>
+            {% else %}
+            <li class="breadcrumb-item"><a href="{% url 'PI:reports' %}">Grant Reports</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active">View</li>
+        </ol>
+    </nav>
+    <!-- CASE VIEW STARTS -->
+    <div class="main_container" id="maincontainer">
+    <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+    <div class="card">
+        <div class="card-body" id="datashow">
+            <div class="card-title text-right">
+                <h5>
+                    <span class="float-left title">Overview</span>
+                    <span class="" style="margin-top: 0px">
+                <div class="dropdown buttons_row">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+
+                    <li><a href="{% url 'grants_reports:edit_pi_36month_report' report.id %}">Edit</a></li>
+
+                  </ul>
+                </div>
+              </span>
+                </h5>
+            </div>
+            <div class="row marl">
+                <div class="col-md-9">
+                    <div class="bd-example">
+                        <address>
+                            <strong>Grant Title</strong><br/>
+                            {{ report.grant.title }}<br/>
+
+                        </address>
+
+                        <address>
+                            <strong>Grant ID</strong><br/>
+                            {{ report.grant.grant_id }}
+                        </address>
+                        <address>
+                            <strong>Report Due Date</strong><br/>
+                            {{ report.grant.month6_due_date }}
+                        </address>
+                        <address>
+                            <strong>Report submitted on</strong><br/>
+                            {{ report.last_submitted|date }}
+                        </address>
+                        <address>
+                            <strong>Status</strong><br />
+                            {{report.status}}
+                        </address>
+                        {% if report.status == 'Accepted' %}
+                        <address>
+                          <strong>Accepted on</strong><br />
+                          {{report.accepted_on|date}}
+                      </address>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bd-example">
+        <div id="accordion">
+          
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo"
+                                aria-expanded="false" aria-controls="collapseTwo">
+                            Student Information
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse hide" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="row marl">
+                            <div class="col-md-12">
+                                {% for studentreport in student_reports %}
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <div class="card-title">
+
+                                                {{ studentreport.student }}
+
+
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <dl>
+                                                <dt>
+                                                    student fulfilled the academic requirements for this period.
+                                                </dt>
+                                                <dd>
+                                                    {% if studentreport.done_academic_requirements == 2 %}
+                                                        Yes
+                                                    {% else %}
+                                                        No
+                                                    {% endif %}
+                                                </dd>
+                                                <dt>
+                                                    Student passed all courses registered for in this semester
+                                                </dt>
+                                                <dd>
+                                                    {% if studentreport.passed_second_courses == 2 %}
+                                                        Yes
+                                                    {% else %}
+                                                        No
+                                                    {% endif %}
+                                                </dd>
+                                                {% if studentreport.passed_second_courses == 3 %}
+                                                    <dt>
+                                                        How many retakes/additional courses does the student have to do
+                                                        for this period
+                                                    </dt>
+                                                    <dd>
+                                                        {% if studentreport.number_of_retakes %}
+                                                            {{ number_of_retakes }} courses
+                                                        {% else %}
+                                                            No Retakes
+                                                        {% endif %}
+                                                    </dd>
+                                                    <dt>
+                                                        Retake Registration Date
+                                                    </dt>
+                                                    <dd>
+                                                        {{ studentreport.retakes_registration_date }}
+                                                    </dd>
+                                                {% endif %}
+                                                <dt>
+                                                    Student developed and defended his/her proposal at department level
+                                                </dt>
+                                                <dd>
+                                                    {% if studentreport.defended_proposal == 2 %}
+                                                        Yes
+                                                    {% else %}
+                                                        No
+                                                    {% endif %}
+                                                </dd>
+                                                {% if studentreport.defended_proposal == 3 %}
+                                                    <dt>
+                                                        Reasons for the delays
+                                                    </dt>
+                                                    <dd>
+                                                        {{ studentreport.defended_proposal_delay_explanation }}
+                                                    </dd>
+                                                {% endif %}
+                                                <dt>
+                                                    Student Research Objectives
+                                                </dt>
+                                                <dd>
+                                                    {{ studentreport.research_objectives }}
+                                                </dd>
+                                                <dt>
+                                                    Student's research activities on schedule as planned
+                                                </dt>
+                                                <dd>
+                                                    {% if studentreport.progress_as_planned == 2 %}
+                                                        Yes
+                                                    {% else %}
+                                                        No
+                                                    {% endif %}
+                                                </dd>
+                                                <dt>
+                                                    Student's progress to date against each of his/her objectives
+                                                </dt>
+                                                <dd>
+                                                    {{ studentreport.research_progress }}
+                                                </dd>
+                                                <dt>
+                                                    Has student completed his/her thesis submission for external
+                                                    examination
+                                                </dt>
+                                                <dd>
+                                                    {% if studentreport.thesis_submission_external == 2 %}
+                                                        Yes
+                                                    {% else %}
+                                                        No
+                                                    {% endif %}
+                                                </dd>
+                                                <dt>
+                                                    Has student completed his/her thesis defense
+                                                </dt>
+                                                <dd>
+                                                    {% if studentreport.thesis_defense == 2 %}
+                                                        Yes
+                                                    {% else %}
+                                                        No
+                                                    {% endif %}
+                                                </dd>
+                                                <dt>
+                                                    Has student completed his/her thesis final submission
+                                                </dt>
+                                                <dd>
+                                                    {% if studentreport.thesis_submission == 2 %}
+                                                        Yes
+                                                    {% else %}
+                                                        No
+                                                    {% endif %}
+                                                </dd>
+                                                <dt>What is causing delays</dt>
+                                                <dd>{{ studentreport.submission_delay_explanation }}</dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                    <br clear="all">
+                                {% endfor %}
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree"
+                                aria-expanded="false" aria-controls="collapseThree">
+                            Project Progress
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseThree" class="collapse hide" aria-labelledby="headingThree" data-parent="#accordion">
+                    <div class="card-body">
+
+
+                        <dl>
+                            <dt>
+                                Principal investigator: {{ report.grant.pi }}</dt>
+                            <dt>
+                                Grant
+                            </dt>
+                            <dd>
+                                {{ report.grant }}
+                            </dd>
+                            <dt>
+                                How the students research objectives link to the project research objectives.
+                            </dt>
+                            <dd>
+                                {{ report.how_student_objectives_link_to_research_objectives }}
+                            </dd>
+                            <dt>
+                                Overall Project Research Objectives.
+                            </dt>
+                            <dd>
+                                {{ report.project_progress }}
+                            </dd>
+                            <dt>
+                                Overall Student Progress.
+                            </dt>
+                            <dd>
+                                {{ report.student_progress }}
+                            </dd>
+                            <dt>
+                                Overall Timeline for final Thesis Submission.
+                            </dt>
+                            <dd>
+                                {{ report.final_thesis_timeline }}
+                            </dd>
+                            <dt>
+                                Summary of the progress made towards achieving each of the project research objectives.
+                            </dt>
+                            <dd>
+                                {{ report.summary_progress }}
+                            </dd>
+                            <dt> Linkages to maintain and or initiate as part of the research in the remaining period.
+                            </dt>
+                            <dd>{{ report.linkages_for_next_12_months }}</dd>
+                            <dt>
+                                Field days organized.
+                            </dt>
+                            <dd>
+                                {{ report.field_days_organized }}
+                            </dd>
+                            <dt>
+                                Engaged any beneficiaries.
+                            </dt>
+                            <dd>
+                                {% if report.have_engaged_beneficiaries == 2 %}
+                                    Yes
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </dd>
+                            {% if report.have_engaged_beneficiaries == 2 %}
+                                <dt>
+                                    Beneficies groups engaged
+                                </dt>
+                                <dd>
+                                    <ul>
+                                        {% for beneficiery in report.beneficary_group.all %}
+                                            <li>
+                                                {{ beneficiery.text }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </dd>
+                                <dt>Number of Beneficies engaged</dt>
+                                <dd>
+                                    {{ report.male_participants }}
+                                </dd>
+                                <dt>Number of Male</dt>
+                                <dd>{{ report.male_participants }}</dd>
+                                <dt>Number of female</dt>
+                                <dd>{{ report.female_participants }}</dd>
+                                <dt>Participants' Attendence</dt>
+                                <dd>  {% if report.participants %}
+                                    <a href="{{ report.participants.url }}">attendence</a>
+                                {% endif %}</dd>
+                            {% endif %}
+                            <dt>RUFORUM students capacity gaps for completing their research successfully and how the PI
+                                plans to address them
+                            </dt>
+                            <dd>
+                                {{ report.student_capacity_gaps }}
+                            </dd>
+                            <dt>
+                                Teamwork and mentoring among the PI, co-supervisors, collaborators and students
+                            </dt>
+                            <dd>
+                                {{ report.teamwork_mentoring }}
+                            </dd>
+                            <dt>
+                                Problems and challenges encountered during project implementation
+                            </dt>
+                            <dd>
+                                {{ project.problems_and_challenges }}
+                            </dd>
+                            <dt>
+                                How the problems and challenges have been addressed
+                            </dt>
+                            <dd>{{ report.problems_and_challenges_solution }}</dd>
+                            <dt>
+                                Changes made to the original project implementation plan as a result of the challenges
+                                encountered
+                            </dt>
+                            <dd>
+                                {{ report.changes_made }}
+                            </dd>
+                            <dt>
+                                Need for a “no-cost extension"
+                            </dt>
+                            <dd>
+                                {% if report.no_cost_extension_required == 2 %}
+                                    Yes
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </dd>
+                            {% if report.no_cost_extension_required == 2 %}
+                                <dt>Justification for extension</dt>
+                                <dd>
+                                    {{ report.no_cost_extension_explained }}
+                                </dd>
+                            {% endif %}
+                            <dt>
+                                Project on schedule for completion on time
+                            </dt>
+                            <dd>
+                                {% if report.on_schedule == 2 %}
+                                    Yes
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </dd>
+                            {% if report.on_schedule == 3 %}
+                                <dt>
+                                    Challenges that are likely to affect project completion within the remaining period
+                                </dt>
+                                <dd>
+                                    {{ report.not_on_schedule_explanation }}
+                                </dd>
+                            {% endif %}
+                            <dt>
+                                Linkages established by the students and the research team to enhance the research and
+                                Research uptake
+                            </dt>
+                            <dd>{{ report.linkages_established }}</dd>
+                            <dt> How the findings of the research have been (or will be) applied along the uptake
+                                pathway
+                            </dt>
+                            <dd>{{ report.uptake_pathway }}</dd>
+                            <dt>Spill over benefits of the project to the various beneficiaries</dt>
+                            <dd>{{ report.unexpected_spillover }}</dd>
+                            <dt>Aspects of the research that can be developed into a plan for the students' Field
+                                Attachment Activities
+                            </dt>
+                            <dd>{{ report.research_to_students_field_attachment }}</dd>
+                            <dt>Strategies that will be undertaken in order to ensure sustainability or continuity of
+                                the research carried out after the project has ended
+                            </dt>
+                            <dd>{{ report.ensure_sustainability_strategies }}</dd>
+                            <dt>Audited 12 month financial report</dt>
+                            <dd>
+                                {% if report.audited_12_month_financial_report %}
+                                    <a href="{{ report.audited_12_month_financial_report.url }}" target="blank">audited
+                                        financial report</a>
+                                {% else %}
+                                    No financial report
+
+                                {% endif %}
+                            </dd>
+                            <dt>Request for funds for the Year</dt>
+                            <dd>
+                                {% if report.request_for_funds_for_year2 %}
+                                    <a href="{{ report.request_for_funds_for_year2.url }}">fund request</a>
+                                {% else %}
+                                    No request for fund
+
+                                {% endif %}
+                            </dd>
+                            <dt>
+                            Produced flyers / brochures / posters
+                            </dt>
+                            <dd>
+                              {% if report.flyers_brochures == 2 %}
+                                    Yes
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </dd>
+                            {% if report.flyers_brochures == 2 %}
+                            <dt>
+                              Samples of flyers / brochures / posters
+                            </dt>
+                            <dd>
+                              {% if report.flyers_brochures_upload %}
+                              <a href="{{ report.flyers_brochures_upload.url }}">Samples</a>
+                          {% else %}
+                              No sample
+
+                          {% endif %}
+                            </dd>
+                            {% endif %}
+                            <dt>Developed policy briefs</dt>
+                            <dd>
+                              {% if report.policy_briefs == 2 %}
+                              Yes
+                          {% else %}
+                              No
+                          {% endif %}
+                            </dd>
+                            {% if report.policy_briefs == 2 %}
+                            <dt>
+                              Samples of  policy briefs
+                            </dt>
+                            <dd>
+                              {% if report.policy_briefs_upload %}
+                              <a href="{{ report.policy_briefs_upload.url }}">Samples</a>
+                          {% else %}
+                              No sample
+
+                          {% endif %}
+                            </dd>
+                            {% endif %}
+                            <dt>
+                              Relevant pictures related to the research activities
+                            </dt>
+                            <dd>
+                                {% if project_images|length > 0 %}
+                                {% for picture in project_images %}
+                               <a href="{{picture.picture.url}}" target="blank">{{picture.picture}}</a>
+                                {% endfor %}
+                                {% else %}
+                                No Relevant pictures available
+                                {% endif %}
+                            </dd>
+                        </dl>
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
+                                aria-expanded="true" aria-controls="collapseOne">
+                            Feedback History
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                          <div class="row marl">
+                            <div class="col-md-12">
+                            {% get_comment_form for report as form %}
+                            <!-- A context variable called form is created with the necessary hidden
+                            fields, timestamps and security hashes -->
+                         
+                        {% if request.user.role == "ADMIN" or request.user.role == "Grants Managers"  or request.user.is_superuser %}
+                              <div class="row marl">
+                                <div class="col-md-12">
+                                  <form action="{% comment_form_target %}" method="POST">
+                                    {% csrf_token %}
+                                    {{ form.comment|as_crispy_field }}
+                                    {{ form.honeypot }}
+                                    {{ form.content_type }}
+                                    {{ form.object_pk }}
+                                    {{ form.timestamp }}
+                                    {{ form.security_hash }}
+                                    <input type="hidden" name="next" value="/grants/{{report.id}}/{{month}}/" />
+                                    <input type="submit"  class="btn btn-primary"  value="Add comment" id="id_submit" />
+                                    <a href="#" data-id="{{report.id}}" class="btn btn-info action accept" title="Accept" data-toggle="modal" data-target="#acceptReportmodel">Accept</a>
+                                    </form>
+                           
+                              
+                            </div> 
+                            </div>
+                            {% endif %}
+                            </div>
+                                  <div class="col-md-12">
+                                          {% get_comment_list for report as comment_list %}
+                                          {% for comment in comment_list %}
+                                          <p>
+                                            <b>{{comment.user.get_full_name}}</b> <br>
+                                            {{comment.comment}}<br>
+                                            <small>
+                                              {{comment.submit_date}}
+                                          
+                                           </small>
+                                        </p>
+                                         
+                                      {% endfor %}
+                                      
+                    </div>
+                    </div>
+                  </div>
+                  </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" id="headingFour">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour"
+                                aria-expanded="false" aria-controls="collapseFour">
+                            Display Only Information
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseFour" class="collapse hide" aria-labelledby="headingFour" data-parent="#accordion">
+                    <div class="card-body">
+                        <div class="row marl">
+                            <div class="col-md-10">
+                                <fieldset>
+                                    <h5>Grant Information</h5>
+                                    <dl>
+                                        <dt>Call</dt>
+                                        <dd>{{ report.grant.grant_application.call.call_id }}</dd>
+                                        <dt>Grant ID</dt>
+                                        <dd>{{ report.grant.grant_id }}</dd>
+                                        <dt>Title</dt>
+                                        <dd>{{ report.grant.title }}</dd>
+                                        <dt>Project objectives</dt>
+                                        <dd>{{ report.grant.project_objectives }}</dd>
+                                        <dt>Summary</dt>
+                                        <dd>{{ report.grant.summary }}</dd>
+                                        <dt>Budget</dt>
+                                        <dd>{{ report.grant.budget }}</dd>
+
+                                        <dt>Start date</dt>
+                                        <dd>{{ report.grant.start_date }}</dd>
+                                        <dt>End date</dt>
+                                        <dd>{{ report.grant.end_date }}</dd>
+                                        <dt>Theme</dt>
+                                        <dd>{{ report.grant.theme }}</dd>
+                                        <dt>Duration</dt>
+                                        <dd>{{ report.grant.duration }}</dd>
+                                        <dt>Pi</dt>
+                                        <dd>{{ report.grant.pi }}</dd>
+                                        <dt>Collaborators</dt>
+                                        <dd>{{ report.grant.collaborators }}</dd>
+                                        <dt>Keywords</dt>
+                                        <dd>{{ report.grant.keywords }}</dd>
+                                        <dt>Has reports</dt>
+                                        <dd>{{ report.grant.has_reports }}</dd>
+                                        <hr>
+                                    </dl>
+                                </fieldset>
+
+
+                                <h4>PI Information</h4>
+
+                                <dl>
+                                    <dt>Title</dt>
+                                    <dd>{{ report.grant.pi.title }}</dd>
+                                    <dt>Gender</dt>
+                                    <dd>{{ report.grant.pi.get_gender_display }}</dd>
+                                    <dt>First name</dt>
+                                    <dd>{{ report.grant.pi.first_name }}</dd>
+                                    <dt>Last name</dt>
+                                    <dd>{{ report.grant.pi.last_name }}</dd>
+                                    <dt>Country</dt>
+                                    <dd>{{ report.grant.pi.get_country_display }}</dd>
+                                    <dt>Nationality</dt>
+                                    <dd>{{ report.grant.pi.get_nationality_display }}</dd>
+                                    <dt>Job title</dt>
+                                    <dd>{{ report.grant.pi.job_title }}</dd>
+                                    <dt>Place of work</dt>
+                                    <dd>{{ report.grant.pi.institution }}</dd>
+                                    <dt>Area of specialisation</dt>
+                                    <dd>{{ report.grant.pi.area_of_specialisation }}</dd>
+                                    <dt>Business email</dt>
+                                    <dd>{{ report.grant.pi.business_email }}</dd>
+                                    <dt>Personal email</dt>
+                                    <dd>{{ report.grant.pi.personal_email }}</dd>
+                                    <dt>Home telephone</dt>
+                                    <dd>{{ report.grant.pi.home_telephone }}</dd>
+                                    <dt>Business telephone</dt>
+                                    <dd>{{ report.grant.pi.business_telephone }}</dd>
+                                    <dt>Mobile telephone</dt>
+                                    <dd>{{ report.grant.pi.mobile_telephone }}</dd>
+                                    <dt>Fax no</dt>
+                                    <dd>{{ report.grant.pi.fax_no }}</dd>
+                                    <dt>Home address</dt>
+                                    <dd>{{ report.grant.pi.home_address }}</dd>
+                                    <dt>Business address</dt>
+                                    <dd>{{ report.grant.pi.business_address }}</dd>
+                                </dl>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br clear="all">
+        </div>
+
+    </div>
+    <br clear="all">
+    
+<!-- Modal -->
+<div class="modal fade" id="acceptReportmodel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="exampleModalLabel">Accept Report</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+  
+          <P>Are you sure you want to accept this report?</P>
+  
+        </div>
+        <div class="modal-footer text-center">
+          <button type="button" class="btn btn-danger " data-dismiss="modal">Cancel</button>
+          <button type="button" id="accept_btn" class="btn btn-primary">Accept</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--end of model-->
+{% endblock %}
+{% block js_block %}
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script>
+<script type="text/javascript">
+
+  $(document).ready(function () {
+    $("#id_honeypot").hide();
+  });
+  
+  $('.accept').click(function () {
+     var item_di=$(this).attr("data-id");
+    // console.log(item_di);
+     $('#accept_btn').click(function(){
+         var url="/grants_reports/"+item_di+"/{{accept_url}}/";
+
+      //$('.edu_approve').hide();
+        //   showSpinner();
+       $.get(url, function (data) {
+          // hideSpinner();
+        window.location.reload();
+     });
+
+     });
+   });
+
+
+</script>
+{% endblock js_block %}

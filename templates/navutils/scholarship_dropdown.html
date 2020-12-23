@@ -1,0 +1,15 @@
+{% load navutils_tags %}
+
+<li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle scholarships"  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {% block node_label %}{% render_nested node.label %}{% endblock %}
+        </a>
+        {% if viewable_children %}
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                {% for child_node in viewable_children %}
+          <a class="dropdown-item" href="{% render_nested child_node.get_url %}"{% for attr, value in node.link_attrs.items %} {% render_nested attr %}="{% render_nested value %}"{% endfor %}>{% block chld_node_label %}{% render_nested child_node.label %}{% endblock %}</a>
+          {% endfor %}
+
+        </div>
+        {% endif %}
+      </li>

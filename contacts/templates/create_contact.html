@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% block breadcrumb %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css" />
+{% endblock %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'contacts:list' %}">Contacts</a></li>
+    <li class="breadcrumb-item active">{% if contact_obj %}Edit{% else %}Create{% endif %}</li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+
+<form id="formid" action='' method="POST" novalidate enctype="multipart/form-data">{% csrf_token %}
+  <div class="overview_form_block row  justify-content-center">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title text-center">
+            {% if contact_obj %}EDIT{% else %}ADD NEW{% endif %} CONTACT
+          </div>
+          </div>
+          <div class="card-body">
+          <div class="row mar1">
+
+
+        <!--  #  {% crispy user_form %}-->
+<div class="col-md-6">
+{{form.title|as_crispy_field}}
+</div>
+<div class="col-md-6">
+
+{{form.business_email|as_crispy_field}}
+</div>
+<div class="col-md-6">
+
+{{form.first_name|as_crispy_field}}
+</div>
+<div class="col-md-6">
+
+{{form.last_name|as_crispy_field}}
+</div>
+<div class="col-md-6">
+
+{{form.personal_email|as_crispy_field}}
+</div>
+<div class="col-md-6">
+ 
+{{form.home_address|as_crispy_field}}
+</div>
+<div class="col-md-6">
+ 
+{{form.business_address|as_crispy_field}}
+</div>
+<div class="col-md-6">
+
+{{form.country|as_crispy_field}}
+</div>
+<div class="col-md-6">
+
+{{form.nationality|as_crispy_field}}
+</div>
+<div class="col-md-6">
+{{form.gender|as_crispy_field}}
+</div>
+<div class="col-md-6">
+{{form.contact_type|as_crispy_field}}
+</div>
+<div class="col-md-6">
+
+{{form.passport_no|as_crispy_field}}
+</div>
+<div class="col-md-6">
+ 
+{{form.job_title|as_crispy_field}}
+</div>
+<div class="col-md-6">
+
+{{form.institution|as_crispy_field}}
+</div>
+<div class="col-md-6">
+{{form.area_of_specialisation|as_crispy_field}}
+</div>
+<div class="col-md-6">
+ 
+{{form.home_tel|as_crispy_field}}
+</div>
+
+<div class="col-md-6">
+
+  {{form.business_tel|as_crispy_field}}
+</div>
+<div class="col-md-6">
+ 
+  {{form.mobile|as_crispy_field}}
+</div>
+<div class="col-md-6">
+
+{{form.fax|as_crispy_field}}
+</div>
+<div class="col-md-6">
+
+{{form.skype_id|as_crispy_field}}
+</div>
+<div class="col-md-6">
+
+{{form.yahoo_messenger|as_crispy_field}}
+</div>
+<div class="col-md-6">
+
+{{form.msn_id|as_crispy_field}}
+</div>
+<div class="col-md-12">
+
+{{form.notes|as_crispy_field}}
+</div>
+<div class="col-md-6">
+
+{{form.picture|as_crispy_field}}
+</div>
+<div class="col-md-6">
+
+{{form.cv|as_crispy_field}}
+</div>
+
+
+                <div class="col-md-12 card-footer">
+
+                  <div class="form-actions marl text-center">
+                      <button class="btn btn-primary" type="submit" onclick="this.disabled=true,this.form.submit();" name="save">Save</button>
+                  </div>
+                </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- overview ends here -->
+</form>
+    
+<br clear="all">
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script>
+<script type="text/javascript">
+  // $(document).ready(function() {
+  //   $('.assigned_users').select2();
+  // });
+  $(document).ready(function () {
+    //$("#id_pi").select2();
+    $("#id_students").select2()
+    $("#id_teams").select2()
+    $("#id_assigned_to").change(function () {
+      $("#id_assigned_to").attr('name', 'assigned_to')
+    })
+  
+  });
+
+  {% for message in messages %}
+  $(document).ready(function() {
+      $.notify("{{message}}", "{{ message.tags }}");
+  });
+  {% endfor %}
+</script>
+
+{% endblock js_block %}

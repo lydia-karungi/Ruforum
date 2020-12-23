@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% load common_tags %}
+{% load humanize %}
+<!-- <a href=""><button class="btn btn-primary" type="button">Logout</button></a> -->
+<div class="row marl justify-content-center">
+  <div class="col-md-10">
+    <div class="card">
+      <div class="card-header">
+      <h3 class="text-center"><strong>Grants Reviewer Dashboard</strong> <br><b>Dear {{user.last_name}} {{user.first_name}}</b></h3>
+      <h5>Welcome to the Ruforum Grants review system, using this system you can review and submit
+        your reviews and also view your submitted reviews.For any enquiry, contact the grants Manager
+         <a href="mailto: cgs@ruforum.org"> here </a>
+      </h5>
+      </div>
+      </div>
+    <!-- count_blocks_row starts here -->
+    <div class="row count_blocks_row">
+        {% comment %}
+      <div class="col-md-3">
+        <div class="item sky_blue">
+          <a href="">
+            <div class="title">Contacts</div>
+            <div class="count">{{contacts_count|intcomma}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+      {% endcomment %}
+      <div class="col-md-4">
+        <div class="item green">
+          <a id="viewed_applications" href="{% url 'grants_applications:reviewed_list' %}">
+            <div class="title">Reviewed</div>
+            <div class="count">{{reviewed_grantapplications_count|intcomma}}</div>
+          </a>
+          <!-- <div class="more"><a href="#">Go Live</a></div> -->
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="item yellow">
+          <a id="view_applications" href="{% url 'grants_applications:review_list' %}">
+            <div class="title">Pending</div>
+            <div class="count">{{grantapplications_count|intcomma}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="item red">
+          <a href="#">
+            <div class="title">Total</div>
+            <div class="count">{{reviewed_grantapplications_count|intcomma|add:grantapplications_count|intcomma}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+
+    </div>
+</div>
+    <!-- count_blocks_row ends here -->
+    <div class="open_sections row">
+      <div class="col-md-10 offset-1 table_container_row">
+        <div class="card">
+          <div class="card-body">
+
+            <div id="review_list"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block js_block %}
+<script type="text/javascript">
+
+  $(document).ready(function () {
+    $(".tag_class_opp").click(function () {
+      // $(".tag_class_opp").css('cursor', 'pointer')
+      url = ""
+      url = url + "?tag=" + $(this).attr('data-link')
+      window.location.href = url;
+    });
+
+    $(".tag_class_acc").click(function () {
+      // $(".tag_class_acc").css('cursor', 'pointer')
+      url = ""
+      url = url + "?tag=" + $(this).attr('data-link')
+      window.location.href = url;
+    });
+
+  });
+  //load data when the viewed application card is clicked
+
+
+</script>
+{% endblock js_block %}

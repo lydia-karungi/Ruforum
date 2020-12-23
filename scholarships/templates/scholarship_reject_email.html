@@ -1,0 +1,13 @@
+{% extends 'root_email_template.html' %}
+
+{% block heading %}
+Dear {{ user }}
+{% endblock heading %}
+
+
+{% block content_body %}
+<p>Thank you for responding to the RUFORUM Call, <br>
+  {{ application.selected_for_funding_comments }}
+<br>Regards </p>
+<p>Scholarship Manager </p>
+{% endblock content_body %}

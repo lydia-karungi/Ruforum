@@ -1,0 +1,633 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block breadcrumb %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css" />
+{% endblock %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'calls:list' %}">Calls</a></li>
+    <li class="breadcrumb-item active">{% if call_obj %}Edit{% else %}Create{% endif %}</li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+<form id="formid" action='' method="POST" novalidate enctype="multipart/form-data">{% csrf_token %}
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title text-center">
+            {% if call_obj %}EDIT{% else %}CREATE{% endif %} SCHOLARSHIP APPLICATION
+          </div>
+          <fieldset class="form-group">
+              <legend class="mx-3">Personal Information</legend>
+          <div class="row marl">
+            <div class="col-md-4">
+
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Gender
+                    {% if profile_form.gender.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ profile_form.gender}}
+                  <span class="error" id="id__gender">{{ profile_form.gender.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Last Name
+                    {% if profile_form.last_name.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ profile_form.last_name}}
+                  <span class="error" id="id__last_name">{{ profile_form.last_name.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">First Name
+                    {% if profile_form.first_name.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ profile_form.first_name}}
+                  <span class="error" id="id__first_name">{{ profile_form.first_name.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                  <div class="form-group ">
+                    <label for="exampleInputEmail1" class="required">Nationality{% if profile_form.nationality.field.required %}<span
+                        class="error_marker" style="color:red">*</span>{% endif %}</label>
+                    {{ profile_form.nationality }}
+                    <span class="error" id="id__nationality">{{ form.profile_nationality.errors }}</span>
+                  </div>
+                </div>
+
+
+            </div>
+
+            <div class="col-md-4">
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Marital Status
+                    {% if other_form.marital_status.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ other_form.marital_status}}
+                  <span class="error" id="id__department">{{ other_form.marital_status.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col billing_block col-md-12" style="padding: 0px;">
+                <div class="filter_col col-md-12">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" class="required">Date of Birth
+                      {% if other_form.date_of_birth.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ other_form.date_of_birth }}
+                    <span class="error" id="id__country">{{ other_form.date_of_birth.errors }}</span>
+                  </div>
+                </div>
+
+
+
+                <div class="filter_col col-md-12">
+                  <div class="form-group ">
+                    <label for="exampleInputEmail1" class="required">Business Email{% if profile_form.business_email.field.required %}<span
+                        class="error_marker" style="color:red">*</span>{% endif %}</label>
+                    {{ profile_form.business_email }}
+                    <span class="error" id="id__business_email">{{ profile_form.business_email.errors }}</span>
+                  </div>
+                </div>
+                <div class="filter_col col-md-12">
+                    <div class="form-group ">
+                      <label for="exampleInputEmail1" class="required">English Level{% if other_form.english_vel.field.required %}<span
+                          class="error_marker" style="color:red">*</span>{% endif %}</label>
+                      {{ other_form.english_level }}
+                      <span class="error" id="id__english_level">{{ other_form.english_level.errors }}</span>
+                    </div>
+                  </div>
+
+                <div class="filter_col billing_block col-md-12" style="padding: 0px;">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+
+
+
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Mobile telephone
+                  {% if profile_form.mobile.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ profile_form.mobile }}
+                  <span class="error" id="id__mobile">{{ profile_form.mobile.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Business telephone
+                    {% if profile_form.business_tel.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ profile_form.business_tel }}
+                  <span class="error" id="id__business_tel">{{ profile_form.business_tel.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                <div class="form-group ">
+                  <label for="id_contacts" class="required">Business address{% if profile_form.business_address.field.required %}<span
+                      class="error_marker" style="color:red">*</span>{% endif %}</label>
+                  {{ profile_form.business_address }}
+                  <span class="error" id="id__business_address">{{ profile_form.business_address.errors }}</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          </fieldset>
+          <fieldset class="form-group">
+              <legend class="mx-3">Application Info</legend>
+          <div class="row marl">
+            <div class="col-md-4">
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Call
+                    {% if form.call.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ form.call}}
+                  <span class="error" id="id_call">{{ form.call.errors }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+                <div class="filter_col col-md-12">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1" class="required">Course Type
+                        {% if other_form.phd_application.field.required %}<span class="error_marker"
+                          style="color:red">*</span>{% endif %}</label>
+                      {{ other_form.phd_application}}
+                      <span class="error" id="id__phd_application">{{ other_form.phd_application.errors }}</span>
+                    </div>
+                  </div>
+
+
+            </div>
+            <div class="col-md-4">
+
+                <div class="filter_col col-md-12">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1" class="required">Name of University
+                        {% if other_form.name_of_university.field.required %}<span class="error_marker"
+                          style="color:red">*</span>{% endif %}</label>
+                      {{ other_form.name_of_university }}
+                      <span class="error" id="id__name_of_university">{{ other_form.name_of_university.errors }}</span>
+                    </div>
+                  </div>
+                  <div class="filter_col col-md-12">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1" class="required">Programme applied for
+                          {% if other_form.programme_applied_for.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                        {{ other_form.programme_applied_for }}
+                        <span class="error" id="id_programme_applied_for">{{ other_form.programme_applied_for.errors }}</span>
+                      </div>
+                    </div>
+
+            </div>
+          </div>
+          </fieldset>
+          <fieldset class="form-group">
+              <legend class="mx-3">Education Info</legend>
+          <div class="row marl">
+          <div class="col-md-12">
+
+
+                  <table id='educationTable' class="table">
+                      {{ education_formset.management_form }}
+
+                      {% for form in education_formset.forms %}
+                          {% if forloop.first %}
+                              <thead>
+                              <tr>
+                                  {% for field in form.visible_fields %}
+                                      <th>{{ field.label|capfirst }}</th>
+                                  {% endfor %}
+                              </tr>
+                              </thead>
+                          {% endif %}
+                          <tr class="formset_row">
+                              {% for field in form.visible_fields %}
+                                  <td>
+                                      {# Include the hidden fields in the form #}
+                                      {% if forloop.first %}
+                                          {% for hidden in form.hidden_fields %}
+                                              {{ hidden }}
+                                          {% endfor %}
+                                      {% endif %}
+                                      {{ field.errors.as_ul }}
+                                      {{ field }}
+                                  </td>
+                              {% endfor %}
+                          </tr>
+                      {% endfor %}
+                  </table>
+
+          </div>
+        </div>
+        </fieldset>
+
+        <fieldset class="form-group">
+            <legend class="mx-3">Publications and Research Projects</legend>
+        <div class="row marl">
+
+          <div class="col-md-4">
+
+            <div class="col-md-10">
+
+
+                    <table id='researchTable' class="table">
+                        {{ research_formset.management_form }}
+
+                        {% for form in research_formset.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    {% for field in form.visible_fields %}
+                                        <th>{{ field.label|capfirst }}</th>
+                                    {% endfor %}
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="formset_row">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields in the form #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+            </div>
+        </div>
+        </fieldset>
+
+
+        <fieldset class="form-group">
+            <legend class="mx-3">Employment History Info</legend>
+        <div class="row marl">
+        <div class="col-md-12">
+
+
+                <table id='employmentTable' class="table">
+                    {{ employment_formset.management_form }}
+
+                    {% for form in employment_formset.forms %}
+                        {% if forloop.first %}
+                            <thead>
+                            <tr>
+                                {% for field in form.visible_fields %}
+                                    <th>{{ field.label|capfirst }}</th>
+                                {% endfor %}
+                            </tr>
+                            </thead>
+                        {% endif %}
+                        <tr class="formset_row">
+                            {% for field in form.visible_fields %}
+                                <td>
+                                    {# Include the hidden fields in the form #}
+                                    {% if forloop.first %}
+                                        {% for hidden in form.hidden_fields %}
+                                            {{ hidden }}
+                                        {% endfor %}
+                                    {% endif %}
+                                    {{ field.errors.as_ul }}
+                                    {{ field }}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+
+        </div>
+      </div>
+      </fieldset>
+
+      <fieldset class="form-group">
+          <legend class="mx-3">Other Academic Qualifications</legend>
+      <div class="row marl">
+        <div class="col-md-4">
+          <div class="filter_col col-md-12">
+            <div class="form-group">
+              <label for="exampleInputEmail1" class="required">Plans after completion
+                {% if other_form.plans_after_completion.field.required %}<span class="error_marker"
+                  style="color:red">*</span>{% endif %}</label>
+              {{ other_form.plans_after_completion}}
+              <span class="error" id="id_plans_after_completion">{{ other_form.plans_after_completion.errors }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+            <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Scientific Positions
+                    {% if other_form.scientific_positions.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ other_form.scientific_positions}}
+                  <span class="error" id="id__scientific_positions">{{ other_form.scientific_positions.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" class="required">Research Location
+                      {% if other_form.research_location.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ other_form.research_location}}
+                    <span class="error" id="id__research_location">{{ other_form.research_location.errors }}</span>
+                  </div>
+                </div>
+
+        </div>
+        <div class="col-md-4">
+
+            <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Research Experience
+                    {% if other_form.research_experience.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ other_form.research_experience }}
+                  <span class="error" id="id__research_experience">{{ other_form.research_experience.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" class="required">Conferences Attended
+                      {% if other_form.conferences_attended.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ other_form.conferences_attended }}
+                    <span class="error" id="id_conferences_attended">{{ other_form.conferences_attended.errors }}</span>
+                  </div>
+                </div>
+
+        </div>
+      </div>
+      </fieldset>
+
+      <fieldset class="form-group">
+          <legend class="mx-3">Accomodation</legend>
+      <div class="row marl">
+        <div class="col-md-4">
+          <div class="filter_col col-md-12">
+            <div class="form-group">
+              <label for="exampleInputEmail1" class="required">Accomodation Requirements
+                {% if other_form.accommodation_required.field.required %}<span class="error_marker"
+                  style="color:red">*</span>{% endif %}</label>
+              {{ other_form.accommodation_required}}
+              <span class="error" id="id_accommodation_required">{{ other_form.accommodation_required.errors }}</span>
+            </div>
+          </div>
+          <div class="filter_col col-md-12">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="required">Accomodation Reasons
+                  {% if other_form.accommodation_reasons.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+                {{ other_form.accommodation_reasons}}
+                <span class="error" id="id_accommodation_reasons">{{ other_form.accommodation_reasons.errors }}</span>
+              </div>
+            </div>
+        </div>
+      </div>
+      </fieldset>
+      <fieldset class="form-group">
+          <legend class="mx-3">Referees</legend>
+      <div class="row marl">
+        <div class="col-md-4">
+          <div class="filter_col col-md-12">
+            <div class="form-group">
+              <label for="exampleInputEmail1" class="required">Referees names and contacts
+                {% if other_form.referees_names_and_contacts.field.required %}<span class="error_marker"
+                  style="color:red">*</span>{% endif %}</label>
+              {{ other_form.referees_names_and_contacts}}
+              <span class="error" id="id_referees_names_and_contacts">{{ other_form.referees_names_and_contacts.errors }}</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      </fieldset>
+
+      <fieldset class="form-group">
+          <legend class="mx-3"></legend>
+      <div class="row marl">
+        <div class="col-md-4">
+          <div class="filter_col col-md-12">
+            <div class="form-group">
+              <label for="exampleInputEmail1" class="required">Birth certificate
+                {% if other_form.birth_certificate.field.required %}<span class="error_marker"
+                  style="color:red">*</span>{% endif %}</label>
+              {{ other_form.birth_certificate}}
+              <span class="error" id="id_birth_certificate">{{ other_form.birth_certificate.errors }}</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-md-4">
+            <div class="filter_col col-md-12">
+              <div class="form-group">
+                <label for="exampleInputEmail1" class="required">Research concept note
+                  {% if other_form.research_concept_note.field.required %}<span class="error_marker"
+                    style="color:red">*</span>{% endif %}</label>
+                {{ other_form.research_concept_note}}
+                <span class="error" id="id_research_concept_note">{{ other_form.research_concept_note.errors }}</span>
+              </div>
+            </div>
+
+          </div>
+      </div>
+      </fieldset>
+
+      <fieldset class="form-group">
+          <legend class="mx-3">Transcripts</legend>
+      <div class="row marl">
+      <div class="col-md-12">
+
+
+              <table id='transcriptTable' class="table">
+                  {{ transcript_formset.management_form }}
+
+                  {% for form in transcript_formset.forms %}
+                      {% if forloop.first %}
+                          <thead>
+                          <tr>
+                              {% for field in form.visible_fields %}
+                                  <th>{{ field.label|capfirst }}</th>
+                              {% endfor %}
+                          </tr>
+                          </thead>
+                      {% endif %}
+                      <tr class="formset_row">
+                          {% for field in form.visible_fields %}
+                              <td>
+                                  {# Include the hidden fields in the form #}
+                                  {% if forloop.first %}
+                                      {% for hidden in form.hidden_fields %}
+                                          {{ hidden }}
+                                      {% endfor %}
+                                  {% endif %}
+                                  {{ field.errors.as_ul }}
+                                  {{ field }}
+                              </td>
+                          {% endfor %}
+                      </tr>
+                  {% endfor %}
+              </table>
+
+      </div>
+    </div>
+    </fieldset>
+
+    <fieldset class="form-group">
+        <legend class="mx-3">Reference Letters</legend>
+    <div class="row marl">
+    <div class="col-md-12">
+
+
+            <table id='refereeTable' class="table">
+                {{ referee_formset.management_form }}
+
+                {% for form in referee_formset.forms %}
+                    {% if forloop.first %}
+                        <thead>
+                        <tr>
+                            {% for field in form.visible_fields %}
+                                <th>{{ field.label|capfirst }}</th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                    {% endif %}
+                    <tr class="formset_row">
+                        {% for field in form.visible_fields %}
+                            <td>
+                                {# Include the hidden fields in the form #}
+                                {% if forloop.first %}
+                                    {% for hidden in form.hidden_fields %}
+                                        {{ hidden }}
+                                    {% endfor %}
+                                {% endif %}
+                                {{ field.errors.as_ul }}
+                                {{ field }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+
+    </div>
+  </div>
+  </fieldset>
+          <div class="col-md-12">
+            <div class="col-md-12">
+              <div class="row marl buttons_row form_btn_row text-center">
+                <button class="btn btn-default save" type="submit">Save</button>
+                <a href="{% url 'scholarships:list' %}" class="btn btn-default clear"
+                  id="create_user_cancel">Cancel</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <input type="hidden" id="save_new_form" name="savenewform"> -->
+  </div>
+  <!-- overview ends here -->
+</form>
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script>
+<script type="text/javascript">
+
+  // $(document).ready(function() {
+  //   $('.assigned_users').select2();
+  // });
+  $(document).ready(function () {
+
+    $('#recurring_block').hide()
+    $("#id_contacts").select2();
+    $("#id_assigned_to").select2();
+    $("#id_teams").select2();
+    $("#id_start_date").css('color', 'black');
+    $("#id_end_date").css('color', 'black');
+    var date = new Date();
+    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    $('.date').datetimepicker({
+      'format': 'YYYY-MM-DD',
+      minDate: today
+    })
+
+    if ($('#id_call_type').val() == 'Recurring') {
+      $('#recurring_block').show()
+    }
+    else {
+      $('#recurring_block').hide()
+    }
+
+    $('#id_call_type').on('change', function () {
+      // console.log($(this).val())
+      if ($(this).val() == 'Recurring') {
+        $('#recurring_block').show()
+      }
+      else {
+        $('#recurring_block').hide()
+      }
+    })
+
+
+  });
+
+</script>
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+<script type="text/javascript">
+    $('#educationTable .formset_row').formset({
+        addText: 'add education',
+        deleteText: 'remove',
+        prefix: 'education_set'
+    });
+    $('#employmentTable .formset_row').formset({
+        addText: 'add employment',
+        deleteText: 'remove',
+        prefix: 'employment_set'
+    });
+    $('#researchTable .formset_row').formset({
+        addText: 'add Research/Publication',
+        deleteText: 'remove',
+        prefix: 'research_set'
+    });
+    $('#transcriptTable .formset_row').formset({
+        addText: 'add transcript',
+        deleteText: 'remove',
+        prefix: 'transcript_set'
+    });
+    $('#refereeTable .formset_row').formset({
+        addText: 'add referee letter',
+        deleteText: 'remove',
+        prefix: 'referee_set'
+    });
+    {% for message in messages %}
+  $(document).ready(function() {
+      $.notify("{{message}}", "{{ message.tags }}");
+  });
+  {% endfor %}
+</script>
+{% endblock js_block %}

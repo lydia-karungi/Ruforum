@@ -1,0 +1,36 @@
+{% extends 'root_email_template.html' %}
+
+
+{% block content_body %}
+<b>Dear Validator {{ user.first_name }} {{user.last_name}} </b><br >
+Greetings from RUFORUM Secretariat<br>
+RUFORUM is inviting you to validate scholarship applications submitted by:
+{% for application in applications %}
+<table>
+    <tbody>
+<tr>
+<td>
+    {{ forloop.counter }}. {{application.user}}
+</td>
+</tr>
+    </tbody>
+
+</table>
+{% endfor %}
+
+
+
+Your efforts are much appreciated.<br>
+
+Best Regards<br>
+
+Grants manager <br>
+{% endblock content_body %}
+
+{% block button_link %}
+<div style="margin-bottom:20px">
+    <a href="http://{{ domain }}{% url 'scholarships:list' %}"
+        style="display:inline-block;width:170px;background:#38abdd;padding:10px;text-align:center;color:#fff;font-size:1rem;font-weight:600;margin:0px auto;margin-bottom:20px;border-radius:5px;text-decoration:none;display:block">click
+        here</a>
+</div>
+{% endblock button_link %}

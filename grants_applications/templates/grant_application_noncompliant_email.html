@@ -1,0 +1,15 @@
+{% extends 'root_email_template.html' %}
+
+{% block heading %}
+Dear {{ application.user }}
+{% endblock heading %}
+
+
+{% block content_body %}
+<p>Thank you for responding to the RUFORUM Call. <br>
+With regret, I inform you that your application did not meet the compliance criteria
+after a compliance check. We understand that this may come as a disappointment but encourage you
+ to apply for subsequent calls.</p>
+<p>Best Regards </p>
+<p>Grants Manager </p>
+{% endblock content_body %}

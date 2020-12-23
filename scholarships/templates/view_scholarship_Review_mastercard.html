@@ -1,0 +1,593 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% block extralinks %}
+{% load crispy_forms_tags %}
+{% load common_tags %}
+
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'scholarships:list' %}">Scholarships</a></li>
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">Overview</span>
+              <span class="" style="margin-top: 0px">
+
+                <div class="dropdown buttons_row">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    {% if request.user.role == "ADMIN" or request.user.role == "Grants Managers"  or request.user.is_superuser %}
+                    <li><a href="{% url 'scholarships:edit_scholarship' application_record.pk %}">Edit</a></li>
+                    {% endif %}
+                    <li><a class="dropdown-item" href="{% url 'scholarships:print_scholarship' application_record.id %}"
+                      target="blank">print</a></li>
+                  </ul>
+                </div>
+
+              </span>
+            </h5>
+          </div>
+          </div>
+          <div class="card-body" id="datashow">
+            <div class="row marl">
+                <div class="col-md-9">
+                <h4 class="text-center">{{application_record.last_name}}, {{application_record.first_name}}'s application details</h4>
+                <dl>
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="col-auto">
+                        <div class="avatar-wrapper" data-tippy-placement="bottom" title="Passport Photo">
+                          {% if application_record.passport_photo %}
+                          <img alt="Passport Photo" class="profile-pic" src="{{application_record.passport_photo.url}}" />
+                          {% else %}
+                            <img alt="" class="profile-pic" src="{% static 'images/user.png'%}"/>
+                            {% endif %}
+                            <div class="upload-button"></div>
+
+                        </div>
+                    </div>
+                  </div>
+                    <div class="col-md-9">
+                      <h4>Bio data</h4>
+                      <b>Last Name:</b>{{application_record.last_name}}<br>
+                      <b>First Name:</b>{{application_record.first_name}}<br>
+                      <b>Other Names:</b>{{application_record.other_names}}<br>
+                      <b>Nationality:</b> {{application_record.mastercardscholarshipapplication.get_country_of_residence_display}}<br>
+                      <b>Gender:</b> {{application_record.get_gender_display}}<br>
+                      <!--<b>Marital Status:</b> {{application_record.get_marital_status_display}}<br>-->
+                      <h4>Place of birth</h4>
+                      <b>Date Of Birth:</b> {{application_record.date_of_birth}}<br>
+                      <b>Village of Birth:</b>{{application_record.mastercardscholarshipapplication.village_of_birth }}<br>
+                      <b>District of Birth:</b>{{application_record.mastercardscholarshipapplication.district_of_birth}}<br>
+                      <b>Country of Birth:</b> {{application_record.mastercardscholarshipapplication.get_country_of_birth_display}}<br>
+
+                        <h4>Residence contact address</h4>
+                        <b>Village of residence:</b> {{application_record.mastercardscholarshipapplication.village_of_residence}}<br>
+                        <b>District of residence:</b> {{application_record.mastercardscholarshipapplication.district_of_residence}}<br>
+                        <b>Country of residence:</b> {{application_record.mastercardscholarshipapplication.get_country_of_residence_display}}<br>
+                        <b>Nearest major road:</b> {{application_record.mastercardscholarshipapplication.nearest_major_road}}<br>
+                        <b>Sketch Map:</b>
+                        {% if application_record.mastercardscholarshipapplication.sketch_map%}
+                          <a href="{{application_record.mastercardscholarshipapplication.sketch_map.url}}">{{application_record.mastercardscholarshipapplication.sketch_map}}<br></a>
+                        {% else %}
+                        No sketch map attached
+                          {% endif %}
+                        <b>Telephone contact:</b> {{application_record.mastercardscholarshipapplication.telephone_contacts}}<br>
+
+                        <!--<b> Email:</b> {{application_record.otherscholarshipapplication.contact_email}}<br>
+                          <b>Residence contact address:</b> {{application_record.otherscholarshipapplication.residence_contact_address}}<br> -->
+                         <b> Telephone owner:</b>  {{application_record.mastercardscholarshipapplication.telephone_owner}}<br>
+                          <!--end of applicant's data-->
+                          <h4>Family Background and History</h4>
+                          {% if family_backgrounds|length > 0 %}
+                          {% for row in family_backgrounds %}
+                          <div>
+                              <dt>{{ parents|get_at_index:forloop.counter0 }}</dt>
+                              <b>Full Name:</b>
+                              {{row.full_name}}<br>
+                              <b>Status:</b>
+                              {{row.status}}
+                              {%if row.status == "deceased"%}
+                              <b>Date of Death:</b>
+                              {{row.date_of_death}}<br>
+                              <b>Death Certificate:</b>
+                              {%endif%}
+                              <a href="{{application_record.family_backgrounds.death_certificate}}.url">
+                              {{row.death_certificate}}</a> <br>
+                              <b>Disability:</b>
+                              {{row.disability}}<br>
+                              <b>Occupation:</b>
+                              {{row.occupation}}<br>
+                              <b>Organisation:</b>
+                              {{row.organisation}}<br>
+                              <b>Gross annual income:</b>
+                              {{row.gross_annual_income}}<br>
+
+
+                        </div>
+                              {% endfor %}
+                              {% else %}
+                              {% endif %}
+
+                          <b> Name of guardian or spouse:</b>  {{application_record.mastercardscholarshipapplication.name_of_guardian_or_spouse}}<br>
+                          <b> Guardian / spouse phone:</b>  {{application_record.mastercardscholarshipapplication.guardian_or_spouse_phone}}<br>
+                          <b>Guardian relationship: </b>  {{application_record.mastercardscholarshipapplication.guardian_relationship}}<br>
+                          <b>Guardian or spouse occupation: </b>  {{application_record.mastercardscholarshipapplication.guardian_occupation}}<br>
+                          <b>Number of siblings: </b>  {{application_record.mastercardscholarshipapplication.number_of_siblings}}<br>
+                          <br>
+
+                              <h4>Education Background</h4>
+                              <b>Primary level:</b>
+                              {% if application_record.mastercardscholarshipapplication.primary_certificate %}
+                                <a href="{{application_record.mastercardscholarshipapplication.primary_certificate.url}}">{{application_record.mastercardscholarshipapplication.primary_certificate}}<br></a>
+                              {% else %}
+                              No primary certificate attached
+                                {% endif %}
+
+                                <b>Secondary level:</b>
+                                {% if application_record.mastercardscholarshipapplication.secondary_certificate %}
+                                <a href="{{application_record.mastercardscholarshipapplication.secondary_certificate.url}}">{{application_record.mastercardscholarshipapplication.secondary_certificate}}<br></a>
+                              {% else %}
+                              No secondary certificate attached
+                                {% endif %}
+
+                                <b>Tertiary level:</b>
+                                {% if application_record.mastercardscholarshipapplication.tertiary_certificate %}
+                                <a href="{{application_record.mastercardscholarshipapplication.tertiary_certificate.url}}">{{application_record.mastercardscholarshipapplication.tertiary_certificate}}<br></a>
+                              {% else %}
+                              No tertiary certificate attached
+                                {% endif %}
+                                <br>
+                                <b>University level:</b>
+                                {% if application_record.mastercardscholarshipapplication.university_certificate %}
+                                <a href="{{application_record.mastercardscholarshipapplication.university_certificate.url}}">{{application_record.mastercardscholarshipapplication.university_certificate}}<br></a>
+                              {% else %}
+                              No university certificate attached
+                                {% endif %}
+
+                                <h4>Publications and Research Projects</h4>
+                                {% for row in publications %}
+                               <br>
+                              <dt>Research project: {{ forloop.counter }}</dt>
+                              <b>Level:</b>
+                              {{row.code}}<br>
+                              <b>Title:</b>
+                              {{row.title}}<br>
+                              <b>Description:</b>
+                              {{row.description}}<br>
+                              {% endfor %}
+
+
+                              <h4>Family associated Information</h4>
+                              {% for row in Household_incomesource %}
+
+                              <dt>Household Income source: {{ forloop.counter }}</dt>
+                              <b>Source:</b>
+                              {{row.source}}<br>
+                              <b>Amount:</b>
+                              {{row.amount}}<br>
+                              {% endfor %}
+
+
+
+
+                              <b>Most Significant contribution:    </b>
+                                {% for row in application_record.mastercardscholarshipapplication.income_contrib3efc.all %}
+                                {{row}}
+                                {% endfor %}<br>
+                                <b>Does your household own livestock:</b>
+                               {{application_record.mastercardscholarshipapplication.own_livestock|yesno:"Yes,No"}} <br>
+                               {% if own_livestock %}
+                               {{application_record.mastercardscholarshipapplication.number_of_donkeys}} <br>
+                               {{application_record.mastercardscholarshipapplication.number_of_camels}} <br>
+                               {{application_record.mastercardscholarshipapplication.number_of_cattle}} <br>
+                               {{application_record.mastercardscholarshipapplication.number_of_chickens}} <br>
+                               {{application_record.mastercardscholarshipapplication.number_of_goats}} <br>
+                               {{application_record.mastercardscholarshipapplication.number_of_sheep}} <br>
+                               {% endif %}
+
+                               <b>Is your family house connected to electricity?</b>
+                               {{application_record.mastercardscholarshipapplication.electricity|yesno:"Yes,No"}} <br>
+                               <b>What type of toilet do you have? </b>
+                               {{application_record.mastercardscholarshipapplication.toilet_type|yesno:"flush and pour,vip, covered pit, uncovered pit, composting, none, ecosan"}} <br>
+                               <b>How many people share this toilet?</b>
+                               {{application_record.mastercardscholarshipapplication.how_many_share_toilet}}<br>
+                               <b>What is your major water source for household use?</b>
+                               {{application_record.mastercardscholarshipapplication.water_source}} <br>
+                               <b>Other water source:</b>
+                               {{application_record.mastercardscholarshipapplication.other_water_source}} <br>
+                               <b>Distance to the water source(kM):</b>
+                               {{application_record.mastercardscholarshipapplication.distance_to_the_source}}<br>
+
+
+
+                               <br>
+                             <b> What are your current sources of income? Rank them in order of importance</b>
+                             {{application_record.mastercardscholarshipapplication.income_source_1}}<br>
+                             {{application_record.mastercardscholarshipapplication.income_source_2}}</br>
+                             {{application_record.mastercardscholarshipapplication.income_source_3}}</br>
+                             {{application_record.mastercardscholarshipapplication.income_source_4}}<br>
+                              <b>  Number of people living in the house</b>
+                            >{{application_record.mastercardscholarshipapplication.people_in_house}}<br>
+                              <b>After high school, did you ever have any pending school fees balances?</b>
+                               {{application_record.mastercardscholarshipapplication.pending_high_school_balances|yesno:"Yes,No"}} <br>
+                               <b>School balances:</b>
+                               {{application_record.mastercardscholarshipapplication.school_balances}} <br>
+                             <h4> Leadership experience and participation in community activities</h4>
+                             <b>Have you held any leadership position in your life time?</b>
+                              {{application_record.mastercardscholarshipapplication.held_leadership_position|yesno:"Yes,No"}} <br>
+
+                             {% if Leadership_positions.length > 0 %}
+                             {% for row in Leadership_positions %}
+  <br>
+                                 <b>Position: {{ forloop.counter }}</b>
+                                 <b>Leadership position:</b>
+                                 {{row.position}}<br>
+                                 <b>Group:</b>
+                                 {{row.group}}<br>
+
+                                 <b>Year:</b>
+                                 {{row.year}}<br>
+
+                                 {% if application_record.mastercardscholarshipapplication.certificate %}
+                                 <a href="{{application_record.mastercardscholarshipapplication.certificate.url}}">{{application_record.mastercardscholarshipapplication.certificate}}<br></a>
+                               {% else %}
+                               No certificate attached
+                                 {% endif %}
+                                 {% endfor %}
+                                 {% endif %}
+
+                            <b>Using concrete examples, briefly describe your experience in relation to agriculture, livestock, and natural resources.</b>
+                               {{application_record.mastercardscholarshipapplication.experience}}</br>
+                               <b>What is the most important challenge or problem that you have faced in your life, and how did you overcome or solve it</b>
+                               {{application_record.mastercardscholarshipapplication.challenge}} <br>
+                               <b>Please rank in order of preference the first three sectors you would like to work in the most.</b>
+                               <b>Sector 1</b>
+                               {{application_record.mastercardscholarshipapplication.sector_1}}</br>
+                               <b>Sector 2</b>
+                               {{application_record.mastercardscholarshipapplication.sector_2}} <br>
+                               <b>Sector 3</b>
+                               {{application_record.mastercardscholarshipapplication.sector_3}}<br>
+
+                               <h4>Work Experience (to be filled by Postgraduate and Masters Applicants Only)</h4>
+
+
+                             {% if work_experiences.length > 0 %}
+                             {% for row in work_experiences %}
+  <br>
+                                 <dt>Position: {{ forloop.counter }}</dt>
+                                 <b>Organisation:</b>
+                                 {{row.organisation}}<br>
+                                 <b>Employed from:</b>
+                                 {{row.employed_from}}<br>
+
+                                 <b>Employed to:</b>
+                                 {{row.employed_to}}<br>
+                                 <b>Average Monthly Salary:</b>
+                                 {{row.average_monthly_salary}}<br>
+                                 <b>Reason for leaving:</b>
+                                 {{row.reason_for_leaving}}<br>
+                              {%endfor%}
+                              {%endif%}
+
+                              <b>What degree program did you persue at undergraduate level?</b>
+                              <b>Degree program:</b>
+                              {{application_record.mastercardscholarshipapplication.degree_program}} <br>
+                              <b>Grading Criteria:</b>
+                              {{application_record.mastercardscholarshipapplication.grading_creteria}} <br>
+                              <b>Grade:</b>
+                              {{application_record.mastercardscholarshipapplication.total_score}} <br>
+                              <b>Grade:</b>
+                              {{application_record.mastercardscholarshipapplication.total_score}} <br>
+                              <b>Institution:</b>
+                              {{application_record.mastercardscholarshipapplication.institution}} <br>
+                              <b>Year of completion:</b>
+                              {{application_record.mastercardscholarshipapplication.year_of_completion}} <br>
+                              <b>Describe your most significant contribution to each of the organizations you have listed above:</b>
+                              {{application_record.mastercardscholarshipapplication.most_significant_contribution}} <br>
+
+                              <b>Do you have full support of your current employer to undertake graduate studies through full release?:</b>
+                              {{application_record.mastercardscholarshipapplication.employer_support|yesno:"Yes,No"}} <br>
+                              <b>letter of no objection/endorsement</b>
+
+                                {% if application_record.mastercardscholarshipapplication.support_evidence %} <br>
+                                <a href="{{application_record.mastercardscholarshipapplication.support_evidence.url}}" target="blank">{{row.support_evidence}}</a>
+                                {% else %}
+                                No Letter attached
+                                {% endif %}
+
+                                <b>Do you have any physical disability?</b>
+                                {{application_record.mastercardscholarshipapplication.have_physical_disability|yesno:"Yes,No"}} <br>
+
+                                  <b>Disability:</b>
+                                  {{application_record.mastercardscholarshipapplication.physical_disability}} <br>
+                                  <b>Do you have any past medical history of chronic illness</b>
+                                {{application_record.mastercardscholarshipapplication.have_history_of_chronic_illness|yesno:"Yes,No"}} <br>
+
+                                <b>History of Chronic Illness:</b>
+                                {{application_record.mastercardscholarshipapplication.history_of_chronic_illness}} <br>
+                                <b>Have you ever been arrested and/or convicted by a court of Law (apart from a traffic offense)</b>
+                                {{application_record.mastercardscholarshipapplication.have_been_arrested|yesno:"Yes,No"}} <br>
+                                <b>Cause of arrest:</b>
+                                {{application_record.mastercardscholarshipapplication.cause_of_arrest}} <br>
+                                <b>Was English your language of instruction in High school?</b>
+                                {{application_record.otherscholarshipapplication.english_in_high_school|yesno:"Yes,No"}} <br>
+                                <b>How did you learn about the Scholarship call?</b>
+                                {{application_record.otherscholarshipapplication.scholarship_call_source|yesno:"Yes,No"}} <br>
+
+                              
+                    </div>
+
+                  </div>
+
+
+                </dl>
+
+                </div>
+          </div>
+
+
+          <!-- Reviews Section Ends-->
+        </div>
+
+
+            {% if request.user.is_superuser or request.user.role == 'ADMIN' or request.user.role == "Grants Managers" or request.user == review.reviewed_by or perms.scholarships.make_scholarship_permissions %}
+      <!-- Reviews Section starts-->
+      <div class="card-header" id="datashow">
+        <div class="panel-heading card-title view-pad">
+          <div class="spinner-border  text-primary" id="spinner"></div>
+          <h5>Reviews</h5>
+        </div>
+        </div>
+        <div class="card-body">
+        <div class="row">
+          <div class="col-md-12">
+
+                <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+
+                  <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Score</th>
+                        <th>Reviewer</th>
+                        <th>Recommendation</th>
+                        <th>Review Form</th>
+                        <th>Concept Note</th>
+                        <th >Comments</th>
+                      
+                    </tr>
+                  </thead>
+                  {% for review in reviews %}
+                    <tr>
+                      <td>{{review.reviewed_on|date:'d/m/Y'}}</td>
+                      <td>{{review.get_total_marks}}</td>
+                      <td>{{review.reviewer}}</td>
+                      <td>{{review.get_recommendation_display}}</td>
+                      <td>
+                        {% if review.review_form %}
+                        <a href="{{ review.review_form.url }}"
+                                              target="blank" >View</a>
+                        {% else %}
+                        No Form 
+                        {% endif %}
+                      </td>
+                      <td>
+                        {% if review.concept_note %}
+                        <a href="{{ review.concept_note.url }}"
+                                              target="blank" >View</a>
+                        {% else %}
+                        No Form 
+                        {% endif %}
+                      </td>
+                      <td>{{review.comments}}</td>
+                    </tr>
+                    {% endfor %}
+                     <tfoot>
+                      <tr>
+                        <th>
+                          Average Score
+                        </th>
+                        <th>
+                          {{average_score.mark__avg}}
+                        </th>
+                        <th colspan="3">
+                          {% if application_record.selected_for_funding == True %}
+                          Selected for fundind
+                          {% elif application_record.selected_for_funding == False %}
+                          Application Rejected
+                          {% else %}
+                          Decision has not been made yet
+                          {% endif %}
+
+                        </th>
+                        <th>
+                          {{application_record.selected_for_funding_comments}}
+                        </th>
+                        <th>
+                          <a class="btn primary_btn decision" data-id="{{application_record.id}}" style="color:white;" data-toggle="modal" data-target="#approveGrantApplicationmodel" >Decision
+                            </button>
+                        </th>
+                      </tr>
+                    </tfoot>
+
+                </table>
+              </div>
+
+
+
+
+          </div>
+        </div>
+        <div class="modal fade" id="Reviews_Cases_Modal" role="dialog" data-keyboard="false" data-backdrop="static">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Update Your Review</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+              </div>
+              <form id="review_edit_form" method="POST">
+                <div class="modal-body">
+                  <div class="form-group">
+                    <textarea class="form-control mentions" textarea cols="40" rows="3" id="id_editreview"
+                      name="review" placeholder="Submit Your Reviews" style="color:black;"></textarea><span>
+                      <p id="ReviewEditError" style="display:none; color:red"></p>
+                    </span>
+                    <input type="hidden" value="{{ application.id }}" name="applicationid">
+                    <input type="hidden" value="" name="reviewid" id="reviewid">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-default save" id="review_edit" type="submit">Update</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Reviews Section Ends-->
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+</div>
+<br clear="all">
+  <!--model to handle fellowship application deletion confirmation-->
+<!-- Modal -->
+<div class="modal fade" id="approveGrantApplicationmodel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="exampleModalLabel">Scholarship Application Decision</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="text-center">Take Scholarship Application Decision.</p>
+
+      </div>
+      <div class="modal-footer text-center">
+        <button type="button" class="btn btn-danger " data-dismiss="modal">Cancel</button>
+        <button type="button" data-id="{{application_record.id}}" data-toggle="modal" data-target="#reject_application_modal" data-dismiss="modal"   class="btn btn-primary">Reject</button>
+        <a type="button" id="approve_scholarship_application" href="{% url 'scholarships:approve_scholarship' application_record.pk  %}" class="btn btn-success">Approve</a>
+      </div>
+    </div>
+  </div>
+  </div>
+        <!-- Reviews Section Ends-->
+        <div class="modal fade" id="reject_application_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title text-center" id="exampleModalLabel">Scholarship Application Decision</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+
+                <form id="reject_form" method="POST">
+                  <input type="hidden" name="selected_for_funding" value="False"/>
+                  {% csrf_token %}
+                  <div class="row marl">
+                    <div class="filter_col col-12">
+
+                      <div class="form-group">
+                        <label for="id_sattus">Comment{% if reject_form.selected_for_funding_comments.field.required %}<span
+                            class="error">*</span>{% endif %}</label>
+                        {{ reject_form.selected_for_funding_comments }}
+                        <span class="error" id="id__budget">{{ reject_form.selected_for_funding_comments.errors }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  </form>
+              </div>
+              <div class="modal-footer text-center">
+                <button type="button" class="btn btn-danger " data-dismiss="modal">Cancel</button>
+                <button type="button" id="reject_scholarship_application" class="btn btn-primary">Reject</button>
+              </div>
+            </div>
+          </div>
+          </div>
+
+
+
+  </div>
+</div>
+<br clear="all">
+{% endblock %}
+{% block js_block %}
+<script src="{% static 'js/scholarships/view_application.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script type="text/javascript">
+  //reject scholarship Application function
+//picked the id of the scholarship app and placed it in the data-id attribute if the url
+$("#spinner").hide();
+$('.decision').click(function () {
+   var item_di=$(this).attr("data-id");
+  // console.log(item_di);
+   $('#reject_scholarship_application').click(function(){
+
+    var formData = new FormData($("#reject_form")[0]);
+    $.ajax({
+      url: "/scholarships/"+item_di+"/reject",
+      type: "POST",
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      beforeSend: function () {
+    // ... your initialization code here (so show loader) ...
+    $("#spinner").show();
+     },
+      success: function (response) {
+        $("#spinner").hide();
+        if(response.errormessage != null){
+        swal({text:response.errormessage,icon:"error"}).then(() =>{
+        window.location.href="{% url 'scholarships:view_scholarship_review' application_record.id  %}"});
+        }else{
+          swal({text:response.success_message,icon:"success"}).then(() =>{
+        window.location.href="{% url 'scholarships:reviewed_scholarships_list'  %}"});
+        }
+
+
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        console.log(errorThrown);
+        $("#spinner").hide();
+            swal({
+          text: textStatus,
+          icon: "An error occured",
+});
+        }
+
+    });
+  });
+
+ });
+
+</script>
+
+
+{% endblock js_block %}

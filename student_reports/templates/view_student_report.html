@@ -1,0 +1,427 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'student_reports:list' %}">Student Reports</a></li>
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+    <div class="overview_form_block row marl justify-content-center">
+        <div class="col-md-8" id="opacity_block">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title text-right">
+                        <h5>
+                            <span class="float-left title">Overview</span>
+                            <span class="" style="margin-top: 0px">
+                                <div class="dropdown buttons_row">
+                                    <button class="btn primary_btn dropdown-toggle" type="button"
+                                        data-toggle="dropdown">Actions
+                                        <span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a
+                                                href="">Edit</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </span>
+                        </h5>
+                    </div>
+                    </div>
+                    <div class="card-body" id="datashow">
+                    <div class="row marl">
+                        <div class="col-md-4">
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_title"
+                                        data-name="title">Title</label>
+                                    <div class="application_field" id="title" data-name="title">
+                                        {{ student_reportrecord.student.title }}</div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_gender"
+                                        data-name="gender">Gender</label>
+                                    <div class="application_field" id="gender" data-name="gender">
+                                        {{ student_reportrecord.student.gender }}</div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_last_name" data-name="last_name">Last
+                                        Name</label>
+                                    <div class="application_field" id="last_name" data-name="last_name">
+                                        {{ student_reportrecord.student.last_name }}</div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_first_name"
+                                        data-name="first_name">First Name</label>
+                                    <div class="application_field" id="first_name" data-name="first_name">
+                                        {{ student_reportrecord.student.first_name }}</div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_institution"
+                                        data-name="institution">Place of work</label>
+                                    <div class="application_field" id="institution" data-name="institution">
+                                        {{ student_reportrecord.student.institution }}</div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_department"
+                                        data-name="department">Department at Place of work</label>
+                                    <div class="application_field" id="department" data-name="department">
+                                        {{ student_reportrecord.student.department }}</div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_country"
+                                        data-name="country">Country</label>
+                                    <div class="application_field" id="country" data-name="country">
+                                        {{ student_reportrecord.student.country }}</div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_nationality"
+                                        data-name="nationality">Nationality</label>
+                                    <div class="application_field" id="nationality" data-name="nationality">
+                                        {{ student_reportrecord.student.nationality }}</div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_highest_qualification"
+                                        data-name="highest_qualification">Highest Qualification</label>
+                                    <div class="application_field" id="highest_qualification"
+                                        data-name="highest_qualification">{{ student_reportrecord.student.highest_qualification }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_area_of_specialisation"
+                                        data-name="area_of_specialisation">Area of specialisation</label>
+                                    <div class="application_field" id="area_of_specialisation"
+                                        data-name="area_of_specialisation">
+                                        {{ student_reportrecord.student.area_of_specialisation }}</div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_cv" data-name="cv">Curriculum
+                                        Vitae</label>
+                                    <div class="application_field" id="cv" data-name="cv">{{ student_reportrecord.student.cv }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_mobile" data-name="mobile">Mobile
+                                        telephone</label>
+                                    <div class="application_field" id="mobile" data-name="mobile">
+                                        {{ student_reportrecord.student.mobile }}</div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_business_tel"
+                                        data-name="business_tel">Business telephone</label>
+                                    <div class="application_field" id="business_tel" data-name="business_tel">
+                                        {{ student_reportrecord.student.business_tel }}</div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_business_address"
+                                        data-name="business_address">Business address</label>
+                                    <div class="application_field" id="business_address" data-name="business_address">
+                                        {{ student_reportrecord.student.business_address }}</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_commodity_focus"
+                                        data-name="commodity_focus">Commodity Focus</label>
+                                    <div class="application_field" id="commodity_focus" data-name="commodity_focus">
+                                        {{ student_reportrecord.student.commodity_focus }}</div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_theme" data-name="theme">Proposal
+                                        theme</label>
+                                    <div class="application_field" id="theme" data-name="theme">
+                                        {{ student_reportrecord.student.theme }}</div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_proposal_theme"
+                                        data-name="proposal_theme">Subtheme</label>
+                                    <div class="application_field" id="proposal_theme" data-name="proposal_theme">
+                                        {{ student_reportrecord.student.proposal_theme }}</div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_non_university_partners"
+                                        data-name="non_university_partners">Non University Partners*</label>
+                                    <div class="application_field" id="non_university_partners"
+                                        data-name="non_university_partners">
+                                        {{ student_reportrecord.student.non_university_partners }}</div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_other_departments"
+                                        data-name="other_departments">Other Departments</label>
+                                    <div class="application_field" id="other_departments" data-name="other_departments">
+                                        {{ student_reportrecord.student.other_departments }}</div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_other_universities"
+                                        data-name="other_universities">Other Universities</label>
+                                    <div class="application_field" id="other_universities"
+                                        data-name="other_universities">{{ student_reportrecord.student.other_universities }}</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_supporting_letter_from_university"
+                                        data-name="supporting_letter_from_university">Letter from University</label>
+                                    <div class="application_field" id="supporting_letter_from_university"
+                                        data-name="supporting_letter_from_university"><a
+                                            href="{{ student_reportrecord.student.supporting_letter_from_university.url }}">Letter
+                                            from University</a></div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_project_budget"
+                                        data-name="project_budget">Project Budgets</label>
+                                    <div class="application_field" id="project_budget" data-name="project_budget"><a
+                                            href="{{ student_reportrecord.student.project_budget.url }}">Project Budgets</a></div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_results_framework"
+                                        data-name="results_framework">Results Framework</label>
+                                    <div class="application_field" id="results_framework" data-name="results_framework">
+                                        <a href="{{ student_reportrecord.student.results_framework.url }}">Results Framework</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_project_timeline"
+                                        data-name="project_timeline">Project Timeline</label>
+                                    <div class="application_field" id="project_timeline" data-name="project_timeline"><a
+                                            href="{{ student_reportrecord.student.project_timeline.url }}">Project Timeline</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter_col col-md-12" id="iname">
+                                <div class="form-group">
+                                    <label class="application_field_label" for="id_application_form"
+                                        data-name="application_form">Application Form</label>
+                                    <div class="application_field" id="application_form" data-name="application_form"><a
+                                            href="{{ student_reportrecord.student.application_form.url }}">Application Form</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-12">
+                            <div class="created_information">
+                                Created by <b>{{ student_reportrecord.student.created_by }}</b> created on
+                                <b>{{ student_reportrecord.student.created_on }}</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+
+                <div class="card-header">
+                        <div class="card-title text-right">
+                                <h5>
+                                    <span class="float-left title">Student Information</span>
+                                    <span class="" style="margin-top: 0px">
+                                        <div class="dropdown buttons_row">
+                                            <button class="btn primary_btn dropdown-toggle" type="button"
+                                                data-toggle="dropdown">Actions
+                                                <span class="caret"></span></button>
+                                            <ul class="dropdown-menu">
+                                                <li><a
+                                                        href="">Edit</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </span>
+                                </h5>
+                            </div>
+                            </div>
+                              <div class="card-body">
+                    <div class="row mar1">
+                        <div class="col col-md-8">
+                        <table>
+
+                        <tr><td>Year of Birth  1969</td><td></td></tr>
+                        <tr><td>Name of University</td><td></td></tr>
+                        <tr><td>University Department</td><td></td></tr>
+                        <tr><td>University reg no</td><td></td></tr>
+                        <tr><td>Degree program level</td><td></td></tr>
+                        <tr><td>Degree program name</td><td></td></tr>
+                        <tr><td>Intake year</td><td></td></tr>
+                        <tr><td>Graduation expected</td><td></td></tr>
+                        <tr><td>Expected year & month of graduation</td><td></td></tr>
+
+                        <tr><td>Graduation actual</td><td></td></tr>
+                        <tr><td>Actual year of graduation</td><td></td></tr>
+
+                        <tr><td>Thesis / Research title</td><td></td></tr>
+                        <tr><td>Cohort</td><td></td></tr>
+                        <tr><td>Supervisor 1</td><td></td></tr>
+                        <tr><td>Supervisor 2</td><td></td></tr>
+                        <tr><td>Supervisor 3</td><td></td></tr>
+                        <tr><td>Research abstract</td><td></td></tr>
+                        <tr><td>Type of Student</td><td></td></tr>
+                    </table>
+                </div>
+                </div>
+                </div>
+            </div>
+            <div class="card">
+
+                    <div class="card-header">
+                            <div class="card-title text-right">
+                                    <h5>
+                                        <span class="float-left title">Project Information</span>
+                                        <span class="" style="margin-top: 0px">
+                                            <div class="dropdown buttons_row">
+                                                <button class="btn primary_btn dropdown-toggle" type="button"
+                                                    data-toggle="dropdown">Actions
+                                                    <span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a
+                                                            href="">Edit</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </span>
+                                    </h5>
+                                </div>
+                                </div>
+                                <div class="card-body">
+                        <div class="row mar1">
+                            <div class="col col-md-12">
+                                    <table>
+                                            <tr><td>What challenges, issues or difficulties are you encountering?</td><td>{{student_reportrecord.otherstudentreport.challenges}}</td></tr>
+                                            <tr><td>How many farmers / target beneficiaries have you shared your technology / new approach with? 0-1000</td><td>{{student_reportrecord.otherstudentreport.benefited_count}}</td></tr>
+                                            <tr><td>Provide a brief description of the technology or new approach that you have developed.</td><td>{{student_reportrecord.otherstudentreport.new_technology}}</td></tr>
+                                            <tr><td>How will this technology or new approach be used to improve current farmer problems or agricultural problems?</td><td>{{student_reportrecord.otherstudentreport.technology_use}}</td></tr>
+                                            <tr><td>What skill enhancement trainings have you attended?</td><td>{{student_reportrecord.otherstudentreport.trainings}}</td></tr>
+                                            <tr><td>How are you using the skills gained from the skills enhancement trainings?</td><td>{{student_reportrecord.otherstudentreport.skills_use}}</td></tr>
+                                            <tr><td>Are there any spillover effects as a result of your MSc / PhD research e.g Linkages with other organizations or researchers of grants</td><td>{{student_reportrecord.otherstudentreport.spillovers}}</td></tr>
+                                            <tr><td>What is the Most Significant Change of the training and research on you</td><td>{{student_reportrecord.otherstudentreport.significant_change}}</td></tr>
+                                            <tr><td>If you graduated what have you been able to accomplish so far in your career</td><td>{{student_reportrecord.otherstudentreport.accomplishments}}</td></tr>
+                                            <tr><td>Where are you working now that you have graduated</td><td>{{student_reportrecord.otherstudentreport.workplace}}</td></tr>
+                                            <tr><td>Please provide any other relevant information</td><td>{{student_reportrecord.otherstudentreport.other_info}}</td></tr>
+                                            </table>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+            {% for milestone in student_reportrecord.milestones.all %}
+            <div class="card">
+                    <div class="card-header">
+                        <div class="card-title text-right">
+                            <h5>
+                                <span class="float-left title">{{milestone.get_milestone_type_display}}</span>
+                                <span class="" style="margin-top: 0px">
+                                    <div class="dropdown buttons_row">
+                                        <button class="btn primary_btn dropdown-toggle" type="button"
+                                            data-toggle="dropdown">Actions
+                                            <span class="caret"></span></button>
+                                        <ul class="dropdown-menu">
+                                            <li><a
+                                                    href="">Edit</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </span>
+                            </h5>
+                        </div>
+                        </div>
+                        <div class="card-body" id="datashow">
+                        <div class="row marl">
+                            <div class="col-md-4">
+                                <div class="filter_col col-md-12" id="iname">
+                                    <div class="form-group">
+                                        <label class="application_field_label" for="id_title"
+                                            data-name="title">Due Date</label>
+                                        <div class="application_field" id="title" data-name="title">
+                                            {{ milestone.due_date }}</div>
+                                    </div>
+                                </div>
+                                <div class="filter_col col-md-12" id="iname">
+                                        <div class="form-group">
+                                            <label class="application_field_label" for="id_title"
+                                                data-name="title">Completed</label>
+                                            <div class="application_field" id="title" data-name="title">
+                                                {{ milestone.completed}}</div>
+                                        </div>
+                                    </div>
+                                    <div class="filter_col col-md-12" id="iname">
+                                            <div class="form-group">
+                                                <label class="application_field_label" for="id_title"
+                                                    data-name="title">Comments</label>
+                                                <div class="application_field" id="title" data-name="title">
+                                                    {{ milestone.comments }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="filter_col col-md-12" id="iname">
+                                                <div class="form-group">
+                                                    <label class="application_field_label" for="id_title"
+                                                        data-name="title">Completed Date</label>
+                                                    <div class="application_field" id="title" data-name="title">
+                                                        {{ milestone.completed_date }}</div>
+                                                </div>
+                                            </div>
+                               </div>
+                               </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

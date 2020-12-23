@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load paginate %}
+{% load thumbnail %}
+
+{% block content %}
+<!-- main_container starts here -->
+<div class="main_container">
+  <!-- heading_create starts here -->
+  <div class="row marl">
+    <div class="col-lg-12 text-right m-1">
+     
+          {% if request.user == scholarship.user or request.user.role == "ADMIN" or request.user.is_superuser or request.user.role == "Grants Managers" %}
+          <span class="d-inline"><a class="primary_btn" href="{% url 'fellowship_applications:select_fellowship_call'%}"><i class="fa fa-plus"></i>
+            Add New Fellowship
+            Application</a></span>
+          
+            {% endif %}
+    </div>
+      <span class="text-left ml-4">Fellowship Applications -
+     
+        {{ fellowship_applications|length }}</span>
+  </div>
+  <!-- heading_create ends here -->
+
+  <div class="col-md-12 col-lg-12 col-xl-12">
+    <div class="table_container_row row marl no-gutters">
+      <div class="col-md-12">
+
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open">
+           
+            <div class="card">
+                <div class="table-responsive">
+                  <div id="toolbar">
+                    {% if request.user.role == "ADMIN" or request.user.is_superuser or perms.fellowship_applications.delete_fellowshipapplication %}
+                    <button id="remove" class="btn btn-danger" title="Delete" disabled>
+                      <i class="fa fa-trash"></i>Delete
+                    </button>
+                 {% endif %}
+                  </div>
+                  <table
+                  id="table"
+                  data-toggle="table"
+                  data-show-toggle="true"
+                  data-search="true"
+                  data-show-search-button="true"
+                  data-show-refresh="true"
+                  data-show-fullscreen="true"
+                  data-show-columns="true"
+                  data-show-columns-toggle-all="true"
+                  data-show-export="true"
+                  data-click-to-select="true"
+                  data-minimum-count-columns="2"
+                  data-show-pagination-switch="true"
+                  data-pagination="true"
+                  data-id-field="id"
+                  data-total-field="count"
+                  data-data-field="results"
+                  data-toolbar="#toolbar"
+                  data-side-pagination="server"
+                  data-server-sort="false"
+                  data-export-types="[‘csv’,‘doc’, ‘excel’, ‘pdf’]"
+                  data-page-list="[10, 25, 50, 100, all]"
+                  data-url="/fellowshipapplications/api/validation/list/"
+                  data-response-handler="responseHandler">
+                    <thead>
+                   
+                      <tr class="text-center">
+                        {% if request.user.role == "ADMIN" or request.user.is_superuser or perms.grants_applications.delete_fellowshipapplication %}
+                        <th data-field="status" data-checkbox="true"></th>
+                        {% endif %}
+                        <th data-field="call" data-sortable="true">Call ID</th>
+                        <th data-field="first_name" data-sortable="true">Applicant</th>
+                        <th data-field="position" data-sortable="true">Position</th>
+                        <th data-field="area_of_specialization" data-sortable="true">Specialisation</th>
+                        <th data-visible="false" data-field="area_of_interest" data-sortable="true">Area of interest</th>
+                        <!-- <th data-field="telephone" data-sortable="true">Phone number</th>
+                         -->
+                        <th data-field="country" data-sortable="true">Country of Residence</th>
+                        
+                        <th data-field="status" data-cell-style="cellStyle">Status</th>
+                        <th data-visible="true" data-field="email_1">Email 1</th>
+                        <th data-visible="false" data-field="email_2">Email 2</th>
+                        <th data-visible="false" data-field="home_institute_name">Home institution name</th>
+                        <th data-visible="false" data-field="home_institute_place">Home institution location</th>
+                        <th data-visible="false" data-field="home_institute_faculty">Home institution faculty</th>
+                        <th data-visible="false" data-field="home_institute_department">Home institution department</th>
+                        <th data-visible="false" data-field="host_institute_name">Host institution name</th>
+                        <th data-visible="false" data-field="host_institute_place">Host institution location</th>
+                        <th data-visible="false" data-field="host_institute_faculty">Host institution faculty</th>
+                        <th data-visible="false" data-field="host_institute_department">Host institution department</th>
+                        
+                        <!-- <th data-visible="false" data-field="nationality"> Nationality</th> -->
+                        <th data-visible="false" data-field="business_address">Business Address</th>
+                        <th data-visible="false" data-field="total_budget"> Total Budget</th>
+                        <th data-visible="false" data-field="duration_months">Duration(months)</th>
+                        <th data-visible="false" data-field="students_to_train">Number of Students</th>
+                        <th data-formatter="operateFormatter" class="text-center">Action</th>
+                      </tr>
+                    
+                    </thead>
+                 
+              
+                  </table>
+                </div>
+              
+  
+</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+{%endblock%}
+{% block js_block %}
+<script type="text/javascript">
+
+var $table = $('#table')
+  var $remove = $('#remove')
+
+  var selections = []
+
+  function getIdSelections() {
+    return $.map($table.bootstrapTable('getSelections'), function (row) {
+      return row.id
+    })
+  }
+
+  function responseHandler(res) {
+    $.each(res.rows, function (i, row) {
+      row.status = $.inArray(row.id, selections) !== -1
+    })
+    return res
+  }
+
+ 
+
+  function operateFormatter(value, row, index) {
+    var url ="/fellowshipapplications/"+row.id+"/validate/application"
+    var detail_url = "/fellowshipapplications/"+row.id+"/view"
+    var data_id = row.id
+    return [
+    {% if request.user.role == "ADMIN" or request.user.is_superuser or perms.grants_applications.view_grantapplication %}
+    '<a class="btn btn-sm btn-info view m-1" href="'+detail_url+'" title="Detail">',
+      '<i class="fa fa-eye"></i>',
+      '</a>  ',
+      {% endif %}
+      {% if perms.grants_applications.validate_grant_applications %}
+      '<a class="btn btn-sm btn-success edit" href="'+url+'" title="Validate">',
+      '<i class="fa fa-check"></i>',
+      '</a>  ',
+      {% endif %}
+     
+    ].join('')
+  }
+
+
+  ///used cookies to get crsf token
+  function getCookie(c_name)
+    {
+      if (document.cookie.length > 0)
+        {
+          c_start = document.cookie.indexOf(c_name + "=");
+            if (c_start != -1)
+         {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) c_end = document.cookie.length;
+            return unescape(document.cookie.substring(c_start,c_end));
+         }
+     }
+      return "";
+   }
+
+  function initTable() {
+
+    $table.on('check.bs.table uncheck.bs.table ' +
+      'check-all.bs.table uncheck-all.bs.table',
+    function () {
+      $remove.prop('disabled', !$table.bootstrapTable('getSelections').length)
+  
+      // save your data, here just save the current page
+      selections = getIdSelections()
+      // push or splice the selections if you want to save all data selections
+    })
+    $table.on('all.bs.table', function (e, name, args) {
+      console.log(name, args)
+    })
+    ///multiple delete
+    $remove.click(function () {
+      var ids = getIdSelections()
+      $remove.prop('disabled', true)
+
+      swal({
+  title: "Are you sure?",
+  text: "Once deleted, you will not be able to recover these records!",
+  icon: "warning",
+  buttons: true,
+  dangerMode: true,
+})
+.then((willDelete) => {
+  if (willDelete) {
+    for(id=0; id<ids.length; id++){
+        console.log(ids[id]);
+
+    $.ajax({
+        url: "/fellowshipapplications/api/applications/"+ids[id],
+        data: {},
+        headers:{"X-CSRFToken": getCookie("csrftoken")},
+        type: 'DELETE',
+        contentType: 'application/json',
+        success: function(result) {
+          console.log('deleted successfule');
+          swal("Your record/s have been deleted successfully!", {
+            icon: "success",
+    }).then(() =>{
+        window.location.reload()});
+        },
+       });
+    }
+  } else {
+    swal("You have cancelled the deletion of records!");
+  }
+});
+
+    })
+
+
+  }
+
+  $(function() {
+    initTable()
+
+    $('#locale').change(initTable)
+  })
+
+
+
+  {% for message in messages %}
+  $(document).ready(function() {
+      $.notify("{{message}}", "{{ message.tags }}");
+  });
+  {% endfor %}
+</script>
+{% endblock js_block %}

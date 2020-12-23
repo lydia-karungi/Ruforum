@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% load paginate %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'hrm:travel_list' %}">Travels</a></li>
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">Overview</span>
+              <span class="" style="margin-top: 0px">
+
+                <div class="dropdown buttons_row">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url "hrm:edit_travel" travelrecord.id %}">Edit</a></li>
+                  </ul>
+                </div>
+
+              </span>
+            </h5>
+          </div>
+            </div>
+            <div class="card-body">
+          <div class="row marl">
+              <div class="col-md-4">
+              <dl>
+
+                  <dt>Staff/s</dt>
+                    <ol>
+                      {% for staff in travelrecord.staff.all %}
+                      <li>
+                        {{staff.user.get_full_name}}
+                      </li>
+                      {%endfor %}
+                      </ol>
+                  </dd>
+
+                  <dt>Start Date</dt>
+                  <dd>{{travelrecord.start_date}}</dd>
+
+                  <dt>End Date</dt>
+                  <dd>{{travelrecord.end_date}}</dd>
+
+              </dl>
+              </div>
+              <div class="col-md-4">
+              <dl>
+                <dt>Location to visit</dt>
+                <dd>{{travelrecord.place_of_visit}}</dd>
+                <dt>Expected Budget</dt>
+                <dd>{{travelrecord.expected_budget}}</dd>
+                  <dt>Travel Mode</dt>
+                  <dd>{{travelrecord.get_travel_mode_display}}</dd>
+
+
+              </dl>
+              </div>
+              <div class="col-md-4">
+              <dl>
+
+                <dt>Purpose of Visit</dt>
+                <dd>{{travelrecord.purpose_of_visit}}</dd>
+
+              </dl>
+              </div>
+        </div>
+
+</div>
+
+    
+      <!-- Attachment Section start -->
+      
+      <div class="card-body mar-top" id="datashow">
+        <div class="card-title view-pad">
+          <h5>Attachment Report</h5>
+        </div>
+        <div class="row marl">
+          <div class="col-md-12">
+            <form id="attachment_form" method="POST" enctype="multipart/form-data">
+              <div class="form-group ">
+                <input type="file" class="form-control-file" cols="40" id="id_attachments" name="attachment">
+                <div>
+                  <p id="AttachmentError" style="display:none; color:red"></p>
+                </div>
+                <br>
+                <div class="buttons_row">
+                  <button class="btn btn-default save" style="text-align: center;"
+                    id="attachment_submit">Save</button>
+                </div>
+              </div>
+              <input type="hidden" value="{{travelrecord.id}}" name="travel_id">
+            </form>
+            <ul class="list-group" id="attachment_div">
+              {% for attachment in attachments %}
+              <li class="list-group-item list-row" id="attachment{{attachment.id}}">
+                {% if request.user.is_superuser or request.user.role == 'ADMIN' or request.user == attachment.created_by %}
+                <div class="float-right right-container">
+                  <div class="list-row-buttons btn-group float-right">
+                    <button class="action btn primary_btn"
+                      onclick="remove_attachment({{attachment.id}})">Remove</button>
+                  </div>
+                </div>
+                {% endif %}
+                <div class="stream-post-container" id="attachment_name{{attachment.id}}">
+                  {% if attachment.attachment %}
+                  {% if 'image' in attachment.file_type %}
+                  {% thumbnail attachment.attachment "80x80" crop="center" as im %}
+                  <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" class="mb-2">
+                  {% endthumbnail %}
+                  {% endif %}
+                  {% endif %}
+                  <pre> <span class="icon"><i style="font-size:1.5rem;" class="{{attachment.get_file_type_display}}"></i> </span>{{attachment.file_name}} <a href="{% url 'common:download_attachment' attachment.id %}">Download</a></pre>
+                </div>
+                <div class="stream-container">
+                  <pre class="float-left">Uploaded by :{{ attachment.created_by }}</pre>
+                  <pre class="float-right date">{{ attachment.created_on|date:'m/d/Y,  h:i A' }}</pre>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Attachment Section end -->
+<br clear="all">
+</div>
+  </div>
+  <br clear="all">
+
+</div>
+</div>
+<div class="overview_form_block row marl justify-content-center" id="spinner"
+style="z-index: 10; left: 0; right: 0; vertical-align: middle; position: absolute; margin-top: 15%;">
+
+<div class="spinner-border text-primary" style="width: 5em; height: 5em;" role="status">
+  <span class="sr-only">Processing File...</span>
+</div>
+</div>
+
+{% endblock %}
+{% block js_block %}
+<script src="{% static 'js/sweetalert.min.js' %}"></script>
+<script type="text/javascript">
+  $('#loading_spinner').hide()
+
+function remove_attachment(x) {
+    const con = confirm("Do you want to Delete it for Sure!?");
+    if (con == true) {
+      $.post('{% url "tasks:remove_attachment" %}', {
+        "attachment_id": x
+      }, function (data) {
+        if (data.error) {
+          alert(data.error)
+        } else {
+          $("#attachment" + data.aid).remove()
+        }
+      })
+    }
+  }
+
+  $("#attachment_form").submit(function (e) {
+    e.preventDefault();
+
+    var formData = new FormData($("#attachment_form")[0]);
+    $.ajax({
+      url: "{% url 'hrm:add_travel_attachment' %}",
+      type: "POST",
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      beforeSend: function () {
+    // ... your initialization code here (so show loader) ...
+    $("#spinner").show();
+     },
+      success: function (response) {
+        $("#spinner").hide();
+        if(response.errormessage != null){
+        swal({text:response.errormessage,icon:"error"}).then(() =>{
+        window.location.href="{% url 'grants_applicationss:review_list' %}"});
+        }
+        else{
+          swal({text:"successfully saved file", icon:"success"}).then(() =>{
+        window.location.href="{% url 'hrm:view_travel' travelrecord.id  %}"});
+        }
+
+
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        $("#spinner").hide();
+            swal({
+          text: textStatus,
+          icon: "error",
+});
+        }
+
+    });
+  });
+
+
+  </script>
+{% endblock js_block %}

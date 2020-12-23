@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% load common_tags %}
+{% load humanize %}
+
+{% block head_css %}
+{{ block.super }}
+.hide {
+    display: none;
+}
+.more > .count {
+    font-size: small !important;
+}
+{% endblock %}
+
+{% block content %}
+<!-- <a href=""><button class="btn btn-primary" type="button">Logout</button></a> -->
+<div class="row marl justify-content-center">
+  <div class="col-md-10">
+    <div class="card">
+      <div class="card-header">
+      <h3 class="text-center"><strong>Scholarships Manager Dashboard</strong> <br><b>Dear {{user.last_name}} {{user.first_name}}</b></h3>
+      <h5>Welcome to the Ruforum Scholarships Manager system, using this system you can manage Scholarships
+        .For any enquiry, contact the sytem admin
+         <div class="text-center"><a href="mailto: cgs@ruforum.org"> here </a></div>
+      </h5>
+      </div>
+      </div>
+    <!-- count_blocks_row starts here -->
+    <div class="row count_blocks_row">
+
+      <div class="col-md-4">
+        <div class="item green">
+          <a href="#">
+            <div class="title">Calls</div>
+            <div class="count">{{calls_count_scholarships|intcomma}}</div>
+          </a>
+
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="item red">
+          <a href="">
+            <div class="title">Awarded Scholarships</div>
+            <div class="count">{{grants_count|intcomma}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="item yellow">
+          <a href="">
+            <div class="title">Scholarship Applications</div>
+            <div class="count">{{scholarships_count|intcomma}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- count_blocks_row ends here -->
+
+
+</div>
+</div>
+<br clear="all">
+
+{% endblock %}
+{% block js_block %}
+<script type="text/javascript">
+
+  $(document).ready(function () {
+    $(".tag_class_opp").click(function () {
+      // $(".tag_class_opp").css('cursor', 'pointer')
+      url = ""
+      url = url + "?tag=" + $(this).attr('data-link')
+      window.location.href = url;
+    });
+
+    $(".tag_class_acc").click(function () {
+      // $(".tag_class_acc").css('cursor', 'pointer')
+      url = ""
+      url = url + "?tag=" + $(this).attr('data-link')
+      window.location.href = url;
+    });
+
+  });
+
+</script>
+{% endblock js_block %}
+
+{% block run_jquery %}
+$('.item').click(function(){
+$(this).find('.more').toggleClass('hide');
+});
+{% endblock %}

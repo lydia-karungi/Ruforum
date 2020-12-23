@@ -1,0 +1,688 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load paginate %}
+{% load thumbnail %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<style>
+  .form-group label{
+    font-weight: 800;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<!-- main_container starts here -->
+<div class="main_container">
+  <!-- heading_create starts here -->
+
+
+  <div class="col-md-12 col-lg-12 col-xl-12">
+    <div class="table_container_row row marl no-gutters">
+      <div class="col-md-12">
+
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open">
+            <div class="card">
+              <div class="card-body">
+                <div class="card-title text-right">
+                  <span class="float-left">Grant Reports</span>
+                  <span class="filter_toggle">
+                    <a href="#" class="primary_btn"><i class="fas fa-file"></i></a>
+                  </span>
+                </div>
+                {% if grant.report_number > 0 %}
+                <div class="table-responsive">
+                  <div class="row">
+                    <div class="col-md-12">
+                  <table class="table ">
+                    <thead>
+                      <tr>
+                        <th>Period</th>
+                        <th>Status</th>
+
+                      </tr>
+
+                    </thead>
+                    <tbody>
+                      <tr class="text-center">
+                        <td>
+                          {% if grant.firstreport %}
+                          <a href="{% url "grants:view_month6" grant.firstreport.id %}">
+                           {{grant.reporting_period}} Month </a>
+
+                         {% else %}
+
+                         <a href="/grants_reports/3/{{grant.id}}/{{grant.reporting_period}} Months/create/">Add {{grant.reporting_period}} Months</a>
+                         {% endif %}
+                        </td>
+                        <td>
+                          {{grant.firstreport.status}}
+                        </td>
+                      </tr>
+                      <!--second report starts here-->
+                      {% if grant.firstreport and grant.report_number|add:"-1" < 2 %}
+                      <tr>
+                        <td>
+                          {% if grant.lastreport %}
+                          <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                            Final Report</a>
+                            {% else %}
+                          <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                          {% endif %}
+                        </td>
+                        <td>
+                          {{grant.lastreport.status}}
+                        </td>
+                          </tr>
+                          {% else %}
+                        <tr>
+                          {% if grant.firstreport  %}
+                          <td>
+
+                            {% if grant.month12report  %}
+                            <a href="{% url "grants:view_month12" grant.month12report.id %}">
+                           {% widthratio grant.reporting_period 1 2 %} Month  </a>
+                            {% else %}
+                            <a href="/grants_reports/6/{{grant.id}}/{% widthratio grant.reporting_period 1 2 %} Months/create/">Add {% widthratio grant.reporting_period 1 2 %} Months</a>
+                            {% endif %}
+
+                          </td>
+                          <td>
+                            {{grant.month12report.status}}
+                          </td>
+                          {% endif %}
+                        </tr>
+                         {% endif %}
+                         <!--end of second report-->
+
+<!--third report starts here-->
+                        {% if grant.month12report and grant.report_number|add:"-1" < 3  %}
+                        <tr>
+                          
+                          <td>
+                            {% if grant.lastreport %}
+                            <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                              Final Report</a>
+                              {% else %}
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                            </tr>
+                            {% else %}
+                        <tr>
+                          {% if grant.month12report  %}
+                          <td>
+
+                            {% if grant.month18report %}
+                            <a href="{% url "grants:view_month18" grant.month18report.id %}">
+                              {% widthratio grant.reporting_period 1 3 %} Month</a>
+                            {% else %}
+                            <a href="/grants_reports/9/{{grant.id}}/{% widthratio grant.reporting_period 1 3 %} Months/create/">Add {% widthratio grant.reporting_period 1 3 %} Months</a>
+                            {% endif %}
+
+                          </td>
+                          <td>
+                            {{grant.month18report.status}}
+                          </td>
+                          {% endif %}
+                        </tr>
+                      
+                       
+                         {% endif %}
+<!--third report ends here-->
+<!--fourth report starts here-->
+                         {% if grant.report_number|add:"-1" < 4 and grant.month18report %}
+                         <tr>
+                          <td>
+                            {% if grant.lastreport %}
+                            <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                              Final Report</a>
+                              {% else %}
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                            </tr>
+                            {% else %}
+                        <tr>
+                          {% if grant.month18report %}
+                          <td>
+                            {% if grant.month24report %}
+                            <a href="{% url "grants:view_month24" grant.month24report.id %}">
+                                  {% widthratio grant.reporting_period 1 4 %} Month</a>
+                                {% else %}
+                                <a href="/grants_reports/12/{{grant.id}}/{% widthratio grant.reporting_period 1 4 %} Months/create/">Add {% widthratio grant.reporting_period 1 4 %} Months</a>
+                                {% endif %}
+                          </td>
+                          <td>
+                            {{grant.month24report.status}}
+                          </td>
+                          {% endif %}
+                        </tr>
+                        {% endif %}
+                        <!--end of fourth report-->
+                        <!--fifth report starts here-->
+
+                        {% if grant.report_number|add:"-1" < 5 and grant.month24report %}
+                        <tr>
+                          <td>
+  
+                            {% if grant.lastreport %}
+                            <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                              Final Report</a>
+                              {% else %}
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                            </tr>
+                            {% else %}
+                        <tr>
+                          {% if grant.month24report %}
+                          <td>
+                            {% if grant.month30report %}
+                            <a href="{% url "grants:view_month30" grant.month30report.id %}">
+                              {% widthratio grant.reporting_period 1 5 %} Month </a>
+                            {% else %}
+                            <a href="/grants_reports/15/{{grant.id}}/{% widthratio grant.reporting_period 1 5 %} Months/create/">Add {% widthratio grant.reporting_period 1 5 %} Months</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.month30report.status}}
+                          </td>
+                          {% endif %}
+                        </tr>
+                       
+                        {% endif %}
+                        <!--end fifth report-->
+                          <!--Start of sixth report-->
+                        {% if grant.report_number|add:"-1" < 6 and grant.month30report %}
+                        <tr>
+                          <td>
+  
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                            </tr>
+                            {% else %}
+                        <tr>
+                          {% if grant.month30report %}
+                          <td>
+                            {% if grant.month36report %}
+                            <a href="{% url "grants:view_month36" grant.month36report.id %}">
+                              {% widthratio grant.reporting_period 1 6 %} Month </a>
+                            {% else %}
+                            <a href="/grants_reports/18/{{grant.id}}/{% widthratio grant.reporting_period 1 6 %} Months/create/">Add {% widthratio grant.reporting_period 1 6 %} Months</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.month36report.status}}
+                          </td>
+                          {% endif %}
+                        </tr>
+                   
+                        {% endif %}
+                        <!--end of sixth report-->
+                        <!--start of the seventh report-->
+                        {% if grant.report_number|add:"-1" < 7 and  grant.month36report %}
+                        <tr>
+                          <td>
+                            {% if grant.lastreport %}
+                            <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                              Final Report</a>
+                              {% else %}
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                            </tr>
+                      </tr>
+                      {% else %}
+                        <tr>
+                          {% if grant.month36report %}
+                          <td>
+                            {% if grant.month42report %}
+                            <a href="{% url "grants:view_month42" grant.month42report.id %}">
+                              {% widthratio grant.reporting_period 1 7 %} Month </a>
+                            {% else %}
+                            <a href="/grants_reports/21/{{grant.id}}/{% widthratio grant.reporting_period 1 7 %} Months/create/">Add {% widthratio grant.reporting_period 1 7 %} Months</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.month42report.status}}
+                          </td>
+                          {% endif %}
+                       
+                        {% endif %}
+                         <!--end of seventh report-->
+                           <!--start of the eighth report-->
+                        {% if grant.report_number|add:"-1" < 8 and grant.month42report %}
+                        <tr>
+                          <td>
+  
+                            {% if grant.lastreport %}
+                            <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                              Final Report</a>
+                              {% else %}
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                            </tr>
+                            {% else %}
+                       
+                        <tr>
+                          {% if grant.month42report %}
+                          <td>
+                            {% if grant.month48report %}
+                            <a href="{% url "grants:view_month48" grant.month48report.id %}">
+                              {% widthratio grant.reporting_period 1 8 %} Month </a>
+                            {% else %}
+                            <a href="/grants_reports/24/{{grant.id}}/{% widthratio grant.reporting_period 1 8 %} Months/create/">Add {% widthratio grant.reporting_period 1 8 %} Months</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.month48report.status}}
+                          </td>
+                          {% endif %}
+                        </tr>
+                       
+                        {% endif %}
+                        <!--end of eighth report-->
+                          <!--start of the nineth report-->
+                        {% if grant.report_number|add:"-1" < 9 and grant.month48report %}
+                        <tr>
+                          <td>
+                            {% if grant.lastreport %}
+                            <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                              Final Report</a>
+                              {% else %}
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                            {% endif %}
+                           
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                            </tr>
+                            {% else %}
+                        <tr>
+                        
+                          {% if grant.month48report %}
+                          <td>
+                            {% if grant.month54report %}
+                            <a href="{% url "grants:view_month54" grant.month54report.id %}">
+                              {% widthratio grant.reporting_period 1 9 %} Month </a>
+                            {% else %}
+                            <a href="/grants_reports/27/{{grant.id}}/{% widthratio grant.reporting_period 1 9 %} Months/create/">Add {% widthratio grant.reporting_period 1 9 %} Months</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.month54report.status}}
+                          </td>
+                          {% endif %}
+                        </tr>
+                 
+                        {% endif %}
+                        <!--end the nineth report-->
+                        {% if grant.report_number|add:"-1" < 10 and grant.month54report %}
+                        <tr>
+                          <td>
+                            {% if grant.lastreport %}
+                            <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                              Final Report</a>
+                              {% else %}
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                            {% endif %}
+                            
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                            </tr>
+                            {% else %}
+                        
+                        <tr>
+                          {% if grant.month54report %}
+                          <td>
+                            {% if grant.month60report %}
+                            <a href="{% url "grants:view_month60" grant.month60report.id %}">
+                              {% widthratio grant.reporting_period 1 10 %} Month </a>
+                            {% else %}
+                            <a href="/grants_reports/30/{{grant.id}}/{% widthratio grant.reporting_period 1 10 %} Months/create/">Add {% widthratio grant.reporting_period 1 10 %} Months</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.month60report.status}}
+                          </td>
+                          {% endif %}
+                        </tr>
+                       
+                        {% endif %}
+                        <!--end tenth report-->
+
+                        {% if grant.report_number|add:"-1" < 11 and grant.month60report  %}
+                        <tr>
+                          <td>
+                            {% if grant.lastreport %}
+                            <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                              Final Report</a>
+                              {% else %}
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                            </tr>
+                            {% else %}
+                        <tr>
+                          {% if grant.month60report %}
+                          <td>
+                            {% if grant.month66report %}
+                            <a href="{% url "grants:view_month66" grant.month66report.id %}">
+                              {% widthratio grant.reporting_period 1 11 %} Month </a>
+                            {% else %}
+                            <a href="/grants_reports/33/{{grant.id}}/{% widthratio grant.reporting_period 1 11 %} Months/create/">Add {% widthratio grant.reporting_period 1 11 %} Months</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.month66report.status}}
+                          </td>
+                          {% endif %}
+                        </tr>
+                       
+                        {% endif %}
+                        <!--end of eleventh report-->
+                        {% if grant.report_number|add:"-1" < 12 and grant.month66report %}
+                        <tr>
+                          <td>
+                            {% if grant.lastreport %}
+                            <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                              Final Report</a>
+                              {% else %}
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                            </tr>
+                        <tr>
+                          {% else %}
+                          {% if grant.month66report %}
+                          <td>
+                            {% if grant.month72report %}
+                            <a href="{% url "grants:view_month72" grant.month72report.id %}">
+                              {% widthratio grant.reporting_period 1 12 %} Month </a>
+                            {% else %}
+                            <a href="/grants_reports/36/{{grant.id}}/{% widthratio grant.reporting_period 1 12 %} Months/create/">Add {% widthratio grant.reporting_period 1 12 %} Months</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.month72report.status}}
+                          </td>
+                          {% endif %}
+                        </tr>
+                        
+                        {% endif %}
+                        <!--end of twelveth report-->
+                        {% if grant.report_number|add:"-1" < 13 and grant.month72report %}
+                        <tr>
+                          <td>
+                            {% if grant.lastreport %}
+                            <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                              Final Report</a>
+                              {% else %}
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                            </tr>
+                            {% else %}
+                        
+                        <tr>
+                          {% if grant.month72report %}
+                          <td>
+                            {% if grant.month78report %}
+                            <a href="{% url "grants:view_month78" grant.month78report.id %}">
+                              {% widthratio grant.reporting_period 1 13 %} Month </a>
+                            {% else %}
+                            <a href="/grants_reports/39/{{grant.id}}/{% widthratio grant.reporting_period 1 13 %} Months/create/">Add {% widthratio grant.reporting_period 1 13 %} Months</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.month78report.status}}
+                          </td>
+                          {% endif %}
+                        </tr>
+                       
+                        {% endif %}
+                        <!--end of thirteenth report-->
+                        {% if grant.report_number|add:"-1" < 14 and grant.month78report %}
+                        <tr>
+                          <td>
+                            {% if grant.lastreport %}
+                            <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                              Final Report</a>
+                              {% else %}
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                            {% endif %}
+                           
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                            </tr>
+                            {% else %}
+      
+                        <tr>
+                          {% if grant.month78report %}
+                          <td>
+                            {% if grant.month84report %}
+                            <a href="{% url "grants:view_month84" grant.month84report.id %}">
+                              {% widthratio grant.reporting_period 1 14 %} Month </a>
+                            {% else %}
+                            <a href="/grants_reports/42/{{grant.id}}/{% widthratio grant.reporting_period 1 14 %} Months/create/">Add {% widthratio grant.reporting_period 1 14 %} Months</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.month84report.status}}
+                          </td>
+                          {% endif %}
+                        </tr>
+                       
+                        {% endif %}
+                        <!--end of fourteenth report-->
+                        {% if grant.report_number|add:"-1" < 15 and grant.month84report %}
+                        <tr>
+                          <td>
+  
+                            {% if grant.lastreport %}
+                            <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                              Final Report</a>
+                              {% else %}
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                            </tr>
+                            {% else %}
+                        
+                        <tr>
+                          {% if grant.month84report %}
+                          <td>
+                            {% if grant.month90report %}
+                            <a href="{% url "grants:view_month90" grant.month90report.id %}">
+                              {% widthratio grant.reporting_period 1 15 %} Month </a>
+                            {% else %}
+                            <a href="/grants_reports/45/{{grant.id}}/{% widthratio grant.reporting_period 1 15 %} Months/create/">Add {% widthratio grant.reporting_period 1 15 %} Months</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.month90report.status}}
+                          </td>
+                          {% endif %}
+                        </tr>
+                       
+                        {% endif %}
+                        <!--end fifteenth report-->
+                        {% if grant.report_number|add:"-1" < 16 and grant.month90report %}
+                        <tr>
+                          <td>
+  
+                            {% if grant.lastreport %}
+                            <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                              Final Report</a>
+                              {% else %}
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                            </tr>
+                            {% else %}
+                       
+                        <tr>
+                          {% if grant.month90report %}
+                          <td>
+                            {% if grant.month96report %}
+                            <a href="{% url "grants:view_month96" grant.month96report.id %}">
+                              {% widthratio grant.reporting_period 1 16 %} Month </a>
+                            {% else %}
+                            <a href="/grants_reports/48/{{grant.id}}/{% widthratio grant.reporting_period 1 16 %} Months/create/">Add {% widthratio grant.reporting_period 1 16 %} Months</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.month96report.status}}
+                          </td>
+                          {% endif %}
+                        </tr>
+                      
+                        {% endif %}
+                        {% if grant.report_number|add:"-1" < 17 and  grant.month96report %}
+                        <tr>
+                          <td>
+  
+                            {% if grant.lastreport %}
+                            <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                              Final Report</a>
+                              {% else %}
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                            </tr>
+                            {% else %}
+                        <tr>
+                          {% if grant.month96report %}
+                          <td>
+                            {% if grant.month102report %}
+                            <a href="{% url "grants:view_month102" grant.month102report.id %}">
+                              {% widthratio grant.reporting_period 1 17 %} Month </a>
+                            {% else %}
+                            <a href="/grants_reports/51/{{grant.id}}/{% widthratio grant.reporting_period 1 17 %} Months/create/">Add {% widthratio grant.reporting_period 1 17 %} Months</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.month102report.status}}
+                          </td>
+                          {% endif %}
+                        </tr>
+                      
+     
+                        {% endif %}
+
+
+                        {% if grant.report_number|add:"-1" < 18 and  grant.month102report %}
+                        <tr>
+                          <td>
+  
+                            {% if grant.lastreport %}
+                            <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                              Final Report</a>
+                              {% else %}
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Last Grants Report</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                         </tr>
+                            {% else %}
+                       
+                        <tr>
+                          {% if grant.month102report %}
+                          <td>
+                            {% if grant.month108report %}
+                            <a href="{% url "grants:view_month108" grant.month108report.id %}">
+                              {% widthratio grant.reporting_period 1 18 %} Month </a>
+                            {% else %}
+                            <a href="/grants_reports/54/{{grant.id}}/{% widthratio grant.reporting_period 1 18 %} Months/create/">Add {% widthratio grant.reporting_period 1 18 %} Months</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.month108report.status}}
+                          </td>
+                          {% endif %}
+                        </tr>
+                       
+                        {% endif %}
+                        {% if grant.month108report %}
+                        <tr>
+                          <td>
+  
+                            {% if grant.lastreport %}
+                            <a href="{% url "grants:view_last_report" grant.lastreport.id %}">
+                              Final Report</a>
+                              {% else %}
+                            <a href="{% url 'grants_reports:add_pi_last_report' grant.id  %}">Add Final Grants Report</a>
+                            {% endif %}
+                          </td>
+                          <td>
+                            {{grant.lastreport.status}}
+                          </td>
+                            </tr>
+                            {% endif %}
+                    </tbody>
+                  </table>
+                  </div>
+
+               </div>
+               </div>
+               {% else %}
+               <div class="text-center">Grant has no reports</div>
+               {% endif %}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br clear="all">
+
+
+{% endblock %}

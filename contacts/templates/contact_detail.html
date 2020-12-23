@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'contacts:list' %}">Contacts</a></li>
+    <li class="breadcrumb-item active">Details</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">Contact details</span>
+              <span class="" style="margin-top: 0px">
+                <div class="dropdown">
+                  <button class="btn btn-info dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url "contacts:edit_contact" contact_record.id %}">Edit</a></li>
+                  </ul>
+                </div>
+
+              </span>
+            </h5>
+          </div>
+            </div>
+            <div class="card-body">
+
+          <div class="row marl">
+
+              <div class="col-md-3">
+
+           <div class="profile_pic">
+                {% if contact_record.picture %}
+              <img alt="contact picture" src="{{contact_record.picture.url}}" />
+              {% else %}
+              <img src="/static/images/user.png" alt="">
+              {% endif %}
+
+</div>
+              </div>
+<div class="col-md-9">
+<h3>{{contact_record.title}}: {{ contact_record.first_name}} {{contact_record.last_name}}
+</h3>
+<h5><b>Job title</b>: {{ contact_record.job_title}}</h5>
+<h5><b>Personal Email</b>: {{contact_record.personal_email}}</h5>
+<h5><b>Tel</b>: {{contact_record.mobile}}</h5>
+<h5><b>Passport No</b>: {{contact_record.passport_no}}</h5>
+  </div>
+  <div class="col-md-12">
+    <div class="divider">
+    </div>
+    </div>
+    <div class="col-md-6">
+<h3>Personal Info</h3>
+
+  <p><b>Gender</b>: {{ contact_record.gender}}</p>
+      <p><b>Nationality</b>: {{ contact_record.nationality}}</p>
+    <p><b>Home Address</b>: {{ contact_record.home_address}}</p>
+      <p><b>Home Telephone</b>: {{ contact_record.home_tel}}</p>
+        <p><b>Fax</b>: {{ contact_record.fax}}</p>
+        <p><b>Skype ID</b>: {{ contact_record.skype_id}}</p>
+          <p><b>Yahoo Messenger</b>: {{ contact_record.yahoo_messenger}}</p>
+        <p><b>MSN</b>: {{ contact_record.msn}}</p>
+          <p><b>Curriculum vitae</b>:  {% if contact_record.cv %} <a href="{{ contact_record.cv.url}}"></a>{% endif %}</p>
+
+
+      </div>
+      <div class="col-md-6">
+<h3>Business Info</h3>
+<p><b>Institution</b>: {{ contact_record.institution}}</p>
+<p><b>Area of Specialization</b>: {{ contact_record.area_of_specialisation}}</p>
+        <p><b>Business Address</b>: {{ contact_record.business_address}}</p>
+      <p><b>Business Email</b>: {{ contact_record.business_email}}</p>
+  <p><b>Business Telephone</b>: {{ contact_record.business_tel}}</p>
+        </div>
+<div class="col-md-12">
+  <h3>Note</h3>
+  <p>{{contact_record.note}}</p>
+  </div>
+
+
+        </div>
+
+</div>
+
+    </div>
+    <br clear="all">
+
+  </div>
+ 
+</div>
+
+
+{% endblock %}

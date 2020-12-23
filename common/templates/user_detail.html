@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block breadcrumb %}
+{% load thumbnail %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li  class="breadcrumb-item"><a href="{% url 'common:users_list' %}">Users</a></li>
+    <li class="active breadcrumb-item">{{user_obj.username}}</li>
+  </ol>
+</nav>
+<!-- breadcrumb ends here -->
+{% endblock breadcrumb %}
+{% block content %}
+<!-- ACCOUNTS VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body" id="datashow">
+          <div class="card-title text-right">
+            <h5 >
+              <span class="float-left title">Overview</span>
+              <span class="" style="margin-top: 0px">
+                <div class="dropdown buttons_row">
+                  <button class="btn primary_btn dropdown-toggle " type="button" data-toggle="dropdown">Actions
+                  <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a href="{% url 'common:edit_user' user_obj.id %}" >Edit</a></li>
+                  </ul>
+                </div>
+              </span>
+            </h5>
+          </div>
+          <div class="row ">
+            <div class="col-md-3">
+              <div class="filter_col col-md-12">
+              
+                  <div class="profile_pic" style="text-align: left;">
+                    {% if user_obj.picture %}
+                    <img alt="contact picture" src="{{user_obj.picture.url}}" />
+                    {% else %}
+                    <img src="/static/images/user.png" alt="">
+                    {% endif %}
+      
+                  </div>
+             
+              </div>
+            </div>
+            <div class="col-md-6">
+              {% if user_obj.first_name %}
+              <div class="filter_col col-md-12" id="iname">
+                <div class="form-group" >
+                  <label class="acc_field_label" for="id_name" data-name="name">First Name</label>
+                  <div class="account_field" id="account_name" data-name="name">{{ user_obj.first_name }}</div>
+                </div>
+              </div>
+              {% endif %}
+              {% if user_obj.last_name %}
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label class="acc_field_label" for="id_phone" data-name="name">Last Name</label>
+                  <div class="account_field" id="account_phone" data-name="name">{{ user_obj.last_name }}</div>
+                </div>
+              </div>
+              {% endif %}
+              {% if user_obj.email %}
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label class="acc_field_label" for="id_email" data-name="name">Email</label>
+                  <div class="account_field" id="account_email" data-name="name">{{ user_obj.email }}</div>
+                </div>
+              </div>
+              {% endif %}
+              {% if user_obj.username %}
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label class="acc_field_label" for="id_website" data-name="name">Username</label>
+                  <div class="account_field" id="account_website" data-name="name">{{ user_obj.username }}</div>
+                </div>
+              </div>
+              {% endif %}
+              {% if user_obj.role %}
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label class="acc_field_label" for="id_industry" data-name="name">Role</label>
+                  <div class="account_field" id ="account_industry" data-name="name">{{ user_obj.role }}</div>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+         
+          </div>
+        </div>
+      </div>
+     
+    
+    </div>
+  </div>
+</div>
+<!-- ACCOUNTS VIEW ENDS -->
+{% endblock content %}
+{% block js_block %}
+<script type="text/javascript">
+  var assigned_to_list = "{{ assigned_data }}";
+   assigned_to_list = JSON.parse(assigned_to_list.replace(/&(l|g|quo)t;/g, function(a,b){
+          return {
+               l   : '<',
+               g   : '>',
+               quo : '"'
+           }[b];
+       }));
+   
+     
+  
+
+  
+</script>
+<script src="{% static 'js/mention.js' %}"></script>
+{% endblock js_block %}

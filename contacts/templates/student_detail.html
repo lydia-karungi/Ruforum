@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'contacts:students_list' %}">Students</a></li>
+    <li class="breadcrumb-item active">Details</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">Student details</span>
+              <span class="" style="margin-top: 0px">
+                <div class="dropdown">
+                  <button class="btn btn-info dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url "contacts:edit_student" student_record.id %}">Edit</a></li>
+                  </ul>
+                </div>
+
+              </span>
+            </h5>
+          </div>
+            </div>
+            <div class="card-body">
+
+          <div class="row marl">
+
+              <div class="col-md-3">
+
+           <div class="profile_pic">
+                {% if student_record.user.picture %}
+              <img alt="student picture" src="{{student_record.user.picture.url}}" />
+              {% else %}
+              <img src="/static/images/user.png" alt="">
+              {% endif %}
+
+</div>
+              </div>
+<div class="col-md-9">
+<h3>{{student_record.user.title}}: {{ student_record.user.first_name}} {{student_record.user.last_name}}
+</h3>
+<h5><b>Job title</b>: {{ student_record.user.job_title}}</h5>
+<h5><b>Personal Email</b>: {{student_record.user.personal_email}}</h5>
+<h5><b>Tel</b>: {{student_record.user.mobile}}</h5>
+<h5><b>Passport No</b>: {{student_record.user.passport_no}}</h5>
+  </div>
+  <div class="col-md-12">
+    <div class="divider">
+    </div>
+    </div>
+    <div class="col-md-6">
+<h3>Student Info</h3>
+<p><b>Student No.</b>: {{ student_record.student_no}}</p>
+  <p><b>university</b>: {{ student_record.university}}</p>
+      <p><b>Department</b>: {{ student_record.university_department}}</p>
+    <p><b>Degree Level</b>: {{ student_record.degree_program_level}}</p>
+      <p><b>Degree program</b>: {{ student_record.degree_program_name}}</p>
+        <p><b>Registration Number</b>:<a href="#"> {{ student_record.university_reg_no}}</a></p>
+        <p><b>Student Intake Year</b>: {{ student_record.intake_year}}</p>
+          <p><b>Cohort</b>: {{ student_record.cohort}}</p>
+        <p><b>Expected Graduation date</b>: {{ student_record.grad_expected}}</p>
+          <p><b>Actual Graduation date</b>:  {% if student_record.grad_actual %} <a href="{{ student_record.cv.url}}"></a>{% endif %}</p>
+
+
+      </div>
+      <div class="col-md-6">
+<h3>supervisors</h3>
+<p><b>supervisor 1</b>: {{ student_record.supervisor1}}</p>
+<p><b>supervisor 2</b>: {{ student_record.supervisor2}}</p>
+        <p><b>Supervisor 3</b>: {{ student_record.supervisor3}}</p>
+      <p><b>Grant type</b>: {{ student_record.grant_type}}</p>
+  <p><b>Student type</b>: {{ student_record.student_type}}</p>
+  <p><b>Graduation Status</b>: {{ student_record.graduated|yesno:"Graduated,Continueing student" }}</p>
+        </div>
+<div class="col-md-12">
+  <h3>Thesis title</h3>
+  <p>{{student_record.thesis_title}}</p>
+  <h3>Research Abstract</h3>
+  <p>{{student_record.research_abstract}}</p>
+  </div>
+
+
+        </div>
+
+</div>
+
+    </div>
+
+  </div>
+</div>
+
+
+{% endblock %}

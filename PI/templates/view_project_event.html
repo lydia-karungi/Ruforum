@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+    {% block extralinks %}
+        <link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+        <style>
+            .opacity_block {
+                opacity: 0.2;
+            }
+        </style>
+    {% endblock extralinks %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'PI:events' %}">Project Events</a></li>
+            <li class="breadcrumb-item active">View</li>
+        </ol>
+    </nav>
+    <!-- CASE VIEW STARTS -->
+    <div class="main_container" id="maincontainer">
+        <div class="overview_form_block row marl justify-content-center">
+            <div class="col-md-10" id="opacity_block">
+                <div class="card">
+                    <div class="card-header" id="datashow">
+                        <div class="card-title text-center">
+                            <h5>
+                                <span class="float-left title">Overview</span>
+                                <span class="" style="margin-top: 0px">
+                <div class="dropdown buttons_row text-right">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    {% if perms.events.change_event %}
+                        <li><a class="dropdown-item" href="{% url 'PI:edit_project_event' event_record.id %}">Edit</a></li>
+                    {% endif %}
+                      
+                  </ul>
+                </div>
+
+              </span>
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row marl">
+                            <div class="col-md-10">
+                                <h4>Call details</h4>
+                                <dl>
+
+                                    <dt>Grant:</dt>
+                                    <dd>{{ event_record.grant }}</dd>
+
+                                    <dt>PI:</dt>
+                                    <dd>{{ event_record.organiser }}</dd>
+
+                                    <dt>Name of Event:</dt>
+                                    <dd>{{ event_record.event_name }}</dd>
+
+                                    <dt>Start Date:</dt>
+                                    <dd>{{ event_record.start_date }}</dd>
+                                    <dt>End Date:</dt>
+                                    <dd>{{ event_record.end_date }}</dd>
+                                    <dt>Event Details:</dt>
+                                    <dd>{{ event_record.event_description }}</dd>
+                        
+                                </dl>
+                                <dl>
+
+
+                                    <dt>Attendance:</dt>
+                                    {% if event_record.attendance %}
+                                        <dd><a href="{{ event_record.attendance.url }}" target="blank">{{ event_record.attendance }}</a></dd>
+                                    {% endif %}
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            {% if event_record.photo_one %}
+                                            <dt>Photo one:</dt>
+                                           
+                                                <dd><a href="{{ event_record.photo_one.url }}" target="blank">{{ event_record.photo_one }}</a></dd>
+                                            {% endif %}
+        
+                                        </div>
+                                        <div class="col-md-4">
+                                            {% if event_record.photo_two %}
+                                            <dt>Photo Two:</dt>
+                                                <dd><a href="{{ event_record.photo_two.url }}" target="blank">{{ event_record.photo_two }}</a></dd>
+                                            {% endif %}
+        
+                                        </div>
+                                        <div class="col-md-4">
+                                            {% if event_record.photo_three %}
+                                            <dt>Photo Three:</dt>
+                                                <dd><a href="{{ event_record.photo_three.url }}" target="blank">{{ event_record.photo_three }}</a></dd>
+                                            {% endif %}
+        
+                                        </div>
+                                        <div class="col-md-4">
+                                            {% if event_record.photo_four %}
+                                            <dt>Photo Four:</dt>
+                                                <dd><a href="{{ event_record.photo_four.url }}" target="blank">{{ event_record.photo_four }}</a></dd>
+                                            {% endif %}
+        
+                                        </div>
+                                        <div class="col-md-4">
+                                            {% if event_record.photo_five %}
+                                            <dt>Photo Five:</dt>
+                                                <dd><a href="{{ event_record.photo_five.url }}" target="blank">{{ event_record.photo_five }}</a></dd>
+                                            {% endif %}
+        
+                                        </div>
+                                    </div>
+
+
+                                </dl>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+     <br clear="all">
+    </div>
+
+
+
+
+{% endblock %}
+<br clear="all">

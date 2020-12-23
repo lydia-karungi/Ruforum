@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% block extralinks %}
+<link rel="stylesheet" href="{% static 'css/bootstrap-suggest.css' %}">
+<style>
+  .opacity_block {
+    opacity: 0.2;
+  }
+</style>
+{% endblock extralinks %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'grant_types:list' %}">Grant Types</a></li>
+    <li class="breadcrumb-item active">View</li>
+  </ol>
+</nav>
+<!-- CASE VIEW STARTS -->
+<div class="main_container" id="maincontainer">
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-8" id="opacity_block">
+      <div class="card">
+        <div class="card-header" id="datashow">
+          <div class="card-title text-right">
+            <h5>
+              <span class="float-left title">Overview</span>
+              <span class="" style="margin-top: 0px">
+                {% if perms.calls.change_call %}
+                <div class="dropdown buttons_row">
+                  <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                    <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url "grant_types:edit_grant_type" grant_type_record.id %}">Edit</a></li>
+                  </ul>
+                </div>
+                {% endif %}
+              </span>
+            </h5>
+          </div>
+            </div>
+            <div class="card-body">
+          <div class="row marl">
+              <div class="col-md-12">
+              <h4>Grant Type details</h4>
+              <dl>
+
+                  <dt>Title:</dt>
+                  <dd>{{grant_type_record.name}}</dd>
+              </dl>
+
+              <h3>Documents</h3>
+              <dl>
+
+
+                  <dt>Instructions:</dt>
+                  <dd><a href="{{grant_type_record.instructions.url}}" download>{{grant_type_record.instructions}}</a></dd>
+
+                  <dt>Template:</dt>
+                  <dd><a href="{{grant_type_record.template.url}}" download>{{grant_type_record.template}}</a></dd>
+
+
+                  <dt>Project Budget Template:</dt>
+                  <dd><a href="{{grant_type_record.project_budget_template.url}}" download>{{grant_type_record.project_budget_template}}</a></dd>
+
+
+                  <dt>Results Framework Template:</dt>
+
+                  <dd><a href="{{grant_type_record.results_framework_template.url}}" download>{{grant_type_record.results_framework_template}}</a></dd>
+
+                  <dt>Project Timeline Template:</dt>
+
+                  <dd><a href="{{grant_type_record.project_timeline_template.url}}" download>{{grant_type_record.project_timeline_template}}</a></dd>
+
+
+
+                  <dt>Review Form Template:</dt>
+
+                  <dd><a href="{{grant_type_record.review_form_template.url}}" download>{{grant_type_record.review_form_template}}</a></dd>
+
+              </dl>
+
+
+
+              </div>
+        </div>
+     
+</div>
+
+    </div>
+    <br clear="all">
+
+  </div>
+</div>
+
+
+{% endblock %}

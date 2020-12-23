@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+        <div class="col-sm-6">
+          <div class="panel panel-default panel-table">
+            <div class="panel-heading">Departments<span style="padding-left: 20px"><a href="{% url "department" %}"class="btn btn-space btn-success"><i class="icon icon-left mdi mdi-plus-circle"></i> Add Department</a></span>
+              <div class="tools"><span class="icon mdi mdi-download"></span><span class="icon mdi mdi-more-vert"></span></div>
+            </div>
+            <div class="panel-body">
+                    
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width:50%;">Name</th>
+                    {% comment %}
+                    <th style="width:10%;">Date</th>
+                    <th class="number">Rate</th>
+                    <th class="number">Sales</th>
+                    {% endcomment %}
+                    <th class="actions"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for department in departments %}
+                  <tr>
+                    <td>{{department.name}}</td>
+                    {% comment %}
+                    <td>23/06/2016</td>
+                    <td class="number">60%</td>
+                    <td class="number">639</td>
+                    {% endcomment %}
+                    <td class="actions">
+                      <a href="{% url "edit_department" department.pk %}" class="icon"><i class="mdi mdi-edit"></i></a>&nbsp;&nbsp;
+                      <a href="{% url "delete_department" department.pk %}" class="icon"><i class="mdi mdi-delete"></i></a>
+                    </td>
+                  </tr>
+                  <tr>
+                    {% endfor %}
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+       
+      </div>
+{% endblock %}

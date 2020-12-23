@@ -1,0 +1,350 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load paginate %}
+{% load thumbnail %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<style>
+    .form-group label{
+      font-weight: 800;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+<!-- main_container starts here -->
+<div class="main_container">
+  <!-- heading_create starts here -->
+  <div class="row marl">
+
+  </div>
+  <div class="filter_row list_filter_row row marl">
+    <div class="col-md-12">
+      <div class="card">
+
+          <form id="contacts_filter" action="" method="POST">{% csrf_token %}
+            <div class="card-header text-center">
+              <div class="card-title">Filters</div>
+              </div>
+              <div class="card-body">
+              <div class="row marl">
+                <div class="filter_col col-md-2">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">FIRST NAME</label>
+                    <input type="text" class="form-control" placeholder="First Name" name="first_name"
+                      value="{{request.POST.first_name}}">
+                  </div>
+                </div>
+                <div class="filter_col col-md-2">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">LAST NAME</label>
+                      <input type="text" class="form-control" placeholder="Last Name" name="last_name"
+                        value="{{request.POST.last_name}}">
+                    </div>
+                  </div>
+                <div class="filter_col col-md-2">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Country</label>
+                    <select class="form-control" name="country">
+                      <option value="">
+                        Select country</option>
+                      {% for country in countries.0.1 %}
+                      <option value="{{country.0}}">
+                        {{country.1}}</option>
+                      {% endfor %}
+                      {% for country in countries.1.1 %}
+                      <option value="{{country.0}}">
+                        {{country.1}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="filter_col col-md-2">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Nationality</label>
+                      <select class="form-control" name="nationality">
+                        <option value="">
+                          Select country</option>
+                        {% for country in countries.0.1 %}
+                        <option value="{{country.0}}">
+                          {{country.1}}</option>
+                        {% endfor %}
+                        {% for country in countries.1.1 %}
+                        <option value="{{country.0}}">
+                          {{country.1}}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                <div class="filter_col text-center col-3">
+                  <div class="form-group buttons_row">
+                    <button class="btn btn-primary save" type="submit">Search</button>
+                    <a href="{% url 'contacts:list' %}" class="btn btn-default clear">Clear</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+      </div>
+    </div>
+  </div>
+  <!-- heading_create ends here -->
+  <!-- filter_row starts here -->
+  <div class="table_container_row row marl ">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title text-right">
+
+            <span class="float-left">Applicants - {% if show_pageitems %} {% show_pageitems %}{% else %}
+              {{contact_obj_list|length}}{% endif %}</span>
+
+            <span class="filter_toggle">
+              <a href="#"  title="filter" class="primary_btn"><i class="fas fa-filter"></i></a>
+            </span>
+
+          </div>
+          </div>
+          </div>
+
+
+<div class="table-responsive">
+            <table class="table table-hover table-bordered ">
+              <thead>
+                {% if contact_obj_list|length > 0 %}
+                <tr>
+                  <th >S.no</th>
+                  <th >Name</th>
+                  <th >Country</th>
+                  <th>Nationality</th>
+                  <th>Business Email</th>
+                  <th >Actions</th>
+                </tr>
+                {% endif %}
+              </thead>
+              <tbody>
+                {% if per_page %}
+                {% paginate per_page contact_obj_list %}
+                {% else%}
+                {% paginate 30 contact_obj_list %}
+                {% endif %}
+                {% for contact in contact_obj_list %}
+                <tr style="text-align:center;">
+                  <td scope="row">{{ forloop.counter|add:endless.page.start_index|add:-1 }}</td>
+                  <td><a href="#" data-toggle="modal" data-target="#exampleModalCenter_contact{{contact.id}}">{{contact.first_name}}
+                      {{contact.last_name}}</a></td>
+                  <td>
+                    {{contact.get_country_display}}
+                  </td>
+                  <td>
+                    {% if contact.nationality %}
+                    {{contact.nationality}}
+                    {% else %}
+                    Not Specified
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if contact.nationality %}
+                    {{contact.business_email}}
+                    {% else %}
+                    Not Specified
+                    {% endif %}
+                  </td>
+                  <td class="actions">
+                    <a href="{% url 'contacts:contact_details' contact.pk %}" title="Detail" class="btn btn-sm btn-info view"><i class="fas fa-eye"></i></a>
+                    <a href="{% url "PI:create_pi_studemt" contact.pk %}" title="Enroll" class="btn btn-sm btn-success edit"><i
+                        class="fas fa-plus"></i></a>
+                    {% if request.user == contact.created_by or request.user.role == "ADMIN" or request.user.is_superuser %}
+                    <a href="" title="Delete" data-id="{{contact.pk}}" data-toggle="modal" data-target="#deletecallmodel"
+                      class="btn btn-danger btn-sm delete remove_account"><i class="fas fa-trash-alt"></i></a>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor%}
+              </tbody>
+            </table>
+</div>
+          {%ifequal contact_obj_list|length 0 %}
+          <h6 class="text-center">No Contact Records Found</h6>
+          {%endifequal%}
+          <div class="marl row text-center">
+            {% show_pages %}
+          </div>
+          </div>
+    <br clear="all">
+  </div>
+  <!-- filter_row ends here -->
+
+<!-- main_container ends here -->
+
+
+{% for contact_record in contact_obj_list %}
+
+<div class="modal fade" id="exampleModalCenter_contact{{contact_record.id}}" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">{{ contact_record.first_name }}
+            {{ contact_record.last_name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="" id="">
+          <div class="">
+            <div class="col-md-12" id="">
+              <div class="card">
+
+                <div class="card-body" id="datashow">
+
+                  <div class="card-title text-right">
+                    <h5>
+                      <!-- <span class="float-left title">Overview</span> -->
+                      <span class="" style="margin-top: 0px">
+                        <!-- <div class="dropdown buttons_row">
+                          <button class="btn primary_btn dropdown-toggle" type="button" data-toggle="dropdown">Actions
+                            <span class="caret"></span></button>
+                          <ul class="dropdown-menu">
+                            <li><a href="">Edit</a></li>
+                          </ul>
+                        </div> -->
+                      </span>
+                    </h5>
+                  </div>
+
+                  <div class="row marl">
+                    <div class="col-md-12">
+                      <div class="filter_col col-md-12" id="iname">
+                        <div class="form-group">
+                          <label class="contact_field_label" for="id_name" data-name="name">Name</label>
+                          <div class="contact_field" id="contact_name" data-name="name">{{ contact_record.first_name }}
+                            {{ contact_record.last_name }}</div>
+                        </div>
+                      </div>
+                      <div class="filter_col col-md-12">
+                        <div class="form-group">
+                          <label class="contact_field_label" for="id_phone" data-name="name">Phone</label>
+                          <div class="contact_field" id="contact_phone" data-name="name">{{ contact_record.mobile }}
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="col-md-12">
+                      <div class="filter_col col-md-12">
+                        <div class="form-group">
+                          <label class="contact_field_label" for="id_email" data-name="name">Email</label>
+                          <div class="contact_field" id="contact_email" data-name="name">{{ contact_record.business_email}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="filter_col col-md-12">
+                        <div class="form-group">
+                          {% if contact_record.address.address_line or contact_record.address.street or contact_record.address.city or  contact_record.address.state or contact_record.address.postcode or contact_record.address.country %}
+                          <label class="contact_field_label" for="id_address" data-name="name">Billing Address</label>
+                          <div class="contact_field" id="contact_address" data-name="name">
+                            {{contact_record.address.get_complete_address}}
+                          </div>
+                          {% endif %}
+                        </div>
+                      </div>
+                      <div class="filter_col col-md-12">
+                        <div class="form-group">
+                          {% if contact_record.description %}
+                          <label class="contact_field_label" for="id_description" data-name="name">Description</label>
+                          <div class="contact_field" id="contact_description" data-name="name">
+                            {{ contact_record.description }}
+                          </div>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+{% endfor %}
+
+<!--model to handle call deletion confirmation-->
+<!-- Modal -->
+<div class="modal fade" id="deletecallmodel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="exampleModalLabel">Delete Contact</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="text-center">Are you sure you want to delete this contact?</p>
+      </div>
+      <div class="modal-footer text-center">
+        <button type="button" class="btn btn-danger " data-dismiss="modal">Cancel</button>
+        <button type="button" id="approval_delete_btn" class="btn btn-primary">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--end of model-->
+
+
+{%endblock%}
+{% block js_block %}
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('.assigned_users').select2();
+    $(".filter_toggle").click(function () {
+      $(".list_filter_row").toggle();
+    });
+  });
+
+  search = "{{search}}"
+
+  if (search == 'True') {
+    $(".list_filter_row").show();
+  }
+  /*$('.delete').click(function (e) {
+    e.preventDefault()
+    url = $(this).attr('href')
+    if (!confirm('Are you sure you want to delete?'))
+      return;
+    window.location = $(this).attr('href')
+  });*/
+
+  $('.delete').click(function () {
+     var item_di=$(this).attr("data-id");
+    // console.log(item_di);
+     $('#approval_delete_btn').click(function(){
+         var url="/contacts/"+item_di+"/delete/";
+
+      //$('.edu_approve').hide();
+        //   showSpinner();
+       $.get(url, function (data) {
+          // hideSpinner();
+        window.location.reload();
+     });
+
+     });
+   });
+  $("a[rel='page']").click(function (e) {
+    e.preventDefault();
+    $('#contacts_filter').attr("action", $(this).attr("href"));
+    $('#contacts_filter').submit();
+  });
+</script>
+{% endblock js_block %}

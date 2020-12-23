@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% block content %}
+{% load common_tags %}
+{% load humanize %}
+<!-- <a href=""><button class="btn btn-primary" type="button">Logout</button></a> -->
+<div class="row mar1 justify-content-center">
+  <div class="col-md-10">
+  <h3><strong>Applicant Dashboard:</strong> {{user.last_name}}, {{user.first_name}}</h3>
+  <p>Is your contact info correct? <a href="{% url "common:update_profile" user.pk %}">Please check your details</a><p>
+    {% comment %}
+      <div class="alert alert-primary alert-dismissible fade show" role="alert">
+          <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endcomment %}
+  </div>
+</div>
+<div class="row mar1 justify-content-center">
+  <div class="col-md-10">
+    <!-- count_blocks_row starts here -->
+    <div class="row count_blocks_row">
+      
+      <div class="col-md-4 padding-top">
+        <div class="item green">
+          <a href="{% url 'scholarships:list' %}">
+            <div class="title">Scholarship Applications</div>
+            <div class="count">{{scholarships_count|intcomma}}</div>
+          </a>
+          <!-- <div class="more"><a href="#">Go Live</a></div> -->
+        </div>
+      </div>
+
+      <div class="col-md-4 padding-top">
+        <div class="item yellow">
+          <a href="{% url 'grants_applications:list' %}">
+            <div class="title">Grant Applications</div>
+            <div class="count">{{grantapplications_count|intcomma}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4 padding-top">
+        <div class="item sky_blue">
+          <a href="{% url 'fellowship_applications:list' %}">
+            <div class="title">Fellowship Applications</div>
+            <div class="count">{{fellowshipapplications_count|intcomma}}</div>
+            <!-- <div class="more"><a href="#">Go Live</a></div> -->
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- count_blocks_row ends here -->
+    <div class="open_sections row">
+      <div class="col-md-12 table_container_row">
+        <div class="card">
+          <div id="scholarshipapplications">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row text-center" style="margin:12px;" >
+
+      <div class="col-md-4 padding-top">
+        <a href="{% url "scholarships:select_scholarship_call" %}"  class="btn btn-sm btn-primary">Apply for a Scholarship</a>
+      </div>
+      <div class="col-md-4 padding-top">
+        <a href="{% url "grants_applications:select_grant_call" %}"  class="btn btn-sm btn-primary">Apply for a Grant</a>
+      </div>
+      <div class="col-md-4 padding-top">
+        <a href="{% url "fellowship_applicationss:select_fellowship_call" %}"  class="btn btn-sm btn-primary">Apply for a Fellowship</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block js_block %}
+<script type="text/javascript">
+
+  $(document).ready(function () {
+    $(".tag_class_opp").click(function () {
+      // $(".tag_class_opp").css('cursor', 'pointer')
+      url = ""
+      url = url + "?tag=" + $(this).attr('data-link')
+      window.location.href = url;
+    });
+
+    $(".tag_class_acc").click(function () {
+      // $(".tag_class_acc").css('cursor', 'pointer')
+      url = ""
+      url = url + "?tag=" + $(this).attr('data-link')
+      window.location.href = url;
+    });
+
+  });
+
+</script>
+{% endblock js_block %}

@@ -1,0 +1,17 @@
+{% load static %}
+
+    Highcharts.chart("{{ chart_name }}", {
+        "exporting": {{ exporting|safe }},
+        {% if title %}
+        "title": { "text": "{{ title }}"},
+        {% endif %}
+        {% if subtitle %}
+        "subtitle": {"text": "{{ subtitle }}"},
+        {% endif %}
+        "chart": {"type": "{{ chart_type }}"},
+        "xAxis": {"categories": {{ chart_labels|safe }}},
+        "series": {{ data|safe }},
+        {% if options %}
+        {{ options|safe}}
+        {% endif %}
+    });

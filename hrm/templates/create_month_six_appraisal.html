@@ -1,0 +1,547 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block breadcrumb %}
+    {% block extralinks %}
+        {% load crispy_forms_tags %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css"
+              rel="stylesheet">
+        <link rel="stylesheet" type="text/css"
+              href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css"/>
+
+    {% endblock %}
+    {% block extrahead %}
+        <style>
+
+
+        </style>
+    {% endblock %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'hrm:month6_appraisals' %}">Six Month Appraisals</a></li>
+            <li class="breadcrumb-item active">{% if month6appraisal %}Edit{% else %}Add{% endif %}</li>
+        </ol>
+    </nav>
+{% endblock %}
+{% block content %}
+    <form id="scholarshipform" action='' method="POST" novalidate enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="overview_form_block row marl justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title text-center">
+                            {% if month6appraisal %}EDIT  {% else %}Six Month Appraisal FORM{% endif %}
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+
+                        <div class="row marl">
+                            <!--first tab begins here-->
+
+
+                            <div class="tab">
+                                {{ form.errors }}
+                            
+                                <div class="row">
+            
+                                    <div class="col-md-12">
+                                        {{ form.current_job_title|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-12">
+                                        <legend class="mx-3">Provide a summary of all activities undertaken for the period of six months  based on your work plan</legend>
+                                    </div>
+                                    <div class="col-md-12">
+                                        {{ activity_form_set.management_form }}
+                                        {% for form in activity_form_set %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden|as_crispy_field }}
+                                            {% endfor %}
+                                            <div style="border: 5px solid #eee;padding: 15px;margin: 5px" id="activitytable">
+
+                                                <div class="row formset_row">
+
+                                                    <div class="col-md-12">
+                                                        {{ form.name|as_crispy_field }}
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        {{ form.achievement|as_crispy_field }}
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        {{ form.staff_remarks|as_crispy_field }}
+                                                    </div>
+                                                   
+                                                </div>
+
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                            </div>
+                           
+                            <div class="row tab">
+                                <legend class="mx-3">Planned/envisaged activities for the next six months</legend>
+
+                                <div class="col-md-12" id="dependantstable">
+                                    <h6>These should also include activities in Individual Work Plan not implemented and/ or not completed in the last six months</h6>
+                                    <div>
+                                        {{ planned_activities_set.management_form }}
+                                        {% for form in planned_activities_set %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden|as_crispy_field }}
+                                            {% endfor %}
+                                            <div style="border: 5px solid #eee;padding: 15px;margin: 15px"
+                                                 id="planned_activity_table">
+
+                                                <div class="row formset_row">
+
+                                                    <div class="col-md-12">
+                                                        {{ form.name|as_crispy_field }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form.start_date|as_crispy_field }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form.end_date|as_crispy_field }}
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+             
+
+
+                            </div>
+                         
+                            <div class="tab row">
+                                <legend class="mx-3">Overall Comments and Suggestions </legend>
+
+                                <div class="col-md-12">
+                                    <h6>Provide general remarks with reference to activities that you implemented in the last six months period and activities to be implemented in the coming period of six months
+                                    </h6>
+                                </div>
+                                <div class="col-md-12">
+
+                                    {{ form.implementation_activites|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+
+                                    {{ form.implementation_activites2|as_crispy_field }}
+                                </div>
+                                
+                                <div class="col-md-12">
+
+                                    {{ form.planned_activities|as_crispy_field }}
+                                </div>
+                            </div>
+            
+                            <!--end of one more tab-->
+                            <div class="col-md-12 m-1">
+                                <div style="overflow:auto;">
+                                    <div style="float:right; margin-top: 20px;">
+                                        <button type="button" class="btn previous">Previous</button>
+                                        <button type="button" class="next btn btn-primary">Next</button>
+                                        <button type="button" class="btn btn-primary preview">Preview</button>
+                                        <button type="button" class="btn btn-primary submit">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div style="text-align:center;margin-top:6px;">
+                            <span class="step">1</span>
+                            <span class="step">2</span>
+                            <span class="step">3</span>
+                            
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- <input type="hidden" id="save_new_form" name="savenewform"> -->
+
+            </div>
+        </div>
+        <!-- overview ends here -->
+    </form>
+    <br clear="all">
+
+
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog modal-confirm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="icon-box">
+                        <i class="material-icons">warning</i>
+                    </div>
+                    <h4 class="modal-title">Are you sure?</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Do you really want to save your application? You will not be able to edit it after this.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmSave">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+    <script src="{% static 'js/jquery.validate.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/multi-form.js' %}"></script>
+    <script type='text/javascript'
+            src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+    <script src="https://malsup.github.io/jquery.form.js"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+
+    <script src="{% static 'js/jquery.formset.js' %}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+         
+
+            $.validator.addMethod('month', function (value, element, param) {
+                return (value != 0) && (value <= 12) && (value == parseInt(value, 10));
+            }, 'Please enter a valid month!');
+            $.validator.addMethod('year', function (value, element, param) {
+                return (value != 0) && (value >= 1900) && (value == parseInt(value, 10));
+            }, 'Please enter a valid year not less than 1900!');
+            $.validator.addMethod('username', function (value, element, param) {
+                var nameRegex = /^[a-zA-Z0-9]+$/;
+                return value.match(nameRegex);
+            }, 'Only a-z, A-Z, 0-9 characters are allowed');
+
+
+            var val = {
+                // Specify validation rules
+                rules: {
+                    'education_set-0-date_from_day': {
+                        required: true
+                    },
+                    'education_set-0-date_to_day': {
+                        required: true
+
+                    },
+                    'education_set-0-qualification': {
+                        required: true
+                    },
+                    date_of_birth_month: {
+
+                        required: true,
+
+                    },
+                    date_of_birth_day: {
+
+                        required: true,
+
+                    },
+                    date_of_birth_year: {
+
+                        required: true,
+
+                    },
+                    telephone_contacts_1: {
+
+                        digits: true,
+
+                    },
+                    'referee_set-0-referee_names': {
+
+                        required: true,
+
+                    },
+                    'referee_set-0-referee_address': {
+
+                        required: true,
+
+                    },
+                    'referee_set-0-contact_details': {
+
+                        required: true,
+
+                    },
+                    'referee_set-0-file': {
+
+                        required: true,
+
+                    },
+                    'education_set-0-institution': {
+                        required: true
+                    },
+                    'education_set-0-file': {
+                        required: true
+                    },
+
+                    'education_set-0-major': {
+                        required: true
+                    },
+                    'education_set-0-total_score': {
+                        required: true,
+                        number: true
+                    }
+                },
+                // Specify validation error messages
+                messages: {
+                    'education_set-0-qualification':
+                        "Please fill at one education history record",
+                    date_of_birth_month: {
+                        required: "required"
+                    },
+                    date_of_birth_day: {
+                        required: "required"
+                    },
+                    date_of_birth_year: {
+                        required: "required"
+                    },
+
+                    'referee_set-0-referee_names': {
+                        required: "Provide atleast three referees"
+                    },
+                    proposal_title: {
+                        required: "Please write short notes about your proposal"
+                    },
+                    proposal: {
+                        required: "Proposal is Required"
+                    },
+                    area_of_specialisation: {
+                        required: "Area of specialization  is required",
+
+                    },
+                    other_universities: {
+                        required: "Please include at least one other University"
+                    },
+                    supporting_letter_from_university: {
+                        requied: "Supporting letter is required"
+                    },
+                    project_timeline: {
+                        requied: "Please upload the project timeline"
+                    },
+                    application_form: {
+                        requied: "Please upload the application form"
+                    }
+                }
+            }
+            $("#scholarshipform").multiStepForm(
+                {
+                    // defaultStep:0,
+                    beforeSubmit: function (form, submit) {
+                        console.log("called before submiting the form");
+                        console.log(form);
+                        console.log(submit);
+                    },
+                    validations: val,
+                }
+            ).navigateTo(0);
+        });
+
+
+        $('#activitytable .formset_row').formset({
+            addText: 'Add Activity',
+            deleteText: 'remove',
+            prefix: 'activities_set'
+        });
+        
+        $('#planned_activity_table .formset_row').formset({
+            addText: 'Add Activity',
+            deleteText: 'remove',
+            prefix: 'planned_activities_set'
+        });
+
+        $('#id_already_funded').click(function () {
+
+            if ($('#id_already_funded').val() == 'True') {
+                $("#amount_provided_div").show();
+            } else if ($('#id_already_funded').val() == 'False') {
+                $("#amount_provided_div").hide();
+            }
+
+        });
+
+
+        //hide/show spouse
+        {% comment %} $('#id_marital_status').click(function () {
+
+            if ($('#id_marital_status').val() == 'Married') {
+                $("#spouse_div").show();
+            } else if ($('#id_marital_status').val() == 'Single') {
+                $("#spouse_div").hide();
+            }
+        }); {% endcomment %}
+
+         //hide/show spouse name
+        $('#id_marital_status').click(function () {
+
+            if ($('#id_marital_status').val() == 'Married') {
+                $("#id_name_of_spouse").show();
+            } else if ($('#id_marital_status').val() == 'Single') {
+                $("#id_name_of_spouse").hide();
+            }
+        });
+
+
+        //hide/show please-state-conflicts
+        $('#id_religious_conflicts').click(function () {
+
+            if ($('#id_religious_conflicts').val() == 'True') {
+                $("#Conflicts_div").show();
+            } else if ($('#id_religious_conflicts').val() == 'False') {
+                $("#Conflicts_div").hide();
+            }
+        });
+
+
+        //hide/show eye defects
+        $('#id_have_eye_defect').click(function () {
+
+            if ($('#id_have_eye_defect').val() == 'True') {
+                $("#state_eye_defect_div").show();
+            } else if ($('#id_have_eye_defect').val() == 'False') {
+                $("#state_eye_defect_div").hide();
+            }
+        });
+
+        //hide/show medical letter
+        $('#id_have_eye_defect').click(function () {
+
+            if ($('#id_have_eye_defect').val() == 'True') {
+                $("#div_id_eye_medical_letter").show();
+            } else if ($('#id_have_eye_defect').val() == 'False') {
+                $("#div_id_eye_medical_letter").hide();
+            }
+        });
+
+
+        //hide/show back problems
+        $('#id_have_back_problem').click(function () {
+
+            if ($('#id_have_back_problem').val() == 'True') {
+                $("#id_state_back_problem").show();
+            } else if ($('#id_have_back_problem').val() == 'False') {
+                $("#id_state_back_problem").hide();
+            }
+        });
+
+
+        //hide/show back problems letter
+        $('#id_have_back_problem').click(function () {
+
+            if ($('#id_have_back_problem').val() == 'True') {
+                $("#div_id_back_problem_medical_letter").show();
+            } else if ($('#id_have_back_problem').val() == 'False') {
+                $("#div_id_back_problem_medical_letter").hide();
+            }
+        });
+
+
+        //hide/show state allergy
+        $('#id_have_allergy').click(function () {
+
+            if ($('#id_have_allergy').val() == 'True') {
+                $("#id_state_allergy").show();
+            } else if ($('#id_have_allergy').val() == 'False') {
+                $("#id_state_allergy").hide();
+            }
+        });
+
+
+        //hide/show allergy letter
+        $('#id_have_allergy').click(function () {
+
+            if ($('#id_have_allergy').val() == 'True') {
+                $("#id_allergy_medical_letter").show();
+            } else if ($('#id_have_allergy').val() == 'False') {
+                $("#id_allergy_medical_letter").hide();
+            }
+        });
+
+
+         //hide/show education duration from
+        $('#id_pursuing_any_study').click(function () {
+
+            if ($('#id_pursuing_any_study').val() == 'True') {
+                $("#div_id_duration_from").show();
+            } else if ($('#id_pursuing_any_study').val() == 'False') {
+                $("#div_id_duration_from").hide();
+            }
+        });
+
+
+
+
+         //hide/show criminal offense
+        $('#id_criminal_record').click(function () {
+
+            if ($('#id_criminal_record').val() == 'True') {
+                $("#div_id_state_criminal_offense").show();
+            } else if ($('#id_criminal_record').val() == 'False') {
+                $("#div_id_state_criminal_offense").hide();
+            }
+        });
+
+         //hide/show criminal offense date
+        $('#id_criminal_record').click(function () {
+
+            if ($('#id_criminal_record').val() == 'True') {
+                $("#div_id_offence_date").show();
+            } else if ($('#id_criminal_record').val() == 'False') {
+                $("#div_id_offence_date").hide();
+            }
+        });
+
+
+         //hide/show criminal offense explanation
+        $('#id_criminal_record').click(function () {
+
+            if ($('#id_criminal_record').val() == 'True') {
+                $("#div_id_offence_explanation").show();
+            } else if ($('#id_criminal_record').val() == 'False') {
+                $("#div_id_offence_explanation").hide();
+            }
+        });
+
+        //hide/show action taken
+        $('#id_criminal_record').click(function () {
+
+            if ($('#id_criminal_record').val() == 'True') {
+                $("#div_id_action_taken").show();
+            } else if ($('#id_criminal_record').val() == 'False') {
+                $("#div_id_action_taken").hide();
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+        $('#education .formset_row').formset({
+            addText: 'Add education',
+            deleteText: 'remove',
+            prefix: 'education_set'
+        });
+
+
+        {% for message in messages %}
+            $(document).ready(function () {
+                $.notify("{{message}}", "{{ message.tags }}");
+            });
+        {% endfor %}
+    </script>
+
+{% endblock js_block %}

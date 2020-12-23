@@ -1,0 +1,971 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block breadcrumb %}
+{% block extralinks %}
+{% load crispy_forms_tags %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/main.css'%}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css" />
+
+{% endblock %}
+{% block extrahead %}
+<style>
+
+
+</style>
+{% endblock %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'scholarships:list' %}">Scholarship</a></li>
+    <li class="breadcrumb-item active">{% if scholarship_obj %}Edit{% else %}Apply{% endif %}</li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+<form id="scholarshipform" action='' method="POST" novalidate enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title text-center">
+            {% if scholarship_obj %}EDIT SCHOLARSHIP APPLICATION{% else %}SCHOLARSHIP APPLICATION FORM{% endif %}
+          </div>
+        </div>
+        <div class="card-body">
+
+
+          <div class="row marl">
+            <!--first tab begins here-->
+
+
+            <div class="tab">
+              {{form.errors}}
+              <div class="col-md-12">
+                <legend class="mx-3">Applicant Expression of Study Interest</legend>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" class="required">Passport Photo
+                      {% if form.passport_photo.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    <div class="col-auto">
+                      <div class="avatar-wrapper" data-tippy-placement="bottom" title="Upload Profile Picture">
+                        <img alt="" class="profile-pic" src="{% static 'images/user.png'%}" />
+                        <div class="upload-button"></div>
+                        <input accept="image/*" class="file-upload" name="passport_photo" type="file" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                  <label for="exampleInputEmail1" class="required">Passport No
+                    {% if form.passport_no.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ form.passport_no}}
+                  <small id="hint_id_passport_no">{{ form.passport_no.help_text }}</small>
+                  <span class="error" id="id_call">{{ form.passport_no.errors }}</span>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label for="exampleInputEmail1" class="required"> Programme Applied For
+                    {% if form.programme_applied_for.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ form.programme_applied_for}}
+                  <small id="hint_id_programme_applied_for">{{ form.programme_applied_for.help_text }}</small>
+                  <span class="error" id="id__programme_applied_for">{{ form.programme_applied_for.errors }}</span>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="exampleInputEmail1" class="required">Name of university
+                    {% if other_form.name_of_university.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ other_form.name_of_university}}
+                  <span class="error" id="id_call">{{ other_form.name_of_university.errors }}</span>
+                </div>
+
+                <div class="form-group col-md-12">
+                  <label for="exampleInputEmail1" class="required">Call
+                    {% if form.call.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ form.call}}
+                  <span class="error" id="id_call">{{ form.call.errors }}</span>
+                </div>
+
+              </div>
+            </div>
+            <!--end of first tab-->
+
+            <!--second tab begins here-->
+            <div class="tab">
+              <!--Applicant bio data-->
+              <legend class="mx-3">Applicant Biodata (as applicable in your National Registration Documents)</legend>
+              <div class="row">
+
+                <div class="col-md-6">
+                  {{ form.first_name|as_crispy_field }}
+                </div>
+                <div class="col-md-6">
+                  {{ form.last_name|as_crispy_field }}
+                </div>
+                <div class="col-md-4">
+                  {{ form.other_names|as_crispy_field }}
+                </div>
+                <div class="col-md-4">
+                  {{ form.gender|as_crispy_field }}
+                </div>
+                <div class="filter_col col-md-4">
+                  <div class="form-group">
+                    <label for="marital_status" class="required">Marital Status
+                      {% if other_form.marital_status.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ other_form.marital_status }}
+                    <span class="error" id="id__marital_status">{{ form.marital_status.errors }}</span>
+                  </div>
+                </div>
+
+                <div class="filter_col col-md-4">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" class="required">Date of Birth
+                      {% if form.date_of_birth.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    <div class="input-group">{{ form.date_of_birth }}</div>
+                    <span class="error" id="id__date_of_birth">{{ form.date_of_birth.errors }}</span>
+                    <span class="error" id="id__date_of_birth_month">{{ form.date_of_birth_month.errors }}</span>
+
+                  </div>
+                </div>
+                <div class="filter_col col-md-4">
+                  <div class="form-group">
+                    <label for="marital_status" class="required">Place of Birth
+                      {% if other_form.place_of_birth.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ other_form.place_of_birth }}
+                    <span class="error" id="id__place_of_birth">{{ form.place_of_birth.errors }}</span>
+                  </div>
+                </div>
+                <div class="filter_col col-md-4">
+                  <div class="form-group">
+                    <label for="marital_status" class="required">Country
+                      {% if other_form.country_of_residence.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ other_form.country_of_residence }}
+                    <span class="error" id="id__country_of_residence">{{ form.country_of_residence.errors }}</span>
+                  </div>
+                </div>
+                <div class="filter_col col-md-12">
+                  <div class="form-group">
+                    <label for="marital_status" class="required">Residence contact address
+                      {% if other_form.residence_contact_address.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ other_form.residence_contact_address }}
+                    <span class="error"
+                      id="id__residence_contact_address">{{ form.residence_contact_address.errors }}</span>
+                  </div>
+                </div>
+                <div class="filter_col col-md-6">
+                  <div class="form-group">
+                    <label for="marital_status" class="required">Email (please provide your email address)
+                      {% if other_form.contact_email.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ other_form.contact_email }}
+                    <span class="error" id="id__contact_email">{{ form.contact_email.errors }}</span>
+                  </div>
+                </div>
+                <div class="filter_col col-md-6">
+                  <div class="form-group">
+                    <label for="marital_status" class="required">Telephone contacts (include Mobile phone number if
+                      available.)
+                      {% if other_form.telephone_contacts.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    <div class="input-group">{{ other_form.telephone_contacts }}</div>
+
+                  </div>
+                  <span class="error" id="id__telephone_contacts">{{ other_form.telephone_contacts.errors }}</span>
+                </div>
+
+                <!--end of row class-->
+              </div>
+
+
+            </div>
+            <!--end of second tab-->
+            <!--third tab begins here-->
+            <div id="education" class="form-group tab">
+              <legend class="mx-3">Applicant’s Education Background</legend>
+
+              <div class=" marl">
+                <div id="educationTable">
+                  <div class="formset_row row">
+                    <div class="col-md-12"></div>
+                    <!--formset for education-->
+                    {{ education_formset.management_form }}
+                    {% for form in education_formset.forms %}
+                    {{form.id}}
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1" class="required">Qualification
+                          {% if form.qualification.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                        {{ form.qualification}}
+                        <span class="error" id="id_call">{{ form.qualification.errors }}</span>
+                      </div>
+
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1" class="required">Institution
+
+                          {% if form.institution.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                        {{ form.institution}}
+                        <span class="error" id="id_call">{{ form.institution.errors }}</span>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1" class="required">Major
+                          {% if form.major.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                        {{ form.major}}
+                        <span class="error" id="id_call">{{ form.major.errors }}</span>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1" class="required">Total Score
+                          {% if form.total_score.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                        {{ form.total_score}}
+                        <small id="hint_id_total_score">points / aggregate / grade / CGPA</small>
+                        <span class="error" id="id_call">{{ form.total_score.errors }}</span>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1" class="required">Country
+                          {% if form.country.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                        {{ form.country}}
+                        <span class="error" id="id_call">{{ form.country.errors }}</span>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1" class="required">From
+                          {% if form.date_from.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                        <div class="input-group">{{ form.date_from}}</div>
+                        <span class="error" id="id_call">{{ form.date_from.errors }}</span>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1" class="required">To
+                          {% if form.date_to.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                        <div class="input-group">{{ form.date_to}}</div>
+                        <span class="error" id="id_call">{{ form.date_to.errors }}</span>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1" class="required">Attach Academic Certificate
+                          {% if form.file.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                        <div class="input-group">{{ form.file}}</div>
+                        <span class="error" id="id_call">{{ form.file.errors }}</span>
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <hr>
+                    </div>
+
+                    {% endfor %}
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+            <!--end of third tab-->
+            <div id="research" class="form-group tab">
+              <legend class="mx-3">Publications and Research Projects</legend>
+
+              <div class=" marl">
+                <legend class="mx-2">Research Projects</legend>
+                <div id="researchTable">
+                  {{ research_formset.management_form }}
+
+                  {% for form in research_formset.forms %}
+                  {{form.id}}
+                  <div class="formset_row row">
+                    <div class="col-md-6">
+                      {{ form.code|as_crispy_field }}
+                    </div>
+
+                    <div class="col-md-6">
+                      {{ form.title|as_crispy_field }}
+                    </div>
+                    <div class="col-md-12">
+                      {{ form.description|as_crispy_field }}
+                    </div>
+                    <div class="col-md-12">
+                      <hr />
+                    </div>
+
+                  </div>
+
+                  {% endfor %}
+
+                </div>
+                <legend class="mx-2">Publications</legend>
+                <div id="publicationTable">
+                  {{ publications_formset.management_form }}
+
+                  {% for form in publications_formset.forms %}
+                  {{form.id}}
+                  <div class="formset_row row">
+
+
+                    <div class="col-md-12">
+                      {{ form.title|as_crispy_field }}
+                    </div>
+                    <div class="col-md-12">
+                      {{ form.published_file|as_crispy_field }}
+                    </div>
+                    <div class="col-md-12">
+                      <hr />
+                    </div>
+
+                  </div>
+
+                  {% endfor %}
+
+                </div>
+
+
+              </div>
+            </div>
+            <!--fourth tab begins here-->
+            <div class="form-group tab">
+              <legend class="mx-3">Employment History</legend>
+              <div class="row marl">
+                <div class="col-md-12">
+
+
+                  <div id='employmentTable' class="table">
+                    {{ employment_formset.management_form }}
+
+                    {% for form in employment_formset.forms %}
+                    {{form.id}}
+
+                    <div class="formset_row row">
+                      <div class="col-md-12">
+                        {{ form.organisation|as_crispy_field }}
+                      </div>
+                      <div class="col-md-12">
+                        {{ form.organisation_address|as_crispy_field }}
+                      </div>
+                      <div class="col-md-3">
+                        {{ form.employed_from|as_crispy_field }}
+                      </div>
+                      <div class="col-md-3">
+                        {{ form.employed_to|as_crispy_field }}
+                      </div>
+                      <div class="col-md-12">
+                        {{ form.reason_for_leaving|as_crispy_field }}
+                      </div>
+                      <div class="col-md-12">
+                        <hr>
+                      </div>
+
+                    </div>
+                    {% endfor %}
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!--end of fourth tab-->
+            <!--fifth tab begins from here-->
+            <div class="tab">
+
+              <div class="row marl">
+                <div class="col-md-12">
+                  {{ other_form.experience|as_crispy_field }}
+                </div>
+                <legend class="mx-3">Research Interest</legend>
+                <div class="filter_col col-md-12">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" class="required"> Possible research interest/Topic
+                      {% if other_form.research_experience.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ other_form.research_experience }}
+                    <span class="error" id="id_conferences_attended">{{ other_form.research_experience.errors }}</span>
+                  </div>
+                </div>
+                <div class="filter_col col-md-12">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" class="required">Research Location
+                      {% if other_form.research_location.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ other_form.research_location}}
+                    <span class="error" id="id_research_location">{{ other_form.research_location.errors }}</span>
+                  </div>
+                </div>
+                <div class="filter_col col-md-12">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" class="required">Explain your choice
+                      {% if other_form.research_location_reason.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ other_form.research_location_reason}}
+                    <span class="error"
+                      id="id_research_location_reason">{{ other_form.research_location_reason.errors }}</span>
+                  </div>
+                </div>
+                <div class="filter_col col-md-12">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" class="required">Please attach concept note if applying for PhD
+                      {% if other_form.research_concept_note.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ other_form.research_concept_note}}
+                    <span class="error"
+                      id="id_research_location_reason">{{ other_form.research_concept_note.errors }}</span>
+                  </div>
+                </div>
+                <div class="filter_col col-md-12">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" class="required">Do you have full support of your current employer
+                      to undertake graduate studies through full release?
+                      {% if other_form.employer_support.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ other_form.employer_support}}
+                    <span class="error" id="id_research_location_reason">{{ other_form.employer_support.errors }}</span>
+                  </div>
+                </div>
+                <div class="filter_col col-md-12" id="employer_support_attachment">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" class="required">If yes, attach evidence (letter of no
+                      objection/endorsement explaining what value add graduate studies will bring to the organisation)
+
+                      {% if other_form.support_evidence.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ other_form.support_evidence}}
+                    <span class="error" id="id_support_evidence">{{ other_form.support_evidence.errors }}</span>
+                  </div>
+                </div>
+
+
+              </div>
+
+            </div>
+            <!--last tab-->
+            <!--more tab-->
+            <div class="tab">
+              <legend class="mx-3">Additional funding</legend>
+              <div class="row marl">
+                <div class="filter_col col-md-12">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1" class="required">Do you have any additional funding to your studies?
+
+                      {% if other_form.have_additional_funding.field.required %}<span class="error_marker"
+                        style="color:red">*</span>{% endif %}</label>
+                    {{ other_form.have_additional_funding}}
+                    <span class="error"
+                      id="id_have_additional_funding">{{ other_form.have_additional_funding.errors }}</span>
+                  </div>
+                </div>
+                <div class="filter_col col-md-12">
+
+                  <div id="addtional_funding_div" class="row">
+                    <div class="filter_col col-md-12">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1" class="required">please specify
+
+                          {% if other_form.specify_funding_type.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                        {{ other_form.specify_funding_type}}
+                        <span class="error"
+                          id="id_have_additional_funding">{{ other_form.specify_funding_type.errors }}</span>
+                      </div>
+                    </div>
+                    <div class="filter_col col-md-12">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1" class="required">Funding Type
+
+                          {% if other_form.funding_type.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                        {{ other_form.funding_type}}
+                        <span class="error" id="id_have_additional_funding">{{ other_form.funding_type.errors }}</span>
+                      </div>
+                    </div>
+                    <div class="filter_col col-md-12">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1" class="required">Already Funded
+
+                          {% if other_form.already_funded.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                        {{ other_form.already_funded}}
+                        <span class="error"
+                          id="id_have_additional_funding">{{ other_form.already_funded.errors }}</span>
+                      </div>
+                    </div>
+                    <div class="filter_col col-md-12" id="amount_provided_div">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1" class="required">Amount Provided (US$)
+
+                          {% if other_form.amount_provided.field.required %}<span class="error_marker"
+                            style="color:red">*</span>{% endif %}</label>
+                        {{ other_form.amount_provided}}
+                        <span class="error"
+                          id="id_have_additional_funding">{{ other_form.amount_provided.errors }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!--end of more tab-->
+            <!--one more tab-->
+            <div class="tab">
+              <legend class="mx-3">Please provide names, address and contact details of at least three referees
+              </legend>
+              <div class="row marl">
+                <div class="col-md-12">
+                  <div id='refereeTable' class="table">
+                    {{ referee_formset.management_form }}
+
+                    {% for form in referee_formset.forms %}
+                    {{form.id}}
+
+                    <div class="formset_row row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="exampleInputEmail1" class="required">Referee names
+
+                            {% if form.referee_names.field.required %}<span class="error_marker"
+                              style="color:red">*</span>{% endif %}</label>
+                          {{ form.referee_names}}
+                          <span class="error" id="id__referee_names">{{ form.referee_names.errors }}</span>
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="exampleInputEmail1" class="required">Referee address
+
+                            {% if form.referee_address.field.required %}<span class="error_marker"
+                              style="color:red">*</span>{% endif %}</label>
+                          {{ form.referee_address}}
+                          <span class="error" id="id__referee_address">{{ form.referee_address.errors }}</span>
+                        </div>
+
+                      </div>
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="exampleInputEmail1" class="required">Contact details
+
+                            {% if form.contact_details.field.required %}<span class="error_marker"
+                              style="color:red">*</span>{% endif %}</label>
+                          {{ form.contact_details}}
+                          <span class="error" id="id__contact_details">{{ form.contact_details.errors }}</span>
+                        </div>
+
+                      </div>
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="exampleInputEmail1" class="required">Reference Letter
+
+                            {% if form.file.field.required %}<span class="error_marker"
+                              style="color:red">*</span>{% endif %}</label>
+                          {{ form.file}}
+                          <span class="error" id="id__file">{{ form.file.errors }}</span>
+                        </div>
+
+                      </div>
+
+                      <div class="col-md-12">
+                        <hr>
+                      </div>
+
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab">
+              <legend class="mx-3">Other Information</legend>
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">Was English your language of instruction in High
+                    school?
+
+                    {% if form.english_in_high_school.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ form.english_in_high_school}}
+                  <span class="error" id="id_english_in_high_school">{{ form.english_in_high_school.errors }}</span>
+                </div>
+              </div>
+              <div class="filter_col col-md-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="required">How did you learn about this scholarship call?
+
+                    {% if form.scholarship_call_source.field.required %}<span class="error_marker"
+                      style="color:red">*</span>{% endif %}</label>
+                  {{ form.scholarship_call_source}}
+                  <span class="error" id="id_scholarship_call_source">{{ form.scholarship_call_source.errors }}</span>
+                </div>
+              </div>
+              <div class="col-md-12" id="other_call_sources">
+                {{ other_form.other_call_source|as_crispy_field }}
+              </div>
+              <div class="filter_col col-md-12">
+                <p>
+                  By clicking submit, you declare that all the information provided in this application form is to the
+                  bestof your knowledge true and accurate.
+                  You do understand that any information that may be deemed falsified and/or inaccurate shall lead to
+                  automatic disqualification of your application and/or scholarship.
+                  You do acknowledge that completing this application DOES NOT imply automatic award of scholarship.
+
+                </p>
+              </div>
+
+            </div>
+
+            <!--end of one more tab-->
+            <div class="col-md-12">
+              <div style="overflow:auto;">
+                <div style="float:right; margin-top: 20px;">
+                  <button type="button" class="btn previous">Previous</button>
+                  <button type="button" class="next btn btn-primary">Next</button>
+                  <button type="button" class="btn btn-primary preview">Preview</button>
+                  <button type="button" class="btn btn-primary submit">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div style="text-align:center;margin-top:6px;">
+            <span class="step">1</span>
+            <span class="step">2</span>
+            <span class="step">3</span>
+            <span class="step">4</span>
+            <span class="step">5</span>
+            <span class="step">6</span>
+            <span class="step">7</span>
+            <span class="step">8</span>
+            <span class="step">9</span>
+          </div>
+        </div>
+
+
+      </div>
+      <!-- <input type="hidden" id="save_new_form" name="savenewform"> -->
+
+    </div>
+  </div>
+  <!-- overview ends here -->
+</form>
+<br clear="all">
+
+
+<div id="myModal" class="modal fade">
+  <div class="modal-dialog modal-confirm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="icon-box">
+          <i class="material-icons">warning</i>
+        </div>
+        <h4 class="modal-title">Are you sure?</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Do you really want to save your application? You will not be able to edit it after this.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="btnConfirmSave">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+<script src="{% static 'js/jquery.validate.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/multi-form.js' %}"></script>
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+<script src="https://malsup.github.io/jquery.form.js"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#id_call").attr('readonly', true);
+    $("#employer_support_attachment").hide();
+    $("#addtional_funding_div").hide();
+    $("#amount_provided_div").hide();
+    $("#other_call_sources").hide();
+    $.validator.addMethod('date', function (value, element, param) {
+      return (value != 0) && (value <= 31) && (value == parseInt(value, 10));
+    }, 'Please enter a valid date!');
+    $.validator.addMethod('month', function (value, element, param) {
+      return (value != 0) && (value <= 12) && (value == parseInt(value, 10));
+    }, 'Please enter a valid month!');
+    $.validator.addMethod('year', function (value, element, param) {
+      return (value != 0) && (value >= 1900) && (value == parseInt(value, 10));
+    }, 'Please enter a valid year not less than 1900!');
+    $.validator.addMethod('username', function (value, element, param) {
+      var nameRegex = /^[a-zA-Z0-9]+$/;
+      return value.match(nameRegex);
+    }, 'Only a-z, A-Z, 0-9 characters are allowed');
+
+
+    var val = {
+      // Specify validation rules
+      rules: {
+        'education_set-0-date_from_day': {
+          required: true
+        },
+        'education_set-0-date_to_day': {
+          required: true
+
+        },
+        'education_set-0-qualification': {
+          required: true
+        },
+        date_of_birth_month: {
+
+          required: true,
+
+        },
+        date_of_birth_day: {
+
+          required: true,
+
+        },
+        date_of_birth_year: {
+
+          required: true,
+
+        },
+        telephone_contacts_1: {
+
+          digits: true,
+
+        },
+        'referee_set-0-referee_names': {
+
+          required: true,
+
+        },
+        'referee_set-0-referee_address': {
+
+          required: true,
+
+        },
+        'referee_set-0-contact_details': {
+
+          required: true,
+
+        },
+        'referee_set-0-file': {
+
+          required: true,
+
+        },
+        'education_set-0-institution': {
+          required: true
+        },
+        'education_set-0-file': {
+          required: true
+        },
+
+        'education_set-0-major': {
+          required: true
+        },
+        'education_set-0-total_score': {
+          required: true,
+          number: true
+        }
+      },
+      // Specify validation error messages
+      messages: {
+        'education_set-0-qualification':
+          "Please fill at one education history record",
+        date_of_birth_month: {
+          required: "required"
+        },
+        date_of_birth_day: {
+          required: "required"
+        },
+        date_of_birth_year: {
+          required: "required"
+        },
+
+        'referee_set-0-referee_names': {
+          required: "Provide atleast three referees"
+        },
+        proposal_title: {
+          required: "Please write short notes about your proposal"
+        },
+        proposal: {
+          required: "Proposal is Required"
+        },
+        area_of_specialisation: {
+          required: "Area of specialization  is required",
+
+        },
+        other_universities: {
+          required: "Please include at least one other University"
+        },
+        supporting_letter_from_university: {
+          requied: "Supporting letter is required"
+        },
+        project_timeline: {
+          requied: "Please upload the project timeline"
+        },
+        application_form: {
+          requied: "Please upload the application form"
+        }
+      }
+    }
+    $("#scholarshipform").multiStepForm(
+      {
+        // defaultStep:0,
+        beforeSubmit: function (form, submit) {
+          console.log("called before submiting the form");
+          console.log(form);
+          console.log(submit);
+        },
+        validations: val,
+      }
+    ).navigateTo(0);
+  });
+
+  //hide/show other call sources
+  $('#id_scholarship_call_source').click(function () {
+
+    if ($('#id_scholarship_call_source').val() == 'others') {
+      $("#other_call_sources").show();
+    }
+    else {
+      $("#other_call_sources").hide();
+    }
+
+  });
+  $('#id_employer_support').click(function () {
+
+    if ($('#id_employer_support').val() == 'True') {
+      $("#employer_support_attachment").show();
+    }
+    else if ($('#id_employer_support').val() == 'False') {
+      $("#employer_support_attachment").hide();
+    }
+
+  });
+  $('#id_have_additional_funding').click(function () {
+
+    if ($('#id_have_additional_funding').val() == 'True') {
+      $("#addtional_funding_div").show();
+    }
+    else if ($('#id_have_additional_funding').val() == 'False') {
+      $("#addtional_funding_div").hide();
+    }
+
+  });
+
+  $('#id_already_funded').click(function () {
+
+    if ($('#id_already_funded').val() == 'True') {
+      $("#amount_provided_div").show();
+    }
+    else if ($('#id_already_funded').val() == 'False') {
+      $("#amount_provided_div").hide();
+    }
+
+  });
+
+  $('#educationTable .formset_row').formset({
+    addText: 'Add education',
+    deleteText: 'remove',
+    prefix: 'education_set'
+  });
+  $('#researchTable .formset_row').formset({
+    addText: 'Add Research',
+    deleteText: 'remove',
+    prefix: 'research_set'
+  });
+  $('#publicationTable .formset_row').formset({
+    addText: 'Add Publication',
+    deleteText: 'remove',
+    prefix: 'publication_set'
+  });
+
+  $('#employmentTable .formset_row').formset({
+    addText: 'Add employment',
+    deleteText: 'remove',
+    prefix: 'employment_set'
+  });
+
+  $('#refereeTable .formset_row').formset({
+    addText: 'Add referee',
+    deleteText: 'remove',
+    prefix: 'referee_set'
+  });
+
+  $('#myModal').on('show', function () {
+    var id = $(this).data('id'),
+      removeBtn = $(this).find('.danger');
+  })
+
+  $('#savefinal').on('click', function (e) {
+    e.preventDefault();
+
+    var id = $(this).data('id');
+    $('#myModal').data('id', id).modal('show');
+  });
+
+
+
+  $('#recurring_block').hide()
+  $("#id_contacts").select2();
+  $("#id_assigned_to").select2();
+  $("#id_teams").select2();
+  $("#id_start_date").css('color', 'black');
+  $("#id_end_date").css('color', 'black');
+  var date = new Date();
+  var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  $('.date').datetimepicker({
+    'format': 'YYYY-MM-DD',
+    minDate: today
+  })
+
+  $('#id_call_type').on('change', function () {
+    // console.log($(this).val())
+    if ($(this).val() == 'Recurring') {
+      $('#recurring_block').show()
+    }
+    else {
+      $('#recurring_block').hide()
+    }
+  });
+  {% for message in messages %}
+  $(document).ready(function () {
+    $.notify("{{message}}", "{{ message.tags }}");
+  });
+  {% endfor %}
+</script>
+
+{% endblock js_block %}

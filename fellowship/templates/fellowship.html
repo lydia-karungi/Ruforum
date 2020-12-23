@@ -1,0 +1,455 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load paginate %}
+{% load thumbnail %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<style>
+  .form-group label {
+    font-weight: 800;
+  }
+
+.info-bar {
+    margin: 5px;
+    padding: 3px;
+    background: beige;
+    font-size: large;
+}
+
+
+</style>
+{% endblock %}
+{% block content %}
+<div class="info-bar">
+    There are currently <b>{{ metrics.active_fellowships }} active fellowships.</b>
+</div>
+<!-- main_container starts here -->
+<div class="main_container">
+  <!-- heading_create starts here -->
+  <div class="row marl">
+    <div class="col-lg-12 text-right">
+      <span class="d-inline"><a class="primary_btn" href="{% url 'fellowship:add_fellowship' %}"><i class="fa fa-plus"></i>
+          Add a Fellowship</a></span>
+    </div>
+  </div>
+  <div class="filter_row list_filter_row row marl">
+    <div class="col-md-12">
+      <div class="card">
+
+          <form id="fellowships_filter" method="POST" action="">
+            {% csrf_token %}
+            <div class="card-header">
+              <div class="card-title text-center">Filters</div>
+              </div>
+              <div class="card-body">
+              <div class="row marl">
+                <div class="filter_col col-md-2">
+                    <div class="row">
+                      <div class="form-group">
+                        <label for="fellowship_id">Fellowship ID</label>
+                        <input type="text" class="form-control" placeholder="Fellowship ID" name="fellowship_id" id="fellowship_id" {% if request.POST %}
+                          value="{{request.POST.fellowship_id}}" {%endif%} />
+                      </div>
+                    </div>
+                    <div class="row">
+                        <label for="hide_expired">Hide Expired Fellowships</label>
+                        <input type="checkbox" class="form-control" name="hide_expired" id="hide_expired" {% if request.POST.hide_expired %}checked{%endif%} />
+                    </div>
+                </div>
+                <div class="filter_col col-md-2">
+                  <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" placeholder="Title" id="title" name="title" {% if request.POST %}
+                      value="{{request.POST.title}}" {%endif%} />
+                  </div>
+                </div>
+                <div class="filter_col col-md-2">
+                  <div class="form-group">
+                    <label for="call">Call</label>
+                    <input type="text" class="form-control" placeholder="Call" id="call" name="call" {% if request.POST %}
+                      value="{{request.POST.call}}" {%endif%} />
+                  </div>
+                </div>
+                <div class="filter_col col-md-2">
+                  <div class="form-group">
+                    <label for="pi">PI</label>
+                    <input type="text" class="form-control" placeholder="PI" id="pi" name="pi" {% if request.POST %}
+                      value="{{request.POST.pi}}" {%endif%} />
+                  </div>
+                </div>
+                <div class="filter_col col-md-2">
+
+                    <div class="row">
+                      <div class="form-group">
+                        <label for="date_range_start">Start Date</label>
+                        <input type="text" class="form-control" placeholder="Start Date" name="date_range_start" id="date_range_start" {% if request.POST %}
+                          value="{{request.POST.date_range_start}}" {%endif%} />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group">
+                        <label for="date_range_end">End Date</label>
+                        <input type="text" class="form-control" placeholder="End Date" name="date_range_end" id="date_range_end" {% if request.POST %}
+                          value="{{request.POST.date_range_end}}" {%endif%} />
+                      </div>
+                    </div>
+
+                </div>
+                <input type="hidden" name="tab_status" id="tab_status">
+                {% comment %}
+                <div class="filter_col col-md-2">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Call</label>
+                    <select class="form-control" id="id_tag" name="tag" multiple>
+                      <!-- <option value="">--Select Tags--</option> -->
+                      {% for tag in tags %}
+                      <option value="{{tag.id}}" {% if request_tags %}
+                        {% if tag.id|slugify in request_tags %}selected{% endif %}{% endif %}>{{ tag.name }}
+                      </option>
+                      {% endfor%}
+                    </select>
+                  </div>
+                </div>
+                {% endcomment %}
+                <div class="filter_col col-lg-2">
+                  <div class="form-group buttons_row">
+                    <button class="btn btn-primary save" type="submit">Search</button>
+                    <a href="{% url 'fellowship:list' %}" class="btn btn-default clear">Clear</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+      </div>
+    </div>
+  </div>
+  <!-- heading_create ends here -->
+  <!-- filter_row starts here -->
+  <div class="filter_row row marl">
+    <div class="col-md-12 col-lg-12 col-xl-12">
+      <div class="table_container_row row marl no-gutters">
+        <div class="col-md-12">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="open-tab" data-toggle="tab" href="#open" role="tab" aria-controls="open"
+                aria-selected="true">Fellowships ({{fellowship_list|length}})</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="compliance-tab" data-toggle="tab" href="#compliance" role="tab" aria-controls="close"
+                aria-selected="false">Application Compliance ({{fellowship_applications|length}})</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="approval-tab" data-toggle="tab" href="#approval" role="tab" aria-controls="close"
+                  aria-selected="false">Application Decision ({{application_approvals|length}})</a>
+              </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open">
+              <div class="card">
+
+                  <div class="panel-heading-list card-title text-right">
+                    <span class="total_count float-left">Fellowships - {% if show_pageitems %}
+                      {% show_pageitems %}{% else %}{{fellowship_list|length}}{% endif %}</span>
+                    <span class="filter_toggle ">
+                      <a href="#" class="primary_btn"><i class="fas fa-filter"></i></a>
+                    </span>
+                  </div>
+
+                    </div>
+                    <div class="table_container_row row  ">
+                      <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                      <thead>
+
+                        {% if fellowship_list|length > 0 %}
+                        <tr>
+                          <th>#</th>
+                          <th>Fellowship ID</th>
+                          <th>Title</th>
+                          <th>Call</th>
+                          <th>PI</th>
+                          <th>Maturity</th>
+                          <th>Has Reports</th>
+                          <th>Approval Status</th>
+
+                          <th>Actions</th>
+                        </tr>
+                        {% endif %}
+                      </thead>
+                      <tbody>
+                        {% if per_page %}
+                        {% paginate per_page fellowship_list %}
+                        {% else%}
+                        {% paginate 10 fellowship_list %}
+                        {% endif %}
+                        {% for each_fellowship in fellowship_list %}
+                        <tr id="account_details{{each_fellowship.id}}" class="text-center">
+                          <td scope="row" class="s_no" data-id="{{forloop.counter}}">{{ forloop.counter }}</td>
+                          <!-- <td>{% if each_fellowship.name %}<a
+                              href="{% url 'fellowship:view_account' each_fellowship.id %}">{{ each_fellowship.name }}</a>{% endif %}
+                          </td> -->
+                          <td>{% if each_fellowship.fellowship_id %}<a data-toggle="modal"
+                              data-target="#exampleModalCenter_account{{each_fellowship.id}}"
+                              href="#">{{ each_fellowship.fellowship_id }}</a>{% endif %}
+                          </td>
+                          <td class="cell">
+                            {{each_fellowship.title}}
+                          </td>
+                          <td class="cell">{{each_fellowship.call}}</td>
+                          <td class="cell">{{each_fellowship.pi }}</td>
+                          <td class="cell {% if each_fellowship.is_expired %}expired{%endif%}">{{each_fellowship.show_maturity|safe }}</td>
+                          <td>{% if each_fellowship.has_reports %}Yes {% else %} No {% endif %}</td>
+                          <td class="cell {{ each_fellowship.approval_status }}">{{each_fellowship.get_approval_status_display}}</td>
+                          <td class="actions">
+                            <a href="{% url "fellowship:review_fellowship" each_fellowship.pk %}" title="View" class="btn btn-sm btn-info edit"><i
+                                class="fas fa-eye"></i></a>
+                                {% if perms.fellowships.change_fellowship %}
+                            <a href="{% url "fellowship:edit_fellowship" each_fellowship.pk %}" title="Edit" class="btn btn-sm btn-success edit"><i
+                                class="fas fa-pencil-alt"></i></a>
+                                {% endif %}
+                                {% if perms.fellowships.delete_fellowshipapplication %}
+                            <a href="" title="Delete"
+                              class="btn btn-danger btn-sm delete remove_account"><i class="fas fa-trash-alt"></i></a>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+</div>
+</div>
+
+                  {% ifequal fellowship_list|length 0 %}
+                  <h6 class="text-center">No Fellowship Records Found</h6>
+                  {% endifequal %}
+                  <div class="text-center row marl">
+                    {% show_pages %}
+                  </div>
+
+
+            </div>
+
+            <div class="tab-pane fade" id="compliance" role="tabpanel" aria-labelledby="compliance">
+              <div class="card">
+
+                  <div class="panel-heading-list card-title text-right">
+                    <span class="total_count float-left">Fellowship Applications - {% if show_pageitems %}
+                      {% show_pageitems %}{% else %}{{fellowship_applications|length}}{% endif %}</span>
+                    <span class="filter_toggle ">
+                      <a href="#" class="primary_btn"><i class="fas fa-filter"></i></a>
+                    </span>
+                  </div>
+                  </div>
+
+                  <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                      <thead>
+
+                        {% if fellowship_applications|length > 0 %}
+                        <tr>
+                          <th>ID</th>
+                          <th>Application No</th>
+                          <th>Call ID</th>
+                          <th>Call Title</th>
+                          <th>Last Modified</th>
+                          <th>Proposal Title</th>
+
+                          <th>Compliance</th>
+                        </tr>
+                        {% endif %}
+                      </thead>
+                      <tbody>
+                        {% if per_page %}
+                        {% paginate per_page fellowship_applications %}
+                        {% else%}
+                        {% paginate 10 fellowship_applications %}
+                        {% endif %}
+                        {% for each_fellowship in fellowship_applications %}
+                        <tr id="account_details{{each_fellowship.id}}">
+                          <td scope="row">{{ forloop.counter }}</td>
+
+                          <td>{{each_fellowship.ref_number}}</td>
+                          <td>{{each_fellowship.call.call_id}}</td>
+                          <td class="cell">{{each_fellowship.call}}</td>
+                          <td>{{each_fellowship.last_modified}}</td>
+                          <td class="cell">{{each_fellowship.proposal_title}}</td>
+                          <td class="actions">{% if each_fellowship.compliant %}<button class="green_btn">Compliance Validated</button>{% else %}<button class="primary_btn">Non-compliant</button>{% endif %}
+                          </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {% ifequal close_fellowships|length 0 %}
+                  <h6 class="text-center">No Closed Acccount Records Found</h6>
+                  {% endifequal %}
+                  <div class="text-center row marl">
+                    {% show_pages %}
+                  </div>
+
+
+            </div>
+
+            <div class="tab-pane fade" id="approval" role="tabpanel" aria-labelledby="approval">
+                <div class="card">
+
+                    <div class="panel-heading-list card-title text-right">
+                      <span class="total_count float-left">Fellowship Application Approval - {% if show_pageitems %}
+                        {% show_pageitems %}{% else %}{{application_approvals|length}}{% endif %}</span>
+                      <span class="filter_toggle ">
+                        <a href="#" class="primary_btn"><i class="fas fa-filter"></i></a>
+                      </span>
+                    </div>
+                      </div>
+                    <div class="table-responsive">
+                      <table class="table table-hover table-bordered">
+                        <thead>
+
+                          {% if application_approvals|length > 0 %}
+                          <tr>
+                            <th>ID</th>
+                            <th>Application No</th>
+                            <th>Call ID</th>
+                            <th>Call Title</th>
+                            <th>Last Modified</th>
+                            <th>Proposal Title</th>
+
+                            <th >Status</th>
+                          </tr>
+                          {% endif %}
+                        </thead>
+                        <tbody>
+                          {% if per_page %}
+                          {% paginate per_page application_approvals %}
+                          {% else%}
+                          {% paginate 10 application_approvals %}
+                          {% endif %}
+                          {% for each_fellowship in application_approvals %}
+                          <tr id="account_details{{each_fellowship.id}}">
+                            <td scope="row">{{ forloop.counter }}</td>
+
+                            <td>{{each_fellowship.ref_number}}</td>
+                            <td>{{each_fellowship.call.call_id}}</td>
+                            <td class="cell">{{each_fellowship.call}}</td>
+                            <td>{{each_fellowship.last_modified}}</td>
+                            <td class="cell">{{each_fellowship.proposal_title}}</td>
+                            <td class="actions">{% if each_fellowship.selected_for_funding %}<button class="green_btn">Accepted</button>{% else %}<button class="primary_btn">Rejected</button>{% endif %}
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                    {% ifequal application_approvals|length 0 %}
+                    <h6 class="text-center">No Application Approval Records Found</h6>
+                    {% endifequal %}
+                    <div class="text-center row marl">
+                      {% show_pages %}
+                    </div>
+
+
+              </div>
+
+          </div>
+          <br clear="all">
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- filter_row ends here -->
+  <!-- fellowships list start -->
+  <!-- fellowships list end -->
+</div>
+<!-- main_container ends here -->
+
+{% endblock %}
+{% block js_block %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script type="text/javascript">
+  $("#close-tab").click(function (e) {
+    $("#tab_status").val('Closed');
+  })
+  $(".tag_class_acc").click(function () {
+    // $(".tag_class_acc").css('cursor', 'pointer')
+    url = "{% url 'fellowship:list' %}"
+    url = url + "?tag=" + $(this).attr('data-link')
+    window.location.href = url;
+  });
+
+
+
+  $("#open-tab").click(function (e) {
+    $("#tab_status").val('Open')
+  })
+
+  tab_status = "{{tab_status}}"
+  if (tab_status == 'Closed') {
+    $("#close-tab").click()
+  } else {
+    $("#open-tab").click()
+  }
+
+
+  $('.remove_account').click(function (e) {
+    e.preventDefault()
+    url = $(this).attr('href')
+    if (!confirm('Are you sure you want to delete?'))
+      return;
+    window.location = $(this).attr('href')
+  });
+
+  $(".reset").click(function (e) {
+    window.location = "{% url 'fellowship:list'%}"
+  });
+
+
+  search = "{{search}}"
+
+  if (search == 'True') {
+    $(".list_filter_row").show();
+  }
+
+  $(document).ready(function () {
+    $(".filter_toggle").click(function () {
+      $(".list_filter_row").toggle();
+    });
+    $('#id_tag').select2();
+
+    ////////////////////////
+    $.urlParam = function (name) {
+      var results = new RegExp('[\?&]' + name + '=([^&#]*)')
+        .exec(window.location.search);
+      return (results !== null) ? results[1] || 0 : false;
+    }
+
+    if ($.urlParam('page')) {
+      $('.s_no').each(function (i, e) {
+        pageNum = $.urlParam('page')
+        if (!$(this).attr('data-id').endsWith('0')) {
+          serialNumber = parseInt((pageNum - 1) + $(this).attr('data-id'))
+          console.log(serialNumber)
+        }
+        else {
+          serialNumber = parseInt($(this).attr('data-id')) * pageNum
+          console.log(serialNumber)
+        }
+      })
+    }
+    ////////////////////////
+
+  });
+
+  $("a[rel='page']").click(function (e) {
+    e.preventDefault();
+    $('#fellowships_filter').attr("action", $(this).attr("href"));
+    $('#fellowships_filter').submit();
+  });
+
+  $("#date_range_start, #date_range_end").datetimepicker({
+          'format': 'YYYY-MM-DD',
+ });
+</script>
+{% endblock js_block %}

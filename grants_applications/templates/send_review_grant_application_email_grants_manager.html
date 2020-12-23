@@ -1,0 +1,10 @@
+{% extends 'root_email_template.html' %}
+
+{% block heading %}
+Dear {{ grants_manager.user }}
+{% endblock heading %}
+
+
+{% block content_body %}
+    The proposal that was submitted to {{user.first_name}} {{user.last_name}} for review has been successfully reviewed.
+{% endblock content_body %}

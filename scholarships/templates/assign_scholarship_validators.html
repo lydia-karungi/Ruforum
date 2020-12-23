@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block breadcrumb %}
+{% load paginate %}
+{% load thumbnail %}
+{% load common_tags %}
+{% block extralinks %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+  href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css" />
+  <link href="{% static "css/multi-select.css" %}" rel="stylesheet" />
+{% endblock %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'scholarships:list' %}">Scholarship Applications</a></li>
+    <li class="breadcrumb-item active">{% if call_obj %}Edit{% else %}Add{% endif %}</li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+
+  <div class="overview_form_block row marl justify-content-center">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title text-center">
+            {% if call_obj %}EDIT{% else %}ASSIGN{% endif %} SCHOLARSHIP APPLICATION
+          </div>
+          </div>
+          <div class="card-body">
+          <fieldset class="form-group">
+
+          <div class="row marl">
+
+            <div class="col-md-12">
+
+              <label for="exampleInputEmail1" class="required">Select Applications
+            </label>
+             <!--Display Applications here-->
+
+<!-- main_container starts here -->
+<div class="main_container">
+  <!-- heading_create starts here -->
+  <form id="formid" action='' method="POST" novalidate enctype="multipart/form-data">{% csrf_token %}
+  <div class="col-md-12 col-lg-12 col-xl-12">
+    <div class="table_container_row  marl no-gutters">
+      <div class="col-md-12">
+
+          <div class="tab-pane fade show active" id="open" role="tabpanel" aria-labelledby="open">
+            <div class="card">
+
+              <div class="toolbar">
+                Scholarship Applications: <span>{% if show_pageitems %}
+                  {% show_pageitems %}{% else %}
+                  {{ scholarship_applications|length }}{% endif %}</span>
+              </div>
+                <div class="table-responsive">
+                  <table
+                  data-toggle="table"
+                  data-search="true"
+                  data-toolbar=".toolbar"
+                  data-height="400"
+                  data-virtual-scroll="true"
+                  data-show-columns="true">
+                    <thead>
+                      {% if scholarship_applications|length > 0 %}
+                      <tr>
+                        <th>#</th>
+                        <th >Call ID</th>
+                        <th>Applicant</th>
+                        <th>Programme</th>
+
+                        <th ><input data-field="application" type="checkbox" data-checkbox="true"></th>
+                      </tr>
+                      {% endif %}
+                    </thead>
+                    <tbody>
+
+                      {% for call in scholarship_applications %}
+                      <tr class="text-center">
+                        <td scope="row">{{ forloop.counter }}</td>
+                        <td>{{ call.call.call_id}}</td>
+                        <td>
+                            {{call.user}}
+                          </td>
+                        <td>
+                          {{call.programme_applied_for|truncatechars:40}}
+                        </td>
+
+
+
+                        <td class="actions">
+                          <input type="checkbox" name="application" required class="checkboxinput" value="{{call.id}}" id="id_application" />
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                {% ifequal scholarship_applications|length 0 %}
+                <h6 class="text-center">No Applications Found</h6>
+                {% endifequal %}
+
+
+            </div>
+          </div>
+
+
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+
+    <div class="form-group">
+      <label for="exampleInputEmail1" class="required">Validators
+        {% if applicationform.validators.field.required %}<span class="error_marker"
+          style="color:red">*</span>{% endif %}</label>
+      {{ applicationform.validators}}
+      <span class="error" id="id__validators">{{ applicationform.validators.errors }}</span>
+    </div>
+
+    <div class="spinner-border  text-primary" id="spinner"></div>
+</div>
+  <br clear="all">
+</div>
+
+            </div>
+
+
+
+          </div>
+
+          <div class="row marl">
+                <div class="col-md-12">
+                  <div class="col-md-12">
+
+                    <div class="row marl buttons_row form_btn_row text-center">
+                      <button class="btn btn-default save" id="submit_btn" type="submit">Submit</button>
+                      <a href="{% url 'scholarships:list' %}" class="btn btn-default clear"
+                        id="create_user_cancel">Cancel</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </fieldset>
+
+
+
+        </div>
+      </div>
+    </div>
+    <!-- <input type="hidden" id="save_new_form" name="savenewform"> -->
+  </div>
+  <!-- overview ends here -->
+</form>
+<br clear="all">
+{% endblock %}
+
+{% block js_block %}
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+
+<script src="https://malsup.github.io/jquery.form.js"></script>
+<script src="{% static "js/jquery.multi-select.js" %}"></script>
+<script src="{% static 'js/sweetalert.min.js' %}"></script>
+<script type="text/javascript">
+
+
+  $(document).ready(function () {
+    $("#spinner").hide();
+    $(".filter_toggle").click(function () {
+      $(".list_filter_row").toggle();
+    });
+
+    $('#id_validators').select2();
+
+  });
+$("#submit_btn").click( function(e){
+
+  $("#formid").submit(function (e) {
+    e.preventDefault();
+
+    var formData = new FormData($("#formid")[0]);
+    $.ajax({
+      url: "{% url 'scholarships:save_scholarship_validators' %}",
+      type: "POST",
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      beforeSend: function () {
+    // ... your initialization code here (so show loader) ...
+    $("#spinner").show();
+     },
+      success: function (response) {
+        $("#spinner").hide();
+        if(response.errormessage != null){
+        swal({text:response.errormessage,icon:"error"}).then(() =>{
+        window.location.href="{% url 'scholarships:list' %}"});
+        }
+        else{
+          swal({text:"successfully assigned Validators",icon:"success"}).then(() =>{
+        window.location.href="{% url 'scholarships:list' %}"});
+        }
+
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        $("#spinner").hide();
+            swal({
+          text: 'Some Validators have been assigned the same applications. please check',
+          icon: "error",
+});
+        }
+
+    });
+  });
+});
+  {% for message in messages %}
+  $(document).ready(function() {
+      $.notify("{{message}}", "{{ message.tags }}");
+  });
+  {% endfor %}
+</script>
+{% endblock js_block %}

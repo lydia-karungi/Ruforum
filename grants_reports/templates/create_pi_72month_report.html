@@ -1,0 +1,606 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block breadcrumb %}
+    {% load common_tags %}
+    {% block extralinks %}
+        {% load crispy_forms_tags %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css"
+              rel="stylesheet">
+        <link rel="stylesheet" type="text/css"
+              href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/start/jquery-ui.css"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-collapsible-fieldset.css'%}">
+
+    {% endblock %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {% if request.user.role == "ADMIN" or request.user.is_superuser %}
+                <li class="breadcrumb-item"><a href="{% url 'student_reports:list' %}">Grant Reports</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active">{% if event_obj %}Edit{% else %}Create{% endif %}</li>
+        </ol>
+    </nav>
+{% endblock %}
+{% block content %}
+    <form id="formid" action='' method="POST" novalidate enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="overview_form_block row marl justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title text-center">
+                            {% if studentreport %}EDIT{% else %}{% endif %} GRANT PROJECT REPORT
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+
+                        <div class="row marl">
+                            <!--first tab begins here-->
+                            {{ form.errors }}
+                            <input type="hidden" name="month" value="{{month}}" />
+
+                            <div class="form-group tab">
+                                <div class="col-md-12">
+                                    <div style="border: 5px solid #eee;padding: 10px;margin: 10px" >
+
+                                  <b>Grant Title</b><br>
+                                  {{grant.title}} <br>
+                                <b>Grant ID</b><br>
+                                {{grant.grant_id}} <br>
+                                <b>Report Due Date</b> <br>
+                                {{report_due_date}}
+                                    </div>
+                                </div>
+                                {{ student_formset.management_form }}
+                                <legend class="form-group-legend">Students Information</legend>
+                                {% for student_form in student_formset %}
+
+                                    {% for hidden in student_form.hidden_fields %}
+                                        {{ hidden|as_crispy_field }}
+                                    {% endfor %}
+                                    <fieldset  class="collapsible collapsed" style="border: 5px solid #eee;padding: 10px;margin: 10px">
+
+                                        <legend>{{ grant.students.all|get_at_index:forloop.counter0 }}</legend>
+
+                                        <div class="formset_row row">
+
+                                            <div>
+                                                <input type="hidden" name="student_set-{{ forloop.counter0 }}-student"
+                                                       value="{{ grant.students.all|get_at_index:forloop.counter0|get_item }}"/>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                {{ student_form.done_academic_requirements|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{ student_form.passed_second_courses|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-12">
+                                                {{ student_form.number_of_retakes|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-12">
+                                                {{ student_form.retakes_registration_date|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-12">
+                                                {{ student_form.defended_proposal|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-12">
+                                                {{ student_form.defended_proposal_delay_explanation|as_crispy_field }}
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                {{ student_form.research_objectives|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-12">
+                                                {{ student_form.progress_as_planned|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-12">
+                                                {{ student_form.research_progress|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-12">
+                                                {{ student_form.thesis_submission_external|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-12">
+                                                {{ student_form.thesis_defense|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-12">
+                                                {{ student_form.thesis_submission|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-12">
+                                                {{ student_form.submission_delay_explanation|as_crispy_field }}
+                                            </div>
+
+
+                                        </div>
+                                    </fieldset>
+                                {% endfor %}
+                            </div>
+
+                                <input type="hidden" name="grant" value="{{ grant.id }}"/>
+
+                                <div class="tab">
+
+                                    <div class="col-md-12">
+                                        <legend class="form-group-legend">PI Report</legend>
+                                      </div>
+                                <legend>Project Research</legend>
+
+                                <div class="col-md-12">
+                                    {{ form.how_student_objectives_link_to_research_objectives|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    {{ form.project_progress|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    {{ form.student_progress|as_crispy_field }}
+                                </div>
+                               
+                                <div class="col-md-12">
+                                    {{ form.summary_progress|as_crispy_field }}
+                                </div>
+                                <legend class="mx-2">What linkages will you maintain and or initiate as part of the research in the remaining period.</legend>
+                                <div id="linkageTable">
+                                    {{ linkage_formset.management_form }}
+              
+                                    {% for form in linkage_formset.forms %}
+                                           {{form.id}}
+                                           <div style="border: 5px solid #eee;padding: 10px;margin: 10px" > 
+                                        <div class="formset_row row">
+                                          <div class="col-md-12">
+                                          {{ form.organisations|as_crispy_field }}
+                                        </div>
+                                        <div class="col-md-12">
+                                          {{ form.partners|as_crispy_field }}
+                                        </div>
+                                        <div class="col-md-12">
+                                          {{ form.linkage|as_crispy_field }}
+                                        </div>
+                                        </div>
+                                           </div>
+              
+                                    {% endfor %}
+              
+                                    </div>
+                            </div>
+                            <div class="form-group tab">
+                                <div class="col-md-12">
+                                    <legend class="form-group-legend">PI Report</legend>
+                                  </div>
+                                <legend>Beneficiaries</legend>
+                                <div class="row marl">
+                                    <div class="col-md-6">
+                                        {{ form.field_days_organized|as_crispy_field }}
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        {{ form.have_engaged_beneficiaries|as_crispy_field }}
+                                    </div>
+                                </div>
+
+                                <div id="beneficiaries_div" class="row marl">
+                                    <div class="form-group col-md-12">
+                                        {{ form.beneficary_group|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        {{ form.how_engaged_beneficiaries|as_crispy_field }}
+                                    </div>
+
+                                    <div class="form-group col-md-4">
+                                        {{ form.male_participants|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        {{ form.female_participants|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ form.direct_beneficiaries|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        {{ form.indirect_beneficiaries|as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label>
+                                         {% for report in previous_report %}
+
+                                            {% if report.participants %}
+                                            <a href="{{report.participants.url}}" target="blank">Download Participants Attendance List </a>
+                                            {% else %}
+                                            <a href="/media/file_templates/Participants.xlsx" target="_blank">Download Participants Attendance Template</a>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        </label>
+                                        {{ form.participants|as_crispy_field }}
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="tab form-group">
+                                <div class="col-md-12">
+                                    <legend class="form-group-legend">PI Report</legend>
+                                  </div>
+                                <legend>Research Progress</legend>
+                                <div class="col-md-12">
+                                    {{ form.student_capacity_gaps|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    {{ form.teamwork_mentoring|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    {{ form.problems_and_challenges|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    {{ form.problems_and_challenges_solution|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    {{ form.changes_made|as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="tab form-group">
+                                <div class="col-md-12">
+                                    <legend class="form-group-legend">PI Report</legend>
+                                  </div>
+                                <legend>Project Timeline</legend>
+                                <div class="col-md-12">
+                                    {{ form.no_cost_extension_required|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12" id="no_extension_explained_div">
+                                    {{ form.no_cost_extension_explained|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12">
+                                    {{ form.on_schedule|as_crispy_field }}
+                                </div>
+                                <div class="col-md-12" id="not_on_schedule_explanation_div">
+                                    {{ form.not_on_schedule_explanation|as_crispy_field }}
+                                </div>
+
+
+                                    <div class="col-md-12">
+                                        {{ form.linkages_established|as_crispy_field }}
+                                    </div>
+                            </div>
+                            <div class="tab form-group">
+                                    <div class="row marl">
+                                        <div class="col-md-12">
+                                            <legend class="form-group-legend">PI Report</legend>
+                                          </div>
+                                    <legend>Research outcomes</legend>
+                                    <div class="col-md-12">
+                                        {{ form.uptake_pathway|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-12">
+                                        {{ form.unexpected_spillover|as_crispy_field }}
+                                    </div>
+
+
+                                    <div class="col-md-12">
+                                        {{ form.research_to_students_field_attachment|as_crispy_field }}
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        {{ form.ensure_sustainability_strategies|as_crispy_field }}
+                                    </div>
+                                    </div>
+                            </div>
+                            <div class="tab form-group">
+                                    <div class="row marl">
+                                        <div class="col-md-12">
+                                            <legend class="form-group-legend">PI Report</legend>
+                                          </div>
+                                        <legend>Project Uploads</legend>
+
+                                    <div class="col-md-6">
+                                        {{ form.request_for_funds_for_year2|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ form.audited_12_month_financial_report|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ form.flyers_brochures|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-6">
+                                      {{ form.policy_briefs|as_crispy_field }}
+                                  </div>
+                                    <div class="col-md-6" id="flyers_brochures_upload_div">
+                                        {{ form.flyers_brochures_upload|as_crispy_field }}
+                                    </div>
+
+                                    <div class="col-md-6" id="policy_briefs_upload_div">
+                                        {{ form.policy_briefs_upload|as_crispy_field }}
+                                    </div>
+                                    <legend class="mx-2">Upload relevant pictures related to your research activities</legend>
+                                    <div id="pictureTable">
+                                      {{ picture_formset.management_form }}
+
+                                      {% for form in picture_formset.forms %}
+                                             {{form.id}}
+
+                                          <div class="formset_row row">
+                                            <div class="col-md-6">
+                                            {{ form.picture|as_crispy_field }}
+                                          </div>
+
+                                          </div>
+
+
+                                      {% endfor %}
+
+                                      </div>
+                                </div>
+                            </div>
+                            <!--end of fourth tab-->
+                            <div class="spinner-border  text-primary" id="spinner"></div>
+                            <div class="col-md-12">
+                                <div style="overflow:auto;">
+                                    <div style="float:right; margin-top: 20px;">
+                                        <button type="button" class="btn previous">Previous</button>
+                                        <button type="button" class="next btn btn-primary">Next</button>
+                                        <button type="button" class="btn btn-primary submit">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div style="text-align:center;margin-top:6px;">
+                            <span class="step">1</span>
+                            <span class="step">2</span>
+                            <span class="step">3</span>
+                            <span class="step">4</span>
+                            <span class="step">5</span>
+                            <span class="step">6</span>
+                            <span class="step">7</span>
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- <input type="hidden" id="save_new_form" name="savenewform"> -->
+
+            </div>
+        </div>
+        <!-- overview ends here -->
+    </form>
+ <br clear="all">
+
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog modal-confirm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="icon-box">
+                        <i class="material-icons">warning</i>
+                    </div>
+                    <h4 class="modal-title">Are you sure?</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Do you really want to save your application? You will not be able to edit it after this.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmSave">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+{% block js_block %}
+    <script src="{% static 'js/jquery.validate.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/multi-form.js' %}"></script>
+    <script type='text/javascript'
+            src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+    <script src="https://malsup.github.io/jquery.form.js"></script>
+    <script src="{% static 'js/sweetalert.min.js' %}"></script>
+    <script src="{% static 'js/jquery.formset.js' %}"></script>
+    <script src="{% static 'js/jquery-collapsible-fieldset.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("fieldset.collapsible").collapsible({
+                animation: true,
+	        });
+            $("#spinner").hide();
+            $("#beneficiaries_div").hide();
+            $("#no_extension_explained_div").hide();
+            $("#not_on_schedule_explanation_div").hide();
+            $("#flyers_brochures_upload_div").hide();
+            $("#policy_briefs_upload_div").hide();
+            $.validator.addMethod('month', function (value, element, param) {
+                return (value != 0) && (value <= 12) && (value == parseInt(value, 10));
+            }, 'Please enter a valid month!');
+            $.validator.addMethod('year', function (value, element, param) {
+                return (value != 0) && (value >= 1900) && (value == parseInt(value, 10));
+            }, 'Please enter a valid year not less than 1900!');
+            $.validator.addMethod('username', function (value, element, param) {
+                var nameRegex = /^[a-zA-Z0-9]+$/;
+                return value.match(nameRegex);
+            }, 'Only a-z, A-Z, 0-9 characters are allowed');
+
+
+            var val = {
+                // Specify validation rules
+                rules: {
+                    completed: {
+                        required: true
+                    },
+                    due_date: {
+                        required: true
+
+                    },
+                    title: {
+                        required: true
+                    },
+                    date: {
+                        date: true,
+                        required: true,
+
+                    },
+                    comments: {
+                        required: true
+                    },
+                    /* dean_contact: {
+                       requied: true
+                     },*/
+                    proposal: {
+                        required: true
+                    },
+                    proposal_title: {
+                        required: true
+                    }
+                },
+                // Specify validation error messages
+                messages: {
+                    title:
+                        "Please enter the title",
+                    department: {
+                        required: "Department is required"
+                    },
+                    completed: {
+                        required: "Please indicate whether you completed or not"
+                    },
+                    comments: {
+                        required: "Please include a comment"
+                    },
+
+                    dean_contact: {
+                        required: "Dean's contact is required"
+                    },
+                    proposal_title: {
+                        required: "Please write short notes about your proposal"
+                    },
+                    proposal: {
+                        required: "Proposal is Required"
+                    },
+                    area_of_specialisation: {
+                        required: "Area of specialization  is required",
+
+                    },
+                    other_universities: {
+                        required: "Please include at least one other University"
+                    },
+                    supporting_letter_from_university: {
+                        requied: "Supporting letter is required"
+                    },
+                    project_timeline: {
+                        requied: "Please upload the project timeline"
+                    },
+                    application_form: {
+                        requied: "Please upload the application form"
+                    }
+                }
+            }
+            $("#formid").multiStepForm(
+                {
+                    // defaultStep:0,
+                    beforeSubmit: function (form, submit) {
+                        console.log("called before submiting the form");
+                        console.log(form);
+                        console.log(submit);
+                    },
+                    validations: val,
+                }
+            ).navigateTo(0);
+        });
+
+    $("#formid").submit(function (e) {
+    e.preventDefault();
+
+    var formData = new FormData($("#formid")[0]);
+    $.ajax({
+      url:  "{% url 'grants_reports:save_seventy_two_month_report' %}",
+      type: "POST",
+      data: formData,
+      cache: false,
+      contentType: false,
+      processData: false,
+      beforeSend: function () {
+    // ... your initialization code here (so show loader) ...
+    $("#spinner").show();
+     },
+      success: function (response) {
+        $("#spinner").hide();
+        if(response.errors != null){
+        swal({text:'please check the errors in the form',icon:"error",});
+        console.log(response.errors);
+        }
+        else{
+          swal({text:"successfully submitted", icon:"success"}).then(() =>{
+        window.location.href="{% url 'PI:reports' %}"});
+        }
+
+
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+        $("#spinner").hide();
+            swal({
+          text: textStatus,
+          icon: "error",
+});
+        }
+
+    });
+  });
+
+  $('#linkageTable .formset_row').formset({
+            addText: 'Add Linkage',
+            deleteText: 'remove',
+             prefix: 'linkage_set'
+            });
+
+        $('#pictureTable .formset_row').formset({
+            addText: 'Add Picture',
+            deleteText: 'remove',
+             prefix: 'picture_set'
+            });
+        $('#id_have_engaged_beneficiaries').on('change', function () {
+
+            if ($('#id_have_engaged_beneficiaries').val() == '2') {
+        $("#beneficiaries_div").show();
+        } else if ($('#id_have_engaged_beneficiaries').val() == '3') {
+        $("#beneficiaries_div").hide();
+        }
+        });
+            $('#id_no_cost_extension_required').on('change', function () {
+
+                if ($('#id_no_cost_extension_required').val() == '2') {
+                    $("#no_extension_explained_div").show();
+                } else if ($('#id_no_cost_extension_required').val() == '3') {
+                $("#no_extension_explained_div").hide();
+                }
+            });
+
+
+            $('#id_on_schedule').on('change', function () {
+
+            if ($('#id_on_schedule').val() == '2') {
+                $("#not_on_schedule_explanation_div").hide();
+            } else if ($('#id_on_schedule').val() == '3') {
+                $("#not_on_schedule_explanation_div").show();
+                }
+            });
+
+
+            $('#id_flyers_brochures').on('change', function () {
+
+            if ($('#id_flyers_brochures').val() == '2') {
+                $("#flyers_brochures_upload_div").show();
+            } else if ($('#id_flyers_brochures').val() == '3') {
+                $("#flyers_brochures_upload_div").hide();
+             }
+            });
+
+            $('#id_policy_briefs').on('change', function () {
+
+            if ($('#id_policy_briefs').val() == '2') {
+                $("#policy_briefs_upload_div").show();
+            } else if ($('#id_policy_briefs').val() == '3') {
+    $("#policy_briefs_upload_div").hide();
+ }
+});
+
+    </script>
+
+{% endblock js_block %}

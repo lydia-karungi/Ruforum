@@ -1,0 +1,38 @@
+{% extends 'root_email_template.html' %}
+
+
+{% block content_body %}
+<b>Dear {{ user.first_name }} {{user.last_name}} </b><br >
+Greetings from RUFORUM<br>
+You have invited the following validator/s:
+{% for validator in validators %}
+<table>
+    <tbody>
+<tr>
+<td>
+    {{ forloop.counter }}. {{validator}}
+</td>
+</tr>
+    </tbody>
+
+</table>
+{% endfor %}
+
+To validate proposals submitted by:
+{% for application in applications %}
+<table>
+    <tbody>
+<tr>
+<td>
+    {{ forloop.counter }}. {{application.user}}
+</td>
+</tr>
+    </tbody>
+
+</table>
+{% endfor %}
+
+Best Regards<br>
+RUFORUM
+
+{% endblock content_body %}
